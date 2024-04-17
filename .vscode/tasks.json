@@ -1,0 +1,22 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "NPM DEV",
+            "type": "npm",
+            "script": "dev",
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+        },
+        {
+            "label": "PHP SERVER",
+            "type": "shell",
+            "command": "sail",
+            "args": ["up"],
+            "runOptions": {
+                "runOn": "folderOpen"
+            }
+        }
+    ]
+}
