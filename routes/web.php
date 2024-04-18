@@ -43,8 +43,5 @@ Route::get('/auth/google/callback', function () {
     return redirect('/');
 });
 
-
-require __DIR__ . '/auth.php';
-Route::get('friends', [IndexController::class, 'show'])->name('friends.show');
 Route::get('friends', [FriendsController::class, 'index'])->name('friends.index');
 require __DIR__.'/auth.php';
