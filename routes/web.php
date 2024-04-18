@@ -44,3 +44,5 @@ Route::get('/auth/google/callback', function () {
 
 
 require __DIR__ . '/auth.php';
+Route::get('friends', [IndexController::class, 'show'])->name('friends.show');
+require __DIR__.'/auth.php';
