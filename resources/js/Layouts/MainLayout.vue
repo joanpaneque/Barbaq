@@ -38,8 +38,8 @@
 
     .main-layout-header,
     .main-layout-content {
-        padding-inline: 240px;
-        grid-template-columns: 380px auto 380px;
+        padding-inline: 12%;
+        grid-template-columns: 270px auto 350px;
     }
 
     .main-layout-header {
@@ -53,7 +53,6 @@
         gap: 20px;
         padding-top: 20px;
     }
-
 
     .left-aside {
         width: 100%;
