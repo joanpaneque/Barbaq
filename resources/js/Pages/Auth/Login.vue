@@ -1,10 +1,4 @@
 <script setup>
-import Checkbox from '@/Components/Checkbox.vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 defineProps({
@@ -35,143 +29,80 @@ const googleLogin = () => {
 
 <template>
 
-        <Head title="Log in" />
+    <Head title="Log in" />
 
-        <!-- <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+    <div class="center">
+        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
         </div>
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
+        <form @submit.prevent="submit" class="form">
+            <div class="flex-column">
+                <label for="email">Email</label>
+            </div>
+            <div class="inputForm">
+                <img src="/assets/svg/arroba.svg" alt="Arrova" class="w-5">
+                <input
                     id="email"
                     type="email"
-                    class="mt-1 block w-full"
+                    class="input" 
+                    placeholder="Escriu el teu Email" 
                     v-model="form.email"
                     required
                     autofocus
                     autocomplete="username"
-                />
-
-                <InputError class="mt-2" :message="form.errors.email" />
+                >
             </div>
 
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput
+            <div class="flex-column">
+                <label for="password">Contrasenya</label>
+            </div>
+            <div class="inputForm">
+                <img src="/assets/svg/lock.svg" alt="Lock" class="w-5">
+                <input 
                     id="password"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="input"
+                    placeholder="Escriu la teva Contrasenya"
                     v-model="form.password"
                     required
                     autocomplete="current-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="block mt-4">
-                <label class="flex items-center">
-                    <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="ms-2 text-sm text-gray-600">Remember me</span>
-                </label>
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <Link
-                    v-if="canResetPassword"
-                    :href="route('password.request')"
-                    class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                    Forgot your password?
-                </Link>
-
-                <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Log in
-                </PrimaryButton>
-            </div>
-        </form> -->
-
-        
-        <div class="center">
-            <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-                {{ status }}
             </div>
 
-            <form @submit.prevent="submit" class="form">
-                <div class="flex-column">
-                    <label>Email</label>
+            <div class="flex-row">
+                <div>
+                    <input type="radio" v-model="form.remember">
+                    <label>Recorda'm</label>
                 </div>
-                <div class="inputForm">
-                    <img src="/assets/img/arrova.png" alt="Arrova" class="w-5">
-                    <input
-                        id="email"
-                        type="email"
-                        class="input" 
-                        placeholder="Escriu el teu Email" 
-                        v-model="form.email"
-                        required
-                        autofocus
-                        autocomplete="username"
-                    >
-                </div>
+                <!-- <span class="span">Has oblidat la contrasenya?</span> -->
+            </div>
 
-                <div class="flex-column">
-                    <label>Contrasenya</label>
-                </div>
-                <div class="inputForm">
-                    <img src="/assets/img/lock.png" alt="Lock" class="w-5">
-                    <input 
-                        id="password"
-                        type="password"
-                        class="input"
-                        placeholder="Escriu la teva Contrasenya"
-                        v-model="form.password"
-                        required
-                        autocomplete="current-password"
-                    >
-                </div>
+            <button class="button-submit" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">Iniciar Sessió</button>
+            
+            <p class="p">
+                No tens compte? <Link :href="route('register')" class="span">Registra't</Link>
+            </p>
 
-                <div class="flex-row">
-                    <div>
-                        <input type="radio" v-model="form.remember">
-                        <label>Recorda'm</label>
-                    </div>
-                    <!-- <span class="span">Has oblidat la contrasenya?</span> -->
-                </div>
+            <p class="p line">O amb</p>
 
-                <button class="button-submit" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">Iniciar Sessió</button>
-                
-                <p class="p">
-                    No tens compte? <Link :href="route('register')" class="span">Registra't</Link>
-                </p>
-
-                <p class="p line">O amb</p>
-
-                <div class="flex-row">
-                    <button 
-                        class="btn google"
-                        :class="{ 'opacity-25': form.processing }"
-                        :disabled="form.processing"
-                        @click="googleLogin"
-                    >
-                        <img src="/assets/svg/google_icon.svg" alt="Google" class="w-8">
-                        Google
-                    </button>
-                </div>
-            </form>
-        </div>
+            <div class="flex-row">
+                <button 
+                    class="btn google"
+                    :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing"
+                    @click="googleLogin"
+                >
+                    <img src="/assets/svg/google_icon.svg" alt="Google" class="w-8">
+                    Google
+                </button>
+            </div>
+        </form>
+    </div>
 
 </template>
 
-<style>
-body {
-    background-color: #E4E4E4;
-}
-
+<style scoped>
 .center {
     position: absolute;
     top: 50%;
@@ -187,6 +118,7 @@ body {
     padding: 30px;
     width: 450px;
     border-radius: 20px;
+    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.3);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
@@ -290,6 +222,5 @@ body {
 
 .btn:hover {
     border: 1px solid #2d79f3;
-    ;
 }
 </style>
