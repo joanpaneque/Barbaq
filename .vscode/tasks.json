@@ -12,8 +12,7 @@
         {
             "label": "PHP SERVER",
             "type": "shell",
-            "command": "sail",
-            "args": ["up"],
+            "command": "./vendor/bin/sail up",
             "runOptions": {
                 "runOn": "folderOpen"
             }
