@@ -2,10 +2,14 @@
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
 
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ProfileController;
+
+use App\Models\User;
 
 Route::get('/', [IndexController::class, 'show'])->name('index');
 
@@ -13,4 +17,30 @@ Route::middleware('auth')->group(function () {
     Route::resource('profile', ProfileController::class)->only(['edit', 'update', 'destroy']);
 });
 
-require __DIR__.'/auth.php';
+
+// Google login
+Route::get('/auth/google', function () {
+    return Socialite::driver('google')->redirect();
+});
+Route::get('/auth/google/callback', function () {
+    $googleUser = Socialite::driver('google')->user();
+
+    $user = User::where('email', $googleUser->email)->first();
+
+    if (!$user) {
+        $user = User::create([
+            'id' => $googleUser->id,
+            'name' => $googleUser->user['given_name'],
+            'email' => $googleUser->email,
+            'password' => Str::random(16),
+        ]);
+    }
+
+    // Log the user in
+    Auth::login($user);
+
+    return redirect('/');
+});
+
+
+require __DIR__ . '/auth.php';
