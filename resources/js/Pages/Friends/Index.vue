@@ -6,19 +6,19 @@ import 'flowbite';
     <MainLayout title="Inici">
         <template #main-content>
             <div class="grid grid-friends">
-                <div v-for="(user, index) in users" :key="user.id" class="friend-card w-40 bg-white border border-gray-200 rounded-2xl dark:bg-gray-800 dark:border-gray-700">
-                        <div class="flex justify-end px-2 pt-3">
+                <div v-for="(user, index) in users" :key="user.id"
+                    class="friend-card w-40 bg-white border border-gray-200 rounded-2xl dark:bg-gray-800 dark:border-gray-700">
+                    <div class="flex justify-end px-2 pt-3">
+                    </div>
+                    <div class="flex flex-col items-center pb-5">
+                        <img class="w-32 h-32 mb-3 rounded-full shadow-lg" src="assets/img/user.png" alt="User Image" />
+                        <h5 class="mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ user.username }}</h5>
+                        <div class="flex md:mt-2">
+                            <button @click="deleteUser(user.id)"
+                                class="inline-flex items-center px-4 py-1 text-sm font-medium text-center text-white bg-red-700 rounded-2xl hover:bg-red-800 focus:ring-2 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Eliminar
+                                amic</button>
                         </div>
-                        <div class="flex flex-col items-center pb-5">
-                            <img class="w-32 h-32 mb-3 rounded-full shadow-lg" src="assets/img/user.png"
-                                alt="User Image" />
-                            <h5 class="mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ user.username }}</h5>
-                            <div class="flex md:mt-2">
-                                <button @click="deleteUser(user.id)"
-                                    class="inline-flex items-center px-4 py-1 text-sm font-medium text-center text-white bg-red-700 rounded-2xl hover:bg-red-800 focus:ring-2 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Eliminar
-                                    amic</button>
-                            </div>
-                        </div>
+                    </div>
                 </div>
             </div>
             <div class="flex justify-center mt-4">
@@ -33,7 +33,6 @@ import 'flowbite';
         </template>
     </MainLayout>
 </template>
-
 <script>
 export default {
     data() {
@@ -51,12 +50,13 @@ export default {
     background: white;
     border-radius: 20px;
 }
-.grid-friends{
+
+.grid-friends {
     grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
     gap: 20px;
 }
 
-.friend-card{
-    width:100%;
+.friend-card {
+    width: 100%;
 }
 </style>
