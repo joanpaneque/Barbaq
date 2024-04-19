@@ -56,6 +56,13 @@ const props = defineProps({
     grid-template-columns: 270px auto 350px;
 }
 
+.main-layout-container {
+    height: 100vh;
+    background: #E9E9E9;
+
+
+}
+
 .main-layout-header {
     display: grid;
     grid-template-rows: 100%;
@@ -63,14 +70,16 @@ const props = defineProps({
     background: #fff;
     position: fixed;
     width: 100%;
+    z-index: 100;
 }
 
 .main-layout-content {
     --gap: 20px;
-    padding-top: calc(90px + var(--gap));
     display: grid;
-    height: 100vh;
+    height: 100%;
     gap: var(--gap);
+    grid-template-rows: 100%;
+    padding-top: calc(90px + var(--gap));
 }
 
 .main-layout-title {
@@ -147,5 +156,9 @@ const props = defineProps({
     background: white;
     height: 400px;
     border-radius: 20px;
+}
+
+.main-layout-content-wrapper {
+    height: 100%;
 }
 </style>

@@ -6,7 +6,7 @@
 <template>
     <MainLayout title="Inici">
         <template #main-content>
-      <Chat />
+            <Chat />
         </template>
         <template #right-aside>
             <div class="aside-menu">
