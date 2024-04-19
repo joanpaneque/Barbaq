@@ -63,9 +63,9 @@ const toggleDropdown = () => {
 
 .content {
     overflow: hidden;
-    transition: max-height 0.3s ease-out;
+    transition: max-height 0.9s ease-out;
     max-height: 0;
-    /* Inicialmente oculto */
+    width: 100%;
 }
 
 .dropdown.open .content {
@@ -104,7 +104,7 @@ const toggleDropdown = () => {
             rgba(255, 255, 255, 0.25) 0%,
             rgba(255, 255, 255, 0) 70%);
     transform: scale(0);
-    transition: transform 0.5s ease;
+    transition: transform 1.5s ease;
 }
 
 .boton-elegante:hover::after {
