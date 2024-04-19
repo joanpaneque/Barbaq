@@ -26,6 +26,10 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
-        "pinia": "^2.1.7"
+        "emoji-mart-vue-fast": "^15.0.1",
+        "pinia": "^2.1.7",
+        "vue-emoji-mart": "^1.0.5",
+        "vue-emoji-picker": "^1.0.3",
+        "vue3-emoji-picker": "^1.1.8"
     }
 }

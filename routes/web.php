@@ -8,10 +8,14 @@ use Laravel\Socialite\Facades\Socialite;
 
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\BarbecuesController;
+use App\Http\Controllers\TestController;
 
 use App\Models\User;
 
 Route::get('/', [IndexController::class, 'show'])->name('index');
+
+Route::get('/test', [TestController::class, 'index'])->name('test');
 
 Route::middleware('auth')->group(function () {
     Route::resource('profile', ProfileController::class)->only(['edit', 'update', 'destroy']);
