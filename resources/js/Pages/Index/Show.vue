@@ -10,9 +10,12 @@ import DivBarbacoa from "@/Components/Index/DadesBarbacoa.vue";
     <MainLayout title="Inici">
         <template #main-content>
 
-            <DivBarbacoa />
 
             <CreateBarbaqInput />
+
+            <DivBarbacoa class="mt-5"/>
+
+           
 
         </template>
         <template #right-aside>
