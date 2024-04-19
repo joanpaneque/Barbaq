@@ -5,10 +5,8 @@ import 'flowbite';
 <template>
     <MainLayout title="Inici">
         <template #main-content>
-            <div class="grid md:grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
-                <div v-for="(user, index) in users" :key="user.id" class="flex justify-center"
-                    :class="{ 'grid-cols-1': users.length <= 1 && index === 0, 'single-card': users.length <= 1 }">
-                    <div class="w-40 bg-white border border-gray-200 rounded-2xl dark:bg-gray-800 dark:border-gray-700">
+            <div class="grid grid-friends">
+                <div v-for="(user, index) in users" :key="user.id" class="friend-card w-40 bg-white border border-gray-200 rounded-2xl dark:bg-gray-800 dark:border-gray-700">
                         <div class="flex justify-end px-2 pt-3">
                         </div>
                         <div class="flex flex-col items-center pb-5">
@@ -21,7 +19,6 @@ import 'flowbite';
                                     amic</button>
                             </div>
                         </div>
-                    </div>
                 </div>
             </div>
             <div class="flex justify-center mt-4">
@@ -36,25 +33,6 @@ import 'flowbite';
         </template>
     </MainLayout>
 </template>
-
-<style scoped>
-.single-card {
-    max-width: calc(100% - 1rem);
-}
-
-.single-card img {
-    width: 3rem;
-    height: 3rem;
-}
-
-.single-card h5 {
-    font-size: 0.75rem;
-}
-
-.single-card button {
-    padding: 0.5rem 1rem;
-}
-</style>
 
 <script>
 export default {
@@ -73,22 +51,12 @@ export default {
     background: white;
     border-radius: 20px;
 }
-@media (max-width: 700px) {
-    .grid-cols-1 > div {
-        max-width: calc(100% - 1rem); 
-    }
+.grid-friends{
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: 20px;
+}
 
-    .grid-cols-1 > div img {
-        width: 3rem; 
-        height: 3rem;
-    }
-
-    .grid-cols-1 > div h5 {
-        font-size: 0.75rem; 
-    }
-
-    .grid-cols-1 > div button {
-        padding: 0.5rem 1rem; 
-    }
+.friend-card{
+    width:100%;
 }
 </style>
