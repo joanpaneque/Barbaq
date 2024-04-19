@@ -8,6 +8,7 @@ use Laravel\Socialite\Facades\Socialite;
 
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\FriendsController;
 
 use App\Models\User;
 
@@ -42,5 +43,5 @@ Route::get('/auth/google/callback', function () {
     return redirect('/');
 });
 
-
-require __DIR__ . '/auth.php';
+Route::get('friends', [FriendsController::class, 'index'])->name('friends.index');
+require __DIR__.'/auth.php';
