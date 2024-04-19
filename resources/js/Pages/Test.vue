@@ -1,19 +1,12 @@
 <script setup>
-import MainLayout from "@/Layouts/MainLayout.vue";
-import DivBarbacoa from "@/Components/Index/DadesBarbacoa.vue";
-
-    import CreateBarbaqInput from "@/Components/CreateBarbaqInput/CreateBarbaqInput.vue";
-
+    import MainLayout from "@/Layouts/MainLayout.vue";
+    import Chat from "@/Components/Barbecues/Chat.vue"; 
 </script>
 
 <template>
     <MainLayout title="Inici">
         <template #main-content>
-
-            <DivBarbacoa />
-
-            <CreateBarbaqInput />
-
+            <Chat />
         </template>
         <template #right-aside>
             <div class="aside-menu">
