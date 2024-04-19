@@ -1,8 +1,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-
-body {
-    background: #E9E9E9;
-}
