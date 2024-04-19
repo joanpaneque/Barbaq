@@ -5,7 +5,7 @@
 <template>
     <div class="auth-account-container">
         <div class="auth-account-image">
-            <img src="/assets/img/person.jpg" alt="Icon" />
+            <img src="/assets/img/default/person.jpg" alt="Icon" />
         </div>
         <div class="auth-account-naming-wrapper">
             <div class="auth-account-naming">
