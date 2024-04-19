@@ -1,12 +1,19 @@
 <script setup>
-    import MainLayout from "@/Layouts/MainLayout.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
+import DivBarbacoa from "@/Components/Index/DadesBarbacoa.vue";
+
     import CreateBarbaqInput from "@/Components/CreateBarbaqInput/CreateBarbaqInput.vue";
+
 </script>
 
 <template>
     <MainLayout title="Inici">
         <template #main-content>
+
+            <DivBarbacoa />
+
             <CreateBarbaqInput />
+
         </template>
         <template #right-aside>
             <div class="aside-menu">
