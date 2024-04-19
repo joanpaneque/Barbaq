@@ -31,19 +31,19 @@ const toggleDropdown = () => {
             <img src="/assets/svg/edit.svg" alt="Imatge de editar" class="">
         </div>
 
-        <div class="content" :style="{ height: isOpen ? 'auto' : '0' }">
+        <div class="content " :style="{ height: isOpen ? 'auto' : '0' }" >
 
 
-            <section class="mt-3">
+            <section class="mt-3 ">
 
-                <QuillEditor theme="snow" class="rounded-b-lg" />
+                <QuillEditor theme="snow" class="rounded-b-lg min-h-24" />
 
             </section>
 
-            <editor-content :editor="editor" class="editor-content" />
+            
             <div class="flex">
                 <button class=""><img src="/assets/svg/addphoto.svg" alt="Imatge de editar" class=""></button>
-
+                <button class=""><img src="/assets/svg/addlocation.svg" alt="Imatge de editar" class=""></button>
 
                 <button class="boton-elegante ml-auto mt-2">Publicar</button>
             </div>
@@ -53,23 +53,26 @@ const toggleDropdown = () => {
 
 <style scoped>
 .dropdown {
-  position: relative;
-  width: 100%;
-  background-color: white;
-  border-radius: 20px;
-  padding: 10px 20px;
-  cursor: pointer;
+    position: relative;
+    width: 100%;
+    background-color: white;
+    border-radius: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
 }
 
 .content {
-  overflow: hidden;
-  transition: max-height 0.3s ease-out;
-  max-height: 0; /* Inicialmente oculto */
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    max-height: 0;
+    /* Inicialmente oculto */
 }
 
 .dropdown.open .content {
-  max-height: 300px; /* Altura máxima del contenido */
+    max-height: 1000px;
+   
 }
+
 ::placeholder {
     color: #a8a8a8;
 }
