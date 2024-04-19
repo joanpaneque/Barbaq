@@ -48,7 +48,6 @@ import 'flowbite';
         </template>
     </MainLayout>
 </template>
-
 <style scoped>
 .aside-menu {
     width: 100%;
@@ -71,6 +70,4 @@ import 'flowbite';
     align-items: center;
     padding: 5px 0px;
 }
-
-.plus {}
 </style>
