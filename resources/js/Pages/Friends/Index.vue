@@ -6,13 +6,13 @@ import 'flowbite';
     <MainLayout title="Inici">
         <template #main-content>
             <div class="grid grid-friends">
-                <div v-for="(user, index) in users" :key="user.id"
+                <div v-for="(user, index) in [0, 0, 0, 0, 0]" :key="user.id"
                     class="friend-card w-40 bg-white border border-gray-200 rounded-2xl dark:bg-gray-800 dark:border-gray-700">
                     <div class="flex justify-end px-2 pt-3">
                     </div>
                     <div class="flex flex-col items-center pb-5">
                         <img class="w-32 h-32 mb-3 rounded-full shadow-lg" src="assets/img/user.png" alt="User Image" />
-                        <h5 class="mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ user.username }}</h5>
+                        <h5 class="mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</h5>
                         <div class="flex md:mt-2">
                             <button @click="deleteUser(user.id)"
                                 class="inline-flex items-center px-4 py-1 text-sm font-medium text-center text-white bg-red-700 rounded-2xl hover:bg-red-800 focus:ring-2 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Eliminar
@@ -29,26 +29,32 @@ import 'flowbite';
         </template>
         <template #right-aside>
             <div class="aside-menu">
+                <span class="text-2xl text-gray-800 dark:text-white font-bold">Gent a prop teu</span>
+                <div v-for="(person, index) in [0, 0, 0, 0, 0]" :key="index" class="flex aside-friend">
+                    <img class="w-12 h-12 rounded-full shadow-lg" src="assets/img/user.png" alt="User Image" />
+                    <span class="user text-xl text-gray-800 dark:text-white p-2.5">Marcos Cardat</span>
+                    <div class="plus pl-4 flex justify-end">
+                        <button class="w-8 h-8 rounded-full border-transparent hover:bg-gray-300">
+                            <img src="assets/img/plus.png">
+                        </button>
+                    </div>
+                </div>
+                <div class="people-nearby text-center">
+                    <button>
+                        <span class="text-lg text-gray-800 dark:text-white font-bold">Mostrar més</span>
+                    </button>
+                </div>
             </div>
         </template>
     </MainLayout>
 </template>
-<script>
-export default {
-    data() {
-        return {
-            users: [1, 2, 3, 4, 5, 6]
-        };
-    }
-};
-</script>
-
 <style scoped>
 .aside-menu {
     width: 100%;
     height: 400px;
     background: white;
     border-radius: 20px;
+    padding: 26px 50px;
 }
 
 .grid-friends {
@@ -58,5 +64,10 @@ export default {
 
 .friend-card {
     width: 100%;
+}
+
+.aside-friend {
+    align-items: center;
+    padding: 5px 0px;
 }
 </style>
