@@ -5,23 +5,77 @@ import "vue3-emoji-picker/css";
 
 const messageInput = ref('');
 const showEmojiPicker = ref(false);
-
 const chatBox = ref(null);
 
 const togglePicker = () => {
     showEmojiPicker.value = !showEmojiPicker.value;
 }
-
 const onSelectEmoji = (emoji) => {
-    messageInput.value += emoji;
+    console.log(emoji);
+    messageInput.value += emoji.i;
 }
-
 onMounted(() => {
     chatBox.value.scrollTop = chatBox.value.scrollHeight;
 });
 
-import { defineExpose } from 'vue';
-defineExpose({ messageInput, showEmojiPicker, togglePicker, onSelectEmoji });
+// close the emoji picker when clicking outside of it
+window.addEventListener('click', (e) => {
+    if (showEmojiPicker.value && !e.target.closest('.emoji-picker') && !e.target.closest('.input-message')) {
+        showEmojiPicker.value = false;
+    }
+});
+
+
+// drag the emoji picker, only the div with the class emoji-picker
+let isDragging = false;
+let initialX = 0;
+let initialY = 0;
+let xOffset = 0;
+let yOffset = 0;
+
+const dragStart = (e) => {
+    if (e.target.closest('.emoji-picker')) {
+        isDragging = true;
+        if (e.type === "touchstart") {
+            initialX = e.touches[0].clientX - xOffset;
+            initialY = e.touches[0].clientY - yOffset;
+        } else {
+            initialX = e.clientX - xOffset;
+            initialY = e.clientY - yOffset;
+        }
+    }
+}
+
+const dragEnd = () => {
+    isDragging = false;
+}
+
+const drag = (e) => {
+    if (isDragging) {
+        e.preventDefault();
+        if (e.type === "touchmove") {
+            xOffset = e.touches[0].clientX - initialX;
+            yOffset = e.touches[0].clientY - initialY;
+        } else {
+            xOffset = e.clientX - initialX;
+            yOffset = e.clientY - initialY;
+        }
+
+        const picker = document.querySelector('.emoji-picker');
+        setTranslate(xOffset, yOffset, picker);
+    }
+}
+
+const setTranslate = (xPos, yPos, el) => {
+    el.style.transform = "translate3d(" + xPos + "px, " + yPos + "px, 0)";
+}
+
+window.addEventListener('mousemove', drag);
+window.addEventListener('mouseup', dragEnd);
+
+window.addEventListener('touchmove', drag);
+window.addEventListener('touchend', dragEnd);
+
 </script>
 
 <template>
@@ -177,10 +231,14 @@ defineExpose({ messageInput, showEmojiPicker, togglePicker, onSelectEmoji });
                 <img src="assets/svg/emoji.svg" alt="emoji"
                     class="w-6 h-6 hover:scale-110 transition duration-300 ease-in-out">
             </button>
-            <div class="absolute bottom-14 right-5">
-                <EmojiPicker v-if="showEmojiPicker" :native="true" @select="onSelectEmoji" class="emoji-picker" />
-            </div>
+
+            
+
+           
         </div>
+        <div class="emoji-picker" v-if="showEmojiPicker" @mousedown="dragStart">
+                <EmojiPicker :native="true" @select="onSelectEmoji" />
+            </div>
     </div>
 
 </template>
@@ -217,7 +275,15 @@ defineExpose({ messageInput, showEmojiPicker, togglePicker, onSelectEmoji });
 .input-message {
     display: flex;
     width: 100%;
-    max-width: 500px;
+  
     z-index: 999;
+}
+
+.emoji-picker {
+    position: absolute;
+    bottom: 25px;
+    right:280px;
+    z-index: 999;
+
 }
 </style>
