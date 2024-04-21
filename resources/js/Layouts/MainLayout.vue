@@ -45,6 +45,12 @@ const props = defineProps({
     grid-template-columns: 270px auto 350px;
 }
 
+.main-layout-application-logo {
+    display: flex;
+    align-items: center;
+
+}
+
 .main-layout-container {
     height: 100vh;
     background: #E9E9E9;

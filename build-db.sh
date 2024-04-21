@@ -43,5 +43,6 @@ checkMigrationStatus "$migration_output"
 
 echo "[ INFO ] Executant els seeders...";
 
+./vendor/bin/sail artisan db:seed
 
 echo "[ INFO ] Tots els seeders executats...";
