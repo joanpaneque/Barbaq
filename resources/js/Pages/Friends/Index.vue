@@ -6,7 +6,7 @@ import 'flowbite';
     <MainLayout title="Inici">
         <template #main-content>
             <div class="grid grid-friends">
-                <div v-for="(user, index) in [0, 0, 0, 0, 0]" :key="user.id"
+                <div v-for="(user, index) in [0, 0, 0, 0, 0, 0]" :key="user.id"
                     class="friend-card w-40 bg-white border border-gray-200 rounded-2xl dark:bg-gray-800 dark:border-gray-700">
                     <div class="flex justify-end px-2 pt-3">
                     </div>

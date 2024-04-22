@@ -18,6 +18,8 @@ Route::get('/', [IndexController::class, 'show'])->name('index');
 
 Route::get('/test', [TestController::class, 'index'])->name('test');
 
+Route::get('friends', [FriendsController::class, 'index'])->name('friends.index');
+
 Route::middleware('auth')->group(function () {
     Route::resource('profile', ProfileController::class)->only(['edit', 'update', 'destroy']);
 });
@@ -47,5 +49,4 @@ Route::get('/auth/google/callback', function () {
     return redirect('/');
 });
 
-Route::get('friends', [FriendsController::class, 'index'])->name('friends.index');
 require __DIR__.'/auth.php';
