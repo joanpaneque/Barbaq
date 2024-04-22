@@ -8,8 +8,6 @@ const props = defineProps({
   },
 });
 
-console.log(props.friends);
-
 </script>
 <template>
     <MainLayout title="Inici">
