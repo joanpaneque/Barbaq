@@ -15,10 +15,9 @@ class FriendsController extends Controller
         $user = auth()->user();
         $friends = $user->friends()->get();
 
-        return Inertia::render('Friends/Index',[
+        return Inertia::render('Friends/Index', [
             'friends' => $friends,
         ]);
-        
     }
 
     /**
@@ -42,11 +41,12 @@ class FriendsController extends Controller
      */
     public function show(string $id)
     {
-
+        // GET THE AUTHENTICATED USER
+        $user = auth()->user();
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Showaws the form for editing the specified resource.
      */
     public function edit(string $id)
     {
