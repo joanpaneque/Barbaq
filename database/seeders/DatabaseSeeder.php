@@ -47,39 +47,39 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('123456')
         ]);
 
-                // joan
-                $user_joan->sendFriendRequest($user_roman);
-                $user_roman->acceptFriendRequest($user_joan);
-        
-                $user_joan->sendFriendRequest($user_emma);
-                $user_emma->acceptFriendRequest($user_joan);
-        
-                $user_joan->sendFriendRequest($user_aniol);
-                $user_aniol->acceptFriendRequest($user_joan);
-        
-                $user_joan->sendFriendRequest($user_marcos);
-                $user_marcos->acceptFriendRequest($user_joan);
-        
-                // roman
-                $user_roman->sendFriendRequest($user_emma);
-                $user_emma->acceptFriendRequest($user_roman);
-        
-                $user_roman->sendFriendRequest($user_aniol);
-                $user_aniol->acceptFriendRequest($user_roman);
-        
-                $user_roman->sendFriendRequest($user_marcos);
-                $user_marcos->acceptFriendRequest($user_roman);
-        
-                // emma
-                $user_emma->sendFriendRequest($user_aniol);
-                $user_aniol->acceptFriendRequest($user_emma);
-        
-                $user_emma->sendFriendRequest($user_marcos);
-                $user_marcos->acceptFriendRequest($user_emma);
-        
-                // aniol
-                $user_aniol->sendFriendRequest($user_marcos);
-                $user_marcos->acceptFriendRequest($user_aniol);
+        // joan
+        $user_joan->sendFriendRequest($user_roman);
+        $user_roman->acceptFriendRequest($user_joan);
+
+        $user_joan->sendFriendRequest($user_emma);
+        $user_emma->acceptFriendRequest($user_joan);
+
+        $user_joan->sendFriendRequest($user_aniol);
+        $user_aniol->acceptFriendRequest($user_joan);
+
+        $user_joan->sendFriendRequest($user_marcos);
+        $user_marcos->acceptFriendRequest($user_joan);
+
+        // roman
+        $user_roman->sendFriendRequest($user_emma);
+        $user_emma->acceptFriendRequest($user_roman);
+
+        $user_roman->sendFriendRequest($user_aniol);
+        $user_aniol->acceptFriendRequest($user_roman);
+
+        $user_roman->sendFriendRequest($user_marcos);
+        $user_marcos->acceptFriendRequest($user_roman);
+
+        // emma
+        $user_emma->sendFriendRequest($user_aniol);
+        $user_aniol->acceptFriendRequest($user_emma);
+
+        $user_emma->sendFriendRequest($user_marcos);
+        $user_marcos->acceptFriendRequest($user_emma);
+
+        // aniol
+        $user_aniol->sendFriendRequest($user_marcos);
+        $user_marcos->acceptFriendRequest($user_aniol);
 
     
     }

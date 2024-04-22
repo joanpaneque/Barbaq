@@ -1,9 +1,10 @@
 <script setup>
 import MainLayout from "@/Layouts/MainLayout.vue";
 import 'flowbite';
+
 const props = defineProps({
   friends: {
-    type: Array,
+    type: Object,
     required: true,
   },
 });
