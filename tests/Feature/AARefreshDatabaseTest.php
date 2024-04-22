@@ -1,9 +1,9 @@
 <?php
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
  
-// uses(RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
-// test('Refresh test database', function () {
-//     expect(true)->toBeTrue();
-// });
+test('Refresh test database', function () {
+    expect(true)->toBeTrue();
+});
