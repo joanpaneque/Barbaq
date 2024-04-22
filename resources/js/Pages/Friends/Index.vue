@@ -1,20 +1,27 @@
 <script setup>
 import MainLayout from "@/Layouts/MainLayout.vue";
 import 'flowbite';
+const props = defineProps({
+  friends: {
+    type: Array,
+    required: true,
+  },
+});
+
 </script>
 <template>
     <MainLayout title="Inici">
         <template #main-content>
             <div class="grid grid-friends">
-                <div v-for="(user, index) in [0, 0, 0, 0, 0]" :key="user.id"
+                <div v-for="friend in friends" :key="friends.id"
                     class="friend-card w-40 bg-white border border-gray-200 rounded-2xl dark:bg-gray-800 dark:border-gray-700">
                     <div class="flex justify-end px-2 pt-3">
                     </div>
                     <div class="flex flex-col items-center pb-5">
                         <img class="w-32 h-32 mb-3 rounded-full shadow-lg" src="assets/img/user.png" alt="User Image" />
-                        <h5 class="mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</h5>
+                        <h5 class="mb-2 text-sm font-medium text-gray-900 dark:text-white">{{friend.name}}</h5>
                         <div class="flex md:mt-2">
-                            <button @click="deleteUser(user.id)"
+                            <button
                                 class="inline-flex items-center px-4 py-1 text-sm font-medium text-center text-white bg-red-700 rounded-2xl hover:bg-red-800 focus:ring-2 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Eliminar
                                 amic</button>
                         </div>

@@ -12,7 +12,13 @@ class FriendsController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Friends/Index');
+        $user = auth()->user();
+        $friends = $user->friends()->get();
+
+        return Inertia::render('Friends/Index',[
+            'friends' => $friends,
+        ]);
+        
     }
 
     /**
@@ -36,7 +42,7 @@ class FriendsController extends Controller
      */
     public function show(string $id)
     {
-        //
+
     }
 
     /**
