@@ -11,7 +11,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FriendsController;
 use App\Http\Controllers\BarbecuesController;
 use App\Http\Controllers\TestController;
-
+use App\Http\Controllers\UserController;
 use App\Models\User;
 
 Route::get('/', [IndexController::class, 'show'])->name('index');
@@ -48,4 +48,11 @@ Route::get('/auth/google/callback', function () {
 });
 
 Route::get('friends', [FriendsController::class, 'index'])->name('friends.index');
+
+
+Route::get('/api/user', [UserController::class, 'apiShowLogged']);
+
+
 require __DIR__.'/auth.php';
+
+

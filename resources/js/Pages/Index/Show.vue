@@ -1,12 +1,16 @@
 <script setup>
 import MainLayout from "@/Layouts/MainLayout.vue";
 import DivBarbacoa from "@/Components/Index/DadesBarbacoa.vue";
+import CreateBarbaqInput from "@/Components/CreateBarbaqInput/CreateBarbaqInput.vue";
+import { useAuthStore } from "@/stores/auth";
 
-    import CreateBarbaqInput from "@/Components/CreateBarbaqInput/CreateBarbaqInput.vue";
+const authStore = useAuthStore();
+authStore.updateUserData();
 
 </script>
 
 <template>
+
     <MainLayout title="Inici">
         <template #main-content>
 
