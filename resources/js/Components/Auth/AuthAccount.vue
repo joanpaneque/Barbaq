@@ -1,16 +1,18 @@
 <script setup>
+    import { useAuthStore } from "@/stores/auth";
 
+    const authStore = useAuthStore();
 </script>
 
 <template>
-    <div class="auth-account-container">
+    <div class="auth-account-container" v-if="authStore.user">
         <div class="auth-account-image">
             <img src="/assets/img/default/person.jpg" alt="Icon" />
         </div>
         <div class="auth-account-naming-wrapper">
             <div class="auth-account-naming">
-                <span class="auth-account-name">Joan</span>
-                <span class="auth-account-surnames">Paneque Domingo</span>
+                <span class="auth-account-name">{{ authStore.user.name }}</span>
+                <span class="auth-account-surnames">{{ authStore.user.surnames }}</span>
             </div>
         </div>
         <div class="auth-account-settings">
@@ -18,6 +20,9 @@
                 <img src="/assets/svg/settings.svg" alt="User settings" />
             </div>
         </div>
+    </div>
+    <div class="" v-else>
+        <h1>sdfsd</h1>
     </div>
 </template>
 
