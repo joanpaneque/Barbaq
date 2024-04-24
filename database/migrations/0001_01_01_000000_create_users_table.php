@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('surnames');
             $table->string('email')->unique();
-            $table->string('image')->nullable();
+            $table->string('image')->default('/assets/img/default/person.png');
             $table->string('banner')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

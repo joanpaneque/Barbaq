@@ -7,6 +7,6 @@ use Inertia\Inertia;
 
 class IndexController extends Controller {
     public function show() {
-        return Inertia::render('Index/Show');
+        return Inertia::render('Index/Index');
     }
 }
