@@ -18,8 +18,8 @@ const authStore = useAuthStore();
             </div>
 
             <DadesBarbacoa />
+            
         </div>
-
         <div class="rigth mt-5">
 
         </div>
