@@ -1,8 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import 'vue3-carousel/dist/carousel.css';
 
-const currentSlide = ref(0);
 const images = ref([
     {
         src: '/assets/img/barbaquiu1.jpg',
@@ -17,6 +15,8 @@ const images = ref([
         alt: 'Barbaquiu 3'
     }
 ]);
+
+const currentSlide = ref(0);
 
 const navigate = (index) => {
     if (index < 0) {
@@ -100,7 +100,7 @@ function showMoreComments() {
 
 <template>
     <div class="container px-6 py-3">
-        <div class="header flex items-center justify-between pb-5">
+        <div class="header flex items-center justify-between">
             <div class="left flex items-center">
                 <img src="/assets/svg/user.svg" alt="User" class="w-10 mr-2">
                 <div>
@@ -115,8 +115,8 @@ function showMoreComments() {
             <p class="text-gray-400 text-sm">12 de abril a les 21:25</p>
         </div> 
 
-        <div class="content pb-3">
-            <h1 class="text-3xl font-bold">Barbacoa dels cardats</h1>
+        <div class="content pb-3 leading-relaxed">
+            <h1 class="text-3xl font-bold leading-relaxed py-2">Barbacoa dels cardats</h1>
 
             <p>
                 Una barbacoa és una trobada entre amics o família en què es cuina a l'aire lliure, generalment al voltant d'una graella o un forn de carbó. És una tradició popular en moltes cultures, on es preparen diverses menes de carn, verdures i altres aliments que es cuinen lentament sobre les flames, proporcionant un sabor distintiu i aromàtic. És una ocasió per gaudir del bon temps, la companyia i la gastronomia alhora.
@@ -125,7 +125,7 @@ function showMoreComments() {
             <div class="images flex pt-3">
                 <div class="w-full">
                     <div class="flex gap-1">
-                        <div v-for="(image, index) in images" :key="index" class="w-full md:w-1/2">
+                        <div v-for="(image) in images" class="w-full md:w-1/2">
                             <img 
                                 :src="image.src" 
                                 :alt="image.alt" 
@@ -157,7 +157,7 @@ function showMoreComments() {
                         id="comentari" 
                         name="coment" 
                         placeholder="Escriu un comentari"
-                        class="mr-2 w-full h-[40px] resize-none"
+                        class="mr-2 w-full h-[34px] resize-none text-slate-700 dark:text-slate-200"
                     />
 
                     <button class="send">
@@ -168,14 +168,9 @@ function showMoreComments() {
         </div>
 
         <!-- CAROUSEL IMAGES -->
-        <dialog id="modalImages" class="modal">
-            <div class="carousel w-5/6 h-5/6">
-                 <button 
-                    class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 z-50 border-inherit bg-white hover:text-white"
-                    @click="closeModal"
-                > 
-                    ✕
-                </button>
+        <dialog id="modalImages" class="modal" @click.self="closeModal">
+            <div class="carousel w-5/6 max-h-[80dvh]">
+
                 <template v-for="(image, index) in images" :key="index">
                     <div :id="'slide' + (index + 1)" class="carousel-item relative w-full" v-show="index === currentSlide">
                         <img :src="image.src" :alt="image.alt" class="w-full object-contain" />
@@ -185,6 +180,7 @@ function showMoreComments() {
                         </div>
                     </div>
                 </template>
+
             </div>
         </dialog>
     </div>
@@ -207,9 +203,24 @@ function showMoreComments() {
 
 textarea,
 .send {
-    background-color: #DEDEDE;
     border-radius: 5px;
-    padding: 0.5rem;
+    padding: 0.4rem;
+    font-size: 14px;
+}
+
+textarea {
+    box-shadow: 0 0 0 1px #CECECE;
+}
+
+.send {
+    background: #FF6100;
+    color: white;
+    padding: 0.4rem;
+}
+
+.send:hover {
+    transition: all 0.3s ease;
+    background: #e65800;
 }
 
 .modal-box{

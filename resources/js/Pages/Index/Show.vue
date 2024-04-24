@@ -24,20 +24,18 @@ authStore.updateUserData();
                 
             </div>
 
-
-
-
             <DivBarbacoa class="mb-5" />
             <DivBarbacoa class="mb-5" />
-
 
         </template>
+
         <template #right-aside>
             <div class="aside-menu">
 
             </div>
         </template>
     </MainLayout>
+    
 </template>
 
 <style scoped>
