@@ -20,12 +20,20 @@ Route::middleware('auth')->group(function () {
 Route::get('/test', [TestController::class, 'index'])->name('test');
 Route::get('/test/profile', [TestController::class, 'indexProfile'])->name('test.profile');
 
+Route::resource('profile', ProfileController::class);
+
+
+
+
 Route::get('friends', [FriendsController::class, 'index'])->name('friends.index');
 
 Route::get('/auth/google', [GoogleController::class, 'index']);
 Route::get('/auth/google/callback', [GoogleController::class, 'store']);
 
 Route::get('friends', [FriendsController::class, 'index'])->name('friends.index');
+
+
+
 
 Route::get('/api/user', [UserController::class, 'apiShowLogged']);
 
