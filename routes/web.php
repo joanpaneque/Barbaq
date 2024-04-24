@@ -19,6 +19,11 @@ Route::get('/', [IndexController::class, 'show'])->name('index');
 Route::get('/test', [TestController::class, 'index'])->name('test');
 Route::get('/test/profile', [TestController::class, 'indexProfile'])->name('test.profile');
 
+Route::resource('profile', ProfileController::class);
+
+
+
+
 Route::get('friends', [FriendsController::class, 'index'])->name('friends.index');
 
 Route::middleware('auth')->group(function () {
@@ -52,6 +57,9 @@ Route::get('/auth/google/callback', function () {
 
 
 Route::get('friends', [FriendsController::class, 'index'])->name('friends.index');
+
+
+
 
 Route::get('/api/user', [UserController::class, 'apiShowLogged']);
 

@@ -3,6 +3,11 @@ import { defineProps } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import AuthAccount from '@/Components/Auth/AuthAccount.vue';
 import MainLeftAside from '@/Components/Asides/MainLeftAside.vue';
+import Banner from "@/Components/UserProfile/Banner.vue";
+import { useAuthStore } from "@/stores/auth";
+
+
+const authStore = useAuthStore();
 
 const props = defineProps({
     title: {
@@ -29,6 +34,7 @@ const props = defineProps({
                 <MainLeftAside />
             </div>
             <div class="main-layout-content-wrapper">
+                <Banner class="banner-profile "/>
                 <slot name="main-content"></slot>
             </div>
         </div>

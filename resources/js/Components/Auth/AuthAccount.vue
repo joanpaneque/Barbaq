@@ -1,27 +1,27 @@
 <script setup>
-import { useAuthStore } from "@/stores/auth";
 import { Link } from "@inertiajs/vue3";
-
+import { useAuthStore } from "@/stores/auth";
 const authStore = useAuthStore();
 </script>
 
 <template>
-    <div class="auth-account-container" v-if="authStore.user">
-        <div class="auth-account-image">
-            <img :src="authStore.user.image" alt="Icon" />
-        </div>
-        <div class="auth-account-naming-wrapper">
-            <div class="auth-account-naming">
-                <span class="auth-account-name">{{ authStore.user.name }}</span>
-                <span class="auth-account-surnames">{{ authStore.user.surnames }}</span>
-            </div>
-        </div>
-        <div class="auth-account-settings">
-            <div class="auth-account-settings-bubble">
-                <img src="/assets/svg/settings.svg" alt="User settings" />
-            </div>
+    <Link :href="'/profile/' + authStore.user.id" class="auth-account-container" v-if="authStore.user">
+
+    <div class="auth-account-image">
+        <img :src="authStore.user.image" alt="Icon" />
+    </div>
+    <div class="auth-account-naming-wrapper">
+        <div class="auth-account-naming">
+            <span class="auth-account-name">{{ authStore.user.name }}</span>
+            <span class="auth-account-surnames">{{ authStore.user.surnames }}</span>
         </div>
     </div>
+    <div class="auth-account-settings">
+        <div class="auth-account-settings-bubble">
+            <img src="/assets/svg/settings.svg" alt="User settings" />
+        </div>
+    </div>
+    </Link>
     <div class="no-auth-account-container flex gap-2" v-else>
         <div class="flex items-center justify-center dark:bg-gray-800 ">
             <Link href="/register"
