@@ -70,7 +70,6 @@ public function destroy(string $id)
 {
     $user = auth()->user();
     $friend = User::findOrFail($id);
-
     $user->removeFriend($friend);
 }
 }
