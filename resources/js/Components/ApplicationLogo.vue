@@ -9,8 +9,8 @@
 </template>
 
 <style scoped>
+
     img {
-        height: 100%;
         width: 200px;
         margin: 0 auto;
         object-fit: cover;

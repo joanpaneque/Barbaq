@@ -1,6 +1,7 @@
 <script setup>
     import MainLayout from "@/Layouts/MainLayout.vue";
     import Chat from "@/Components/Barbecues/Chat.vue"; 
+    import BarbacuesAside from "@/Components/Barbecues/BarbacuesAside.vue";
 </script>
 
 <template>
@@ -10,7 +11,7 @@
         </template>
         <template #right-aside>
             <div class="aside-menu">
-                
+                <BarbacuesAside />
             </div>
         </template>
     </MainLayout>

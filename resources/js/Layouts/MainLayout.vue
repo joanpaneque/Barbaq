@@ -1,6 +1,8 @@
 <script setup>
 import { defineProps } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import AuthAccount from '@/Components/Auth/AuthAccount.vue';
+import MainLeftAside from '@/Components/Asides/MainLeftAside.vue';
 
 const props = defineProps({
     title: {
@@ -19,25 +21,12 @@ const props = defineProps({
             </div>
             <div class="main-layout-title">{{ title ?? 'Barbeq' }}</div>
             <div class="main-layout-profile">
-                <div class="profile-image">
-                    <img src="/assets/img/person.jpg" alt="Icon" />
-                </div>
-                <div class="profile-naming-wrapper">
-                    <div class="profile-naming">
-                        <span class="profile-name">Joan</span>
-                        <span class="profile-surnames">Paneque Domingo</span>
-                    </div>
-                </div>
-                <div class="profile-settings-icon">
-                    <img src="/assets/svg/settings.svg" alt="Settings" />
-                </div>
+                <AuthAccount />
             </div>
         </div>
         <div class="main-layout-content">
             <div class="main-layout-left-aside">
-                <div class="left-aside">
-
-                </div>
+                <MainLeftAside />
             </div>
             <div class="main-layout-content-wrapper">
                 <slot name="main-content"></slot>
@@ -56,11 +45,15 @@ const props = defineProps({
     grid-template-columns: 270px auto 350px;
 }
 
+.main-layout-application-logo {
+    display: flex;
+    align-items: center;
+
+}
+
 .main-layout-container {
     height: 100vh;
     background: #E9E9E9;
-
-
 }
 
 .main-layout-header {
@@ -90,75 +83,13 @@ const props = defineProps({
     font-weight: bold;
 }
 
-.main-layout-profile {
-    display: grid;
-    height: 100%;
-    grid-template-columns: 70px auto auto;
-    gap: 10px;
-}
-
-.profile-image {
-    width: fit-content;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.profile-image img {
-    position: relative;
-    height: 60px;
-    width: 60px;
-    object-fit: cover;
-    border-radius: 50%;
-}
-
-.profile-naming-wrapper {
-    display: grid;
-    align-items: center;
-    height: 100%;
-}
-
-.profile-settings-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.profile-settings-icon img {
-    height: 30px;
-    width: 30px;
-    transition: 0.5s;
-
-}
-
-.profile-settings-icon img:hover {
-    cursor: pointer;
-    transform: rotate(180deg);
-    transition: 0.3s;
-}
-
-.profile-naming {
-    height: 60px;
-    display: grid;
-}
-
-.profile-name {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.profile-surnames {
-    margin-top: -10px;
-}
-
-.left-aside {
-    width: 100%;
-    background: white;
-    height: 400px;
-    border-radius: 20px;
-}
-
 .main-layout-content-wrapper {
     height: 100%;
 }
+
+.main-layout-profile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+} 
 </style>
