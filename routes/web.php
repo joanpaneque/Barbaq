@@ -35,7 +35,7 @@ Route::middleware('auth')->group(function () {
     
 });
 
-Route::get('friends', [FriendsController::class, 'index'])->name('friends.index');
+Route::delete('friends', [FriendsController::class, 'destroy'])->name('friends.destroy');
 
 
 
