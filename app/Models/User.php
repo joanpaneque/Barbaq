@@ -53,7 +53,7 @@ class User extends Authenticatable
         ];
     }
 
-    
+
     public function sentFriendRequests()
     {
         return $this->belongsToMany(User::class, 'friendships', 'user_id', 'friend_id')->withPivot('accepted')->withTimestamps();
