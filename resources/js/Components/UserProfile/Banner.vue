@@ -55,9 +55,9 @@ const authStore = useAuthStore();
                                 <div v-else>
                                     <div class="flex items-center justify-center dark:bg-gray-800 gap-2">
                                         <Link
-                                            class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 bg-gray-500">
+                                            class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 bg-gray-100">
                                         <img class="" src="/assets/svg/sendmessage.svg" loading="lazy" alt="google logo">
-                                        <span class="text-white font-bold">Enviar missatge</span>
+                                        <span class="text-black font-bold">Enviar missatge</span>
                                         </Link>
 
                                         <Link
