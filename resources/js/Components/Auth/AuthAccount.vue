@@ -23,21 +23,23 @@ const authStore = useAuthStore();
         </div>
     </div>
     <div class="no-auth-account-container flex gap-2" v-else>
-        <div class="flex items-center justify-center dark:bg-gray-800 ">
-            <Link href="/register"
-                class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 bg-gray-50">
 
-            <span class="font-bold">Registrar-me</span>
-            </Link>
-        </div>
         <div class="flex items-center justify-center dark:bg-gray-800">
-            <Link href="/login"
-                class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 bg-gray-50">
-
-            <span class="font-bold">Iniciar sessió</span>
+            <Link
+                :href="route('login')"
+                class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 bg-gray-50"
+            >
+                <span class="font-bold">Iniciar sessió</span>
             </Link>
         </div>
-
+        <div class="flex items-center justify-center dark:bg-gray-800 ">
+            <Link 
+                :href="route('register')"
+                class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 bg-gray-50"
+            >
+                <span class="font-bold">Registrar-me</span>
+            </Link>
+        </div>
 
     </div>
 

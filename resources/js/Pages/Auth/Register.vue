@@ -3,6 +3,7 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 
 const form = useForm({
     name: '',
+    surnames: '',
     email: '',
     password: '',
     password_confirmation: '',
@@ -39,6 +40,23 @@ const googleLogin = () => {
                     required
                     autofocus
                     autocomplete="name"
+                >
+            </div>
+
+            <div class="flex-column">
+                <label for="name">Cognom/s</label>
+            </div>
+            <div class="inputForm">
+                <img src="/assets/svg/user.svg" alt="Arrova" class="w-5">
+                <input
+                    id="name"
+                    type="text"
+                    class="input" 
+                    placeholder="Escriu el teu Cognom/s" 
+                    v-model="form.surnames"
+                    required
+                    autofocus
+                    autocomplete="surnames"
                 >
             </div>
 
@@ -131,12 +149,12 @@ const googleLogin = () => {
 .form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     background-color: #ffffff;
     padding: 30px;
     width: 450px;
     border-radius: 20px;
-    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.3);
+    box-shadow: 0px 0px 1rem 0px rgba(0,0,0,0.3);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
@@ -220,7 +238,6 @@ const googleLogin = () => {
     text-align: center;
     color: black;
     font-size: 14px;
-    margin: 5px 0;
 }
 
 .btn {

@@ -118,7 +118,7 @@ const googleLogin = () => {
     padding: 30px;
     width: 450px;
     border-radius: 20px;
-    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.3);
+    box-shadow: 0px 0px 1rem 0px rgba(0,0,0,0.3);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
