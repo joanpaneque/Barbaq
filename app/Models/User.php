@@ -142,4 +142,11 @@ class User extends Authenticatable
     {
         $barbecue->recieveInvitationAcceptance($this);
     }
+
+    public function deleteFriend(User $user)
+    {
+        $this->friends()->detach($user->id);
+        $user->friends()->detach($this->id);
+    }
+
 }
