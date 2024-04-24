@@ -1,7 +1,6 @@
 <script setup>
 import MainLayout from "@/Layouts/MainLayout.vue";
 import { useAuthStore } from "@/stores/auth";
-
 const authStore = useAuthStore();
 authStore.updateUserData();
 
