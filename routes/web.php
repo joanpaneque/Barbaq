@@ -22,7 +22,8 @@ Route::get('/test/profile', [TestController::class, 'indexProfile'])->name('test
 Route::get('friends', [FriendsController::class, 'index'])->name('friends.index');
 
 Route::middleware('auth')->group(function () {
-    Route::resource('profile', ProfileController::class)->only(['edit', 'update', 'destroy']);
+    Route::resource('profile', ProfileController::class);
+    
 });
 
 
