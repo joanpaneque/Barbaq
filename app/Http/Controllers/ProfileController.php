@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 
+
+
 class ProfileController extends Controller
 {
     /**
@@ -18,26 +20,21 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
-        return Inertia::render('Profile/Edit', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
-            'status' => session('status'),
-        ]);
+        return Inertia::render('Profile/Edit');
     }
 
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(Request $request, string $id)
     {
-        $request->user()->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
+        $request->all();
+        $user = $request->user();
+        $user->update($request->only('name', 'email', 'surnames'));
+        
 
-        $request->user()->save();
-
-        return Redirect::route('profile.edit');
+        return Redirect::route('profile.edit', $user);
     }
 
     /**

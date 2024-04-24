@@ -25,6 +25,11 @@ Route::get('friends', [FriendsController::class, 'index'])->name('friends.index'
 Route::get('/auth/google', [GoogleController::class, 'index']);
 Route::get('/auth/google/callback', [GoogleController::class, 'store']);
 
+Route::middleware('auth')->group(function () {
+    Route::resource('profile', ProfileController::class);
+    
+});
+
 Route::get('friends', [FriendsController::class, 'index'])->name('friends.index');
 
 Route::get('/api/user', [UserController::class, 'apiShowLogged']);
