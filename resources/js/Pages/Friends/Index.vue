@@ -5,28 +5,56 @@ const authStore = useAuthStore();
 authStore.updateUserData();
 
 const props = defineProps({
-  friends: {
-    type: Object,
-    required: true,
-  },
+    friends: {
+        type: Object,
+        required: true,
+    },
 });
 
 function DeleteFriend(friendId) {
     axios.post(route('friends.destroy', { id: friendId }), {
         _method: 'DELETE'
     })
-    .then(response => {
-        console.log("Amigo eliminado exitosamente.");
-        window.location.reload();
-    })
-    .catch(error => {
-        console.error('Error al eliminar al amigo:', error);
+        .then(response => {
+            console.log("Amigo eliminado exitosamente.");
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error('Error al eliminar al amigo:', error);
+        });
+}
+function searchFriends(searchTerm) {
+    const friendCards = document.querySelectorAll('.friend-card');
+
+    friendCards.forEach(card => {
+        const friendName = card.querySelector('.font-medium').textContent.toLowerCase();
+        const startsWithSearchTerm = friendName.toLowerCase().startsWith(searchTerm.toLowerCase());
+        card.style.display = startsWithSearchTerm ? 'block' : 'none';
     });
 }
+
+function handleSearchInput() {
+    const searchInput = document.getElementById('search-input');
+    const searchTerm = searchInput.value.trim();
+    searchFriends(searchTerm);
+}
+
+document.addEventListener('input', event => {
+    if (event.target && event.target.id === 'search-input') {
+        handleSearchInput();
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    handleSearchInput();
+});
 </script>
 <template>
     <MainLayout title="Inici">
         <template #main-content>
+            <div class="form-control">
+                <input id="search-input" type="text" placeholder="Buscar amics..." class="input rounded-2xl input-bordered w-24 md:w-auto" />
+            </div>
             <div class="grid grid-friends">
                 <div v-for="friend in friends" :key="friends.id"
                     class="friend-card w-40 bg-white border border-gray-200 rounded-2xl dark:bg-gray-800 dark:border-gray-700">
@@ -34,7 +62,7 @@ function DeleteFriend(friendId) {
                     </div>
                     <div class="flex flex-col items-center pb-5">
                         <img class="w-32 h-32 mb-3 rounded-full shadow-lg" src="assets/img/user.png" alt="User Image" />
-                        <h5 class="mb-2 text-sm font-medium text-gray-900 dark:text-white">{{friend.name}}</h5>
+                        <h5 class="mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ friend.name }}</h5>
                         <div class="flex md:mt-2">
                             <button @click="DeleteFriend(friend.id)"
                                 class="inline-flex items-center px-4 py-1 text-sm font-medium text-center text-white bg-red-700 rounded-2xl hover:bg-red-800 focus:ring-2 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Eliminar
@@ -82,6 +110,7 @@ function DeleteFriend(friendId) {
 .grid-friends {
     grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
     gap: 20px;
+    padding: 15px 0px;
 }
 
 .friend-card {
