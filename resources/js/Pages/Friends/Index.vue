@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     handleSearchInput();
 });
 </script>
+
 <template>
     <MainLayout title="Inici">
         <template #main-content>
@@ -71,16 +72,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         </Link>
                         <div class="flex md:mt-2">
                             <button @click="DeleteFriend(friend.id)"
-                                class="inline-flex items-center px-4 py-1 text-sm font-medium text-center text-white bg-red-700 rounded-2xl hover:bg-red-800 focus:ring-2 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Eliminar
-                                amic</button>
+                                class="inline-flex items-center px-4 py-1 text-sm font-medium text-center text-white bg-red-700 rounded-2xl hover:bg-red-800 focus:ring-2 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                                Eliminar amic
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="flex justify-center mt-4">
                 <button type="button"
-                    class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Mostrar
-                    més</button>
+                    class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                >
+                    Mostrar més
+                </button>
             </div>
         </template>
         <template #right-aside>
@@ -104,6 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </template>
     </MainLayout>
 </template>
+
 <style scoped>
 .aside-menu {
     width: 100%;

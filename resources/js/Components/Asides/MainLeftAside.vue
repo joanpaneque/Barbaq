@@ -1,24 +1,35 @@
 <script setup>
-
+import { Link } from '@inertiajs/vue3';
 </script>
 
 <template>
     <div class="main-left-aside-container">
-        <div class="item">
-            <img src="/assets/svg/home.svg" alt="Icon" />
-            <span>Inici</span>
-            <span class="counter"></span>
-        </div>
-        <div class="item active">
-            <img src="/assets/svg/following.svg" alt="Icon" />
-            <span>Amics</span>
-            <span class="counter">3</span>
-        </div>
-        <div class="item">
-            <img src="/assets/svg/envelope.svg" alt="Icon" />
-            <span>Missatges</span>
-            <span class="counter">12</span>
-        </div>
+
+        <Link :href="route('index')">
+            <div class="item">
+                <img src="/assets/svg/home.svg" alt="Icon" />
+                <span>Inici</span>
+                <span class="counter"></span>
+            </div>
+        </Link>
+
+
+        <Link :href="route('friends.index')">
+            <div class="item active">
+                <img src="/assets/svg/following.svg" alt="Icon" />
+                <span>Amics</span>
+                <span class="counter">3</span>
+            </div>
+        </Link>
+
+        <Link :href="route('messages.index')">
+            <div class="item">
+                <img src="/assets/svg/envelope.svg" alt="Icon" />
+                <span>Missatges</span>
+                <span class="counter">12</span>
+            </div>
+        </Link>
+        
         <div class="item">
             <img src="/assets/svg/bell.svg" alt="Icon" />
             <span>Notificacions</span>
