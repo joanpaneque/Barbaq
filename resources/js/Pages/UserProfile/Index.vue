@@ -4,6 +4,7 @@
     import { defineProps } from "vue";
     import { useProfileStore } from "@/stores/profile";
     import { useAuthStore } from "@/stores/auth";
+    import Banner from "@/Components/UserProfile/Banner.vue";
 
     const authStore = useAuthStore();
     authStore.updateUserData();
