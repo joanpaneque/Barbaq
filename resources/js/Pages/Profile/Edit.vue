@@ -4,6 +4,10 @@ import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
 import ProfileLayout from '@/Layouts/ProfileLayout.vue';
 import { useAuthStore } from "@/stores/auth";
+import { Link } from '@inertiajs/vue3';
+import { useProfileStore } from "@/stores/profile";
+
+const profileStore = useProfileStore();
 
 const authStore = useAuthStore();
 authStore.updateUserData();
@@ -14,7 +18,20 @@ authStore.updateUserData();
 <template>
     <ProfileLayout title="Inici">
         <template #main-content>
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 overflow">
+            <div class="max-w-7xl mx-auto space-y-6 overflow mt-5">
+
+                <div class="flex justify-start items-center bg-white shadow sm:rounded-[20px] p-2 w-full" >
+                    <Link 
+                    class="flex items-center gap-2 cursor-pointer hover:opacity-70 transition-opacity"
+                    :href="'/profile/' + authStore.user.id" v-if="authStore.user">
+
+                    <img src="/assets/svg/flecha-izquierda.svg" alt="flecha-izquierda" 
+                    class="w-5 h-5 cursor-pointer hover:opacity-70 transition-opacity pl-4 pr-2 w-auto" >
+
+                    <h1 class="text-lg font-medium text-gray-900">Tornar al perfil</h1>
+                    </Link>
+                </div>
+
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-[20px]">
                     <UpdateProfileInformationForm
                         class=""
@@ -54,3 +71,5 @@ authStore.updateUserData();
             </div>
         </div> -->
 
+
+      

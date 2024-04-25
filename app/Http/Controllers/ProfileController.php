@@ -45,7 +45,9 @@ class ProfileController extends Controller
         $user->update($request->only('name', 'email', 'surnames'));
         
 
-        return Redirect::route('profile.edit', $user);
+        return Inertia::render('UserProfile/Index', [
+            'user' => $user,
+        ]);
     }
 
     /**
