@@ -60,8 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         </Link>
                         <div class="flex items-center">
                             <button
-                                class="inline-flex items-center px-4 py-1 text-sm font-medium text-center text-white bg-red-700 rounded-2xl hover:bg-red-800 focus:ring-2 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Eliminar
-                                amic</button>
+                                class="enviar inline-flex items-center bg-gray-800 hover:bg-gray-900 px-2 py-1 text-sm font-medium text-center text-white rounded-xl">Enviar
+                                missatge</button>
                         </div>
                     </div>
                 </div>
