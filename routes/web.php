@@ -32,11 +32,11 @@ Route::get('/auth/google/callback', [GoogleController::class, 'store']);
 
 Route::middleware('auth')->group(function () {
     Route::resource('profile', ProfileController::class);
-    
 });
 
 Route::delete('friends/{id}', [FriendsController::class, 'destroy'])->name('friends.destroy');
 
+Route::post('/sendfriendrequest/{id}', [FriendsController::class, 'store'])->name('sendfriendrequest');
 
 
 
