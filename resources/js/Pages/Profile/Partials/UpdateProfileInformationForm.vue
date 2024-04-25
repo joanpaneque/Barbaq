@@ -1,3 +1,4 @@
+
 <script setup>
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
@@ -15,13 +16,11 @@ defineProps({
 });
 
 const user = usePage().props.auth.user;
-console.log(user);
 
 const form = useForm({
     name: user.name,
     email: user.email,
     surnames: user.surnames,
-
 });
 </script>
 
@@ -29,16 +28,21 @@ const form = useForm({
     <section>
         <header>
             <h2 class="text-lg font-medium text-gray-900">Informació del perfil</h2>
+
+          
         </header>
 
-        <form @submit.prevent="form.patch(route('profile.update'))" class="mt-2 space-y-6">
-            <div>
+        <form @submit.prevent="form.patch(route('profile.update', user.id))"
+        class="mt-6 space-y-6">
+
+        <div class="flex flex-row justify-between gap-4">
+            <div class="w-1/2">
                 <InputLabel for="name" value="Nom" />
 
                 <TextInput
                     id="name"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     v-model="form.name"
                     required
                     autofocus
@@ -48,22 +52,22 @@ const form = useForm({
                 <InputError class="mt-2" :message="form.errors.name" />
             </div>
 
-            
-
-            <div>
+            <div class="w-1/2">
                 <InputLabel for="surnames" value="Cognoms" />
 
                 <TextInput
                     id="surnames"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     v-model="form.surnames"
                     required
+                    autofocus
                     autocomplete="surnames"
                 />
 
-                <InputError class="mt-2" :message="form.errors.surnames" />
+                <InputError class="mt-2" :message="form.errors.name" />
             </div>
+        </div>
 
             <div>
                 <InputLabel for="email" value="Email" />
@@ -71,7 +75,7 @@ const form = useForm({
                 <TextInput
                     id="email"
                     type="email"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     v-model="form.email"
                     required
                     autocomplete="username"
@@ -80,29 +84,12 @@ const form = useForm({
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
-            <div v-if="mustVerifyEmail && user.email_verified_at === null">
-                <p class="text-sm mt-2 text-gray-800">
-                    Your email address is unverified.
-                    <Link
-                        :href="route('verification.send')"
-                        method="post"
-                        as="button"
-                        class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                        Click here to re-send the verification email.
-                    </Link>
-                </p>
-
-                <div
-                    v-show="status === 'verification-link-sent'"
-                    class="mt-2 font-medium text-sm text-green-600"
-                >
-                    A new verification link has been sent to your email address.
-                </div>
-            </div>
+            
 
             <div class="flex items-center gap-4">
-                <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
+                <button 
+                class="btn hover:bg-[#c84c00]  hover:text-white bg-[#FF6100] text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF6100] focus:ring-offset-white active:bg-[#FF6100] active:text-white px-4 py-2 rounded-md transition ease-in-out duration-150"
+                :disabled="form.processing">Guardar</button>
 
                 <Transition
                     enter-active-class="transition ease-in-out"
@@ -110,9 +97,10 @@ const form = useForm({
                     leave-active-class="transition ease-in-out"
                     leave-to-class="opacity-0"
                 >
-                    <p v-if="form.recentlySuccessful" class="text-sm text-gray-600">Saved.</p>
+                    <p v-if="form.recentlySuccessful" class="text-sm text-gray-600">Guardat.</p>
                 </Transition>
             </div>
         </form>
     </section>
 </template>
+

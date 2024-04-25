@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Friendship;
+use App\Models\User;
 
 class FriendsController extends Controller
 {
@@ -31,9 +33,15 @@ class FriendsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(string $id)
     {
-        //
+    
+
+       $sender = auth()->user();
+       $receiver = User::findOrFail($id);
+       $sender->sendFriendRequest($receiver);
+        
+       
     }
 
     /**
@@ -64,8 +72,10 @@ class FriendsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        //
-    }
+public function destroy(string $id)
+{
+    $user = auth()->user();
+    $friend = User::findOrFail($id);
+    $user->removeFriend($friend);
+}
 }

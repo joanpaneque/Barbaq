@@ -4,6 +4,7 @@ import DivBarbacoa from "@/Components/Index/DadesBarbacoa.vue";
 import CreateBarbaqInput from "@/Components/CreateBarbaqInput/CreateBarbaqInput.vue";
 import CreateBarbaqInputNoAuth from "@/Components/CreateBarbaqInput/CreateBarbaqInputNoAuth.vue";
 import { useAuthStore } from "@/stores/auth";
+import IndexRightAside from "@/Components/Asides/IndexRightAside.vue";
 
 const authStore = useAuthStore();
 authStore.updateUserData();
@@ -27,19 +28,11 @@ authStore.updateUserData();
         </template>
 
         <template #right-aside>
-            <div class="aside-menu">
-
-            </div>
+            <IndexRightAside />
         </template>
     </MainLayout>
     
 </template>
 
 <style scoped>
-.aside-menu {
-    width: 100%;
-    height: 400px;
-    background: white;
-    border-radius: 20px;
-}
 </style>

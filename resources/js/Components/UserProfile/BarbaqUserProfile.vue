@@ -1,22 +1,29 @@
 <script setup>
 import CreateBarbaqInput from "@/Components/CreateBarbaqInput/CreateBarbaqInput.vue";
 import DadesBarbacoa from "../Index/DadesBarbacoa.vue";
-
+import { useProfileStore } from "@/stores/profile";
 import { useAuthStore } from "@/stores/auth";
+const profileStore = useProfileStore();
 const authStore = useAuthStore();
 </script>
 
 <template>
     <div class="barbaq-user-template">
-    <div class="left">
-    <CreateBarbaqInput />
-    <DadesBarbacoa />
-</div>
+        <div class="left">
 
-<div class="rigth">
+            <div v-if="authStore.user && profileStore.user">
+                <div v-if="authStore.user.id == profileStore.user.id">
+                    <CreateBarbaqInput class="mt-5" />
+                </div>
+            </div>
 
-</div>
-</div>
+            <DadesBarbacoa />
+            
+        </div>
+        <div class="rigth mt-5">
+
+        </div>
+    </div>
 </template>
 
 <style scoped>
@@ -32,7 +39,6 @@ const authStore = useAuthStore();
 }
 
 .rigth {
-   background-color: red;
+    background-color: red;
 }
-
 </style>

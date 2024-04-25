@@ -1,17 +1,30 @@
 <script setup>
     import ProfileLayout from "@/Layouts/ProfileLayout.vue";
-    import Banner from "@/Components/UserProfile/Banner.vue";
     import BarbaqUserProfile from "@/Components/UserProfile/BarbaqUserProfile.vue";
+    import { defineProps } from "vue";
+    import { useProfileStore } from "@/stores/profile";
     import { useAuthStore } from "@/stores/auth";
+    import Banner from "@/Components/UserProfile/Banner.vue";
 
     const authStore = useAuthStore();
     authStore.updateUserData();
+
+    const profileStore = useProfileStore();
+
+    const props = defineProps({
+        user: {
+            type: Object,
+            required: true
+        }
+    });
+
+    profileStore.setUser(props.user);
+
 </script>
 
 <template>
-    <ProfileLayout title="Inici">
+    <ProfileLayout title="Inici" :user="user">
         <template #main-content >
-            <Banner class="banner-profile"/>
             <BarbaqUserProfile />
         </template>
     </ProfileLayout>
