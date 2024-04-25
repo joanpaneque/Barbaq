@@ -88,14 +88,39 @@ const props = defineProps({
     },
 });
 
+
+function searchFriends(searchTerm) {
+    const friendItems = document.querySelectorAll('#friendsList');
+
+    friendItems.forEach(item => {
+        const friendName = item.querySelector('span').textContent.toLowerCase();
+        const includesSearchTerm = friendName.includes(searchTerm.toLowerCase());
+        item.style.display = includesSearchTerm ? 'block' : 'none';
+    });
+}
+
+function handleSearchInput() {
+    const searchInput = document.getElementById('search-input');
+    const searchTerm = searchInput.value.trim();
+    searchFriends(searchTerm);
+}
+
+document.addEventListener('input', event => {
+    if (event.target && event.target.id === 'search-input') {
+        handleSearchInput();
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    handleSearchInput();
+});
 </script>
 
 <template>
     <Head title="Missatges" />
 
     <MainLayout title="Missatges">
-        <template #main-content>
-            
+        <template #main-content>     
             <div class="chat-wrapper container">
                 <div class="chat" ref="chatBox">
                     <div class="chat_date flex items-center justify-center w-full">
@@ -260,19 +285,30 @@ const props = defineProps({
                     <EmojiPicker :native="true" @select="onSelectEmoji" />
                 </div>
             </div>
-
         </template>
 
         <template #right-aside>
-            <div class="container">
-                <div v-for="friend in friends" :key="friends.id" class="item">
-                    <img 
-                        :src="friend.image ? friend.image : '/assets/img/user.png'" 
-                        alt="Icon" 
-                        class="w-12 h-12 object-cover rounded-full" 
-                    />
-                    <span>{{ friend.name }}</span>
-                    <span class="counter">3</span>
+            <div class="search-input mb-3">
+                <input 
+                    id="search-input" 
+                    type="text" 
+                    placeholder="Cerca paraules clau..."
+                />
+                <button>
+                    <img src="/assets/svg/search.svg" alt="Icon" />
+                </button>
+            </div>
+            <div class="container pt-5">
+                <div v-for="friend in friends" :key="friends.id" class="item" id="friendsList">
+                    <div class="friends flex">
+                        <img 
+                            :src="friend.image" 
+                            alt="User Image"
+                            class="w-8 h-8 object-cover rounded-full"
+                        />
+                        <span>{{ friend.name }}</span>
+                        <span class="counter">12</span>
+                    </div>
                 </div>
             </div>
         </template>
@@ -290,13 +326,12 @@ const props = defineProps({
 }
 
 .chat-wrapper {
-    height: 100%;
     display: grid;
     grid-template-rows: auto 60px;
+    height: 100%;
 }
 
 .chat {
-    --gap: 0px;
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -320,7 +355,6 @@ const props = defineProps({
 .input-message {
     display: flex;
     width: 100%;
-  
     z-index: 999;
 }
 
@@ -329,10 +363,49 @@ const props = defineProps({
     bottom: 25px;
     right:280px;
     z-index: 999;
-
 }
 
-.item {
+.search-input {
+    position: relative;
+    height: 45px;
+}
+
+.search-input input {
+    width: 100%;
+    height: 100%;
+    padding-left: 20px;
+    border: 1px solid #adadad;
+    border-radius: 20px;
+}
+
+.search-input input:focus-visible {
+    outline: none;
+}
+
+.search-input button {
+    position: absolute;
+    right: 17px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    opacity: 0.3;
+    transition: 0.2s;
+}
+
+.search-input button img {
+    width: 20px;
+}
+
+.search-input input:focus {
+    border-color: #000;
+}
+
+.search-input input:focus + button {
+    opacity: 1;
+    transition: 0.2s;
+}
+
+.friends {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -346,14 +419,15 @@ const props = defineProps({
 }
 
 .counter {
-    background: #b5b5b5;
-    color: #fff;
-    border-radius: 9999px;
-    padding: 0 7px;
-    height: fit-content;
     display: flex;
     align-items: center;
-    width: fit-content;
+    padding: 0 7px;
     margin-left: auto;
+    height: fit-content;
+    width: fit-content;
+    font-size: 12px;
+    color: #fff;
+    background: #b5b5b5;
+    border-radius: 9999px;
 }
 </style>
