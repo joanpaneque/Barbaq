@@ -1,6 +1,7 @@
 <script setup>
 import MainLayout from "@/Layouts/MainLayout.vue";
 import { useAuthStore } from "@/stores/auth";
+import { Head, Link } from '@inertiajs/vue3';
 const authStore = useAuthStore();
 authStore.updateUserData();
 
@@ -53,7 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
     <MainLayout title="Inici">
         <template #main-content>
             <div class="form-control">
-                <input id="search-input" type="text" placeholder="Buscar amics..." class="input rounded-2xl input-bordered w-24 md:w-auto" />
+                <input id="search-input" type="text" placeholder="Buscar amics..."
+                    class="input rounded-2xl input-bordered w-24 md:w-auto" />
             </div>
             <div class="grid grid-friends">
                 <div v-for="friend in friends" :key="friends.id"
@@ -61,8 +63,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="flex justify-end px-2 pt-3">
                     </div>
                     <div class="flex flex-col items-center pb-5">
-                        <img class="w-32 h-32 mb-3 rounded-full shadow-lg" src="assets/img/user.png" alt="User Image" />
-                        <h5 class="mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ friend.name }}</h5>
+                        <Link :href="'/profile/' + friend.id">
+                        <div class="flex flex-col items-center">
+                            <img class=" UserImage w-32 h-32 mb-3 rounded-full shadow-lg" :src="friend.image" alt="User Image"/>
+                            <h5 class="mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ friend.name }}</h5>
+                        </div>
+                        </Link>
                         <div class="flex md:mt-2">
                             <button @click="DeleteFriend(friend.id)"
                                 class="inline-flex items-center px-4 py-1 text-sm font-medium text-center text-white bg-red-700 rounded-2xl hover:bg-red-800 focus:ring-2 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Eliminar
@@ -120,5 +126,8 @@ document.addEventListener('DOMContentLoaded', () => {
 .aside-friend {
     align-items: center;
     padding: 5px 0px;
+}
+.UserImage{
+    object-fit: cover;
 }
 </style>
