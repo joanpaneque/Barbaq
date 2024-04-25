@@ -130,4 +130,5 @@ document.addEventListener('DOMContentLoaded', () => {
 .UserImage{
     object-fit: cover;
 }
+
 </style>
