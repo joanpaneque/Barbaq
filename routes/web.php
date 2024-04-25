@@ -9,6 +9,7 @@ use App\Http\Controllers\BarbecuesController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\MessagesController;
 
 
 Route::get('/', [IndexController::class, 'show'])->name('index');
@@ -22,10 +23,10 @@ Route::get('/test/profile', [TestController::class, 'indexProfile'])->name('test
 
 Route::get('friends', [FriendsController::class, 'index'])->name('friends.index');
 
+Route::get('/messages', [MessagesController::class, 'index'])->name('messages.index');
+
 Route::get('/auth/google', [GoogleController::class, 'index']);
 Route::get('/auth/google/callback', [GoogleController::class, 'store']);
-
-Route::get('friends', [FriendsController::class, 'index'])->name('friends.index');
 
 Route::get('/api/user', [UserController::class, 'apiShowLogged']);
 

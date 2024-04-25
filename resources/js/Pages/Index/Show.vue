@@ -8,8 +8,6 @@ import { useAuthStore } from "@/stores/auth";
 const authStore = useAuthStore();
 authStore.updateUserData();
 
-
-
 </script>
 
 <template>
@@ -24,7 +22,6 @@ authStore.updateUserData();
                 
             </div>
 
-            <DivBarbacoa class="mb-5" />
             <DivBarbacoa class="mb-5" />
 
         </template>
