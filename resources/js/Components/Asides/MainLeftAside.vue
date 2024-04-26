@@ -30,11 +30,13 @@ import { Link } from '@inertiajs/vue3';
             </div>
         </Link>
         
-        <div class="item">
-            <img src="/assets/svg/bell.svg" alt="Icon" />
-            <span>Notificacions</span>
-            <span class="counter">3213</span>
-        </div>
+        <Link :href="route('notifications.index')">
+            <div class="item">
+                <img src="/assets/svg/bell.svg" alt="Icon" />
+                <span>Notificacions</span>
+                <span class="counter">3213</span>
+            </div>
+        </Link>
     </div>
 </template>
 
