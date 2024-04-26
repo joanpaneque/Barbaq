@@ -8,10 +8,8 @@ const props = defineProps({
 
 const emits = defineEmits(['update:modelValue']);
 
-// Usa un ref para el valor del input
 const inputValue = ref(props.modelValue);
 
-// Función para emitir el evento 'update:modelValue' cuando cambie el valor del input
 const onInput = (event) => {
     inputValue.value = event.target.value;
     emits('update:modelValue', inputValue.value);
@@ -20,7 +18,6 @@ const onInput = (event) => {
 
 <template>
     <div class="search-on-steroids-container">
-        <!-- Usa v-model para enlazar el valor del input con el prop 'modelValue' -->
         <input 
             type="text" 
             placeholder="Cerca paraules clau..."

@@ -71,7 +71,7 @@
         margin: 0;
         z-index: 1;
         cursor: pointer;
-        height: 80px;
+        height: 70px;
     }
 
     input[type=range]::-webkit-slider-thumb {
