@@ -100,7 +100,6 @@ document.addEventListener('DOMContentLoaded', () => {
         </template>
     </MainLayout>
 </template>
-
 <style scoped>
 .aside-menu {
     width: 100%;
