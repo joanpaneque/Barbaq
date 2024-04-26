@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Friendship;
 use App\Models\User;
+use App\Models\Notification;
 
 class FriendsController extends Controller
 {
@@ -35,9 +36,11 @@ class FriendsController extends Controller
      */
     public function store(string $id)
     {
-       $sender = auth()->user();
-       $receiver = User::findOrFail($id);
-       $sender->sendFriendRequest($receiver);
+        $sender = auth()->user();
+        $receiver = User::findOrFail($id);
+        $sender->sendFriendRequest($receiver);
+        $receiver->sendNotification($receiver->id);
+
     }
 
     /**
@@ -47,6 +50,7 @@ class FriendsController extends Controller
     {
         // GET THE AUTHENTICATED USER
         $user = auth()->user();
+
     }
 
     /**

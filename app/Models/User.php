@@ -118,6 +118,20 @@ class User extends Authenticatable
         $this->sentFriendRequests()->attach($user->id, ['accepted' => false]);
     }
 
+    public function sendNotification(string $id)
+    {
+        $receiver = User::findOrFail($id);
+        $sender = auth()->user();
+        Notification::create([
+            'user_id' => $receiver->id,
+            'message' => "T'han enviat una solicitud d'amistat",
+            'primary_link' => route('sendfriendrequest', ['id' => $sender->id]),
+            'secondary_link' => route('friends.destroy', ['id' => $sender->id]),
+            'primary_link_text' => 'Aceptar',
+            'secondary_link_text' => 'Denegar',
+        ]);
+    }
+
     public function acceptFriendRequest(User $user)
     {
         $friendship = Friendship::where('user_id', $user->id)
@@ -153,5 +167,10 @@ class User extends Authenticatable
     {
         $this->sentFriendRequests()->detach($user->id);
         $this->recievedFriendRequests()->detach($user->id);
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
     }
 }

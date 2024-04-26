@@ -10,18 +10,21 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        Schema::create('notifications', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+{
+    Schema::create('notifications', function (Blueprint $table) {
+        $table->id();
+        $table->timestamps();
 
-            $table->foreignId('user_id')->constrained();
-            $table->text('message');
-            $table->boolean('seen')->default(false);
-            $table->string('primary_link')->nullable();
-            $table->string('secondary_link')->nullable();
-        });
-    }
+        $table->foreignId('user_id')->constrained();
+        $table->text('message');
+        $table->boolean('seen')->default(false);
+        $table->string('primary_link')->nullable();
+        $table->string('secondary_link')->nullable();
+        $table->string('primary_link_text')->default('Aceptar'); 
+        $table->string('secondary_link_text')->default('Denegar'); 
+    });
+}
+
 
     /**
      * Reverse the migrations.
