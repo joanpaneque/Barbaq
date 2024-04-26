@@ -1,12 +1,11 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
+    import { Link } from  '@inertiajs/vue3'
 </script>
 
 <template>
     <div class="main-left-aside-container">
-
-        <Link :href="route('index')">
-            <div class="item">
+        <Link href="/">
+            <div class="item" :class="{ active: route().current() === 'index' }">
                 <img src="/assets/svg/home.svg" alt="Icon" />
                 <span>Inici</span>
                 <span class="counter"></span>
@@ -53,7 +52,7 @@ import { Link } from '@inertiajs/vue3';
     }
 
     .counter {
-        background: #b5b5b5;
+        background: #FF6100;
         color: #fff;
         border-radius: 9999px;
         padding: 0 7px;
@@ -82,7 +81,11 @@ import { Link } from '@inertiajs/vue3';
         height: 20px;
     }
 
-    .item:not(.active) {
+    .item:not(.active) img {
+        filter: opacity(0.6);
+    }
+
+    .item:not(.active) span:not(.counter) {
         filter: opacity(0.6);
     }
 

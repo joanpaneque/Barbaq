@@ -38,7 +38,7 @@
                 background: props.modelValue.includes(key) ? '#ff6100' : '#fff',
                 border: props.modelValue.includes(key) ? '1px solid #ff6100' : '1px solid #ccc',
             }">
-                <img v-if="props.modelValue.includes(key)" src="/assets/svg/check.svg" alt="Check icon">
+                <img class="filter-on-steroids-check" v-if="props.modelValue.includes(key)" src="/assets/svg/check.svg" alt="Check icon">
             </div>
             <label :for="key">{{ filter }}</label>
         </div>
@@ -82,7 +82,7 @@
         align-items: center;
     }
 
-    .filter-on-steroids-checkbox img {
+    .filter-on-steroids-check {
         filter: invert(1);
         width: 7px;
         user-select: none;
