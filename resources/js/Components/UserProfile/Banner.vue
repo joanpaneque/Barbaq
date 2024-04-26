@@ -28,7 +28,6 @@ const deleteFriend = () => {
 
 };
 
-
 const cancelFrientRequest = () => {
     let id = profileStore.user.id;
     form.delete(route('friends.destroy', id));
@@ -49,10 +48,21 @@ function openModal() {
 function closeModal() {
     showModal.value = false;
 }
+
+const updateUserPhoto = () => {
+    let id = profileStore.user.id;
+    const fileName = formData.get('image').name;
+    console.log('Nombre del archivo seleccionado:', fileName);
+
+
+};
+
+
+
 </script>
 
 <template>
-    <div v-if="profileStore.user">
+    <div v-if="profileStore.user && authStore.user">
         <div class="w-full bg-cover bg-no-repeat bg-center rounded-t-[20px]" style="height: 150px; background: rgb(131,58,180);
         background: linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%);">
         </div>
@@ -61,7 +71,10 @@ function closeModal() {
                 <div class="relative flex w-full">
                     <div class="flex flex-1 pl-4">
                         <div style="margin-top: -6rem;">
-                            <div class="tooltip" data-tip="Canviar foto">
+
+
+                            <div v-if="profileStore.user.id == authStore.user.id" class="tooltip"
+                                data-tip="Canviar foto">
                                 <button @click="openModal">
                                     <div style="height:9rem; width:9rem;" class="md rounded-full relative avatar">
                                         <img style="height:9rem; width:9rem;"
@@ -70,18 +83,19 @@ function closeModal() {
                                         <div class="absolute"></div>
                                     </div>
                                 </button>
+
                                 <dialog id="my_modal_3" class="modal " :open="showModal" @click.self="closeModal">
                                     <div class="modal-box">
                                         <form method="dialog">
                                             <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
                                                 @click="closeModal">✕</button>
                                         </form>
-                                  
-                                        <form @submit.prevent="submit"
-                                        class="flex flex-col items-center gap-4">
-                                            
 
-                                              
+                                        <form @submit.prevent="updateUserPhoto"
+                                            class="flex flex-col items-center gap-4">
+
+
+
                                             <h3 class="font-bold text-lg mb-2">Selecciona una nova foto de perfil</h3>
                                             <label class="custum-file-upload" for="file">
                                                 <div class="icon">
@@ -100,8 +114,12 @@ function closeModal() {
                                                     <span>Click per seleccionar una imatge</span>
 
                                                 </div>
-                                                <p v-if="form.image"> {{ form.image.name }}</p>
-                                                <input type="file" id="file" name="image"  @input="form.image = $event.target.files[0]">
+
+
+                                                <input type="file" id="file" name="image"
+                                                    @input="form.image = $event.target.files[0]">
+
+
 
                                             </label>
                                             <div class="flex justify-center mt-4 space-x-4">
@@ -112,6 +130,16 @@ function closeModal() {
                                     </div>
                                 </dialog>
                             </div>
+
+
+                            <div v-else style="height:9rem; width:9rem;" class="md rounded-full relative avatar">
+                                <img style="height:9rem; width:9rem;"
+                                    class="md rounded-full relative border-4 border-white bg-white"
+                                    :src="profileStore.user.image" alt="avatar">
+                                <div class="absolute"></div>
+                            </div>
+
+
                         </div>
                         <div class="flex flex-col text-left">
                             <h1 class="text-2xl font-bold text-gray-800">{{ profileStore.user.name }} {{
