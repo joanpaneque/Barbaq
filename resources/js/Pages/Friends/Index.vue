@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <template #right-aside>
             <div class="aside-menu">
                 <span class="text-2xl text-gray-800 dark:text-white font-bold">Gent a prop teu</span>
-                <div v-for="(friend, index) in friends" :key="index"
+                <div v-for="friend in friends" :key="friend.id"
                     class="flex aside-friend">
                     <img class="ImageUser w-12 h-12 rounded-full shadow-lg" :src="friend.image" alt="User Image" />
                     <div class="flex">
