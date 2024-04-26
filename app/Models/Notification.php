@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\User;
+
 class Notification extends Model
 {
     use HasFactory;
@@ -14,8 +16,11 @@ class Notification extends Model
         'message',
         'primary_link',
         'secondary_link',
+        'primary_link_text', 
+        'secondary_link_text', 
         'seen'
     ];
+    
 
     public function user()
     {
