@@ -39,7 +39,6 @@ class FriendsController extends Controller
         $sender = auth()->user();
         $receiver = User::findOrFail($id);
         $sender->sendFriendRequest($receiver);
-        $receiver->sendNotification($receiver->id);
 
     }
 
