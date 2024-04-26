@@ -18,10 +18,25 @@ class ProfileController extends Controller
 {
 
     public function show(string $id)
-    {        
-        $user = User::findOrFail($id);
+    {   
+        $user = auth()->user();
+        $profile = User::findOrFail($id);
+
+        $friendStatus = "none";
+
+        if ($user->isFriendWith($profile)) {
+            $friendStatus = 'friend';
+        } else if ($user->alreadySentFriendRequestTo($profile)) {
+            $friendStatus = 'sent';
+        } else if ($user->alreadyHasFriendRequestFrom($profile)) {
+            $friendStatus = 'received';
+        } 
+        
+        
+
         return Inertia::render('UserProfile/Index', [
-            'user' => $user,
+            'user' => $profile,
+            'friendStatus' => $friendStatus,
         ]);
 
         //return response()->json($user);

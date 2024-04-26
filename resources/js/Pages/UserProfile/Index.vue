@@ -15,10 +15,15 @@
         user: {
             type: Object,
             required: true
+        },
+        friendStatus: {
+            type: String,
+            required: false
         }
     });
 
     profileStore.setUser(props.user);
+    profileStore.setStatus(props.friendStatus);
 
 </script>
 

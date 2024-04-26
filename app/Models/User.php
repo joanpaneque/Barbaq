@@ -129,6 +129,11 @@ class User extends Authenticatable
         }
     }
 
+    public function isFriendWith(User $user)
+    {
+        return $this->friends()->where('id', $user->id)->exists();
+    }
+
     public function barbecues()
     {
         return $this->hasMany(Barbecue::class);
@@ -145,7 +150,7 @@ class User extends Authenticatable
     }
     public function removeFriend(User $user)
     {
-        $this->acceptedSentFriendRequests()->detach($user->id);
-        $this->acceptedRecievedFriendRequests()->detach($user->id);
+        $this->sentFriendRequests()->detach($user->id);
+        $this->recievedFriendRequests()->detach($user->id);
     }
 }

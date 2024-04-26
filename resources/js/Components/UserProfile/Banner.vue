@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from 'vue';
 import { useAuthStore } from "@/stores/auth";
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { useProfileStore } from "@/stores/profile";
@@ -10,22 +11,36 @@ const form = useForm({
     id: '',
 });
 
+
 const sendFriendRequest = () => {
-    let id; 
+    let id = profileStore.user.id;
+    form.post(route('sendfriendrequest', id));
+    profileStore.friendStatus = 'sent';
+};
 
-    if (profileStore.user) {
-        id = profileStore.user.id;
+const deleteFriend = () => {
+    let id = profileStore.user.id;
+    form.delete(route('friends.destroy', id));
+    profileStore.friendStatus = 'none';
 
-        form.post(route('sendfriendrequest' , id)); 
-    }
 };
 
 
+const cancelFrientRequest = () => {
+    let id = profileStore.user.id;
+    form.delete(route('friends.destroy', id));
+    profileStore.friendStatus = 'none';
+};
+
+const acceptRequest = () => {
+    let id = profileStore.user.id;
+    form.post(route('sendfriendrequest', id));
+    profileStore.friendStatus = 'friend';
+};
 
 </script>
 
 <template>
-
 
     <div v-if="profileStore.user">
         <div class="w-full bg-cover bg-no-repeat bg-center rounded-t-[20px]" style="height: 150px; background: rgb(131,58,180);
@@ -72,20 +87,45 @@ const sendFriendRequest = () => {
                                 <div v-else>
                                     <div class="flex items-center justify-center dark:bg-gray-800 gap-2">
                                         <Link
-                                            class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 bg-gray-100">
+                                            class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 bg-white">
                                         <img class="" src="/assets/svg/sendmessage.svg" loading="lazy"
                                             alt="google logo">
                                         <span class="text-black font-bold">Enviar missatge</span>
                                         </Link>
 
-                                        
-
-                                        <form @submit.prevent="sendFriendRequest" class="form">
+                                        <form v-if="profileStore.friendStatus === 'none'"
+                                            @submit.prevent="sendFriendRequest" class="form">
                                             <Button
                                                 class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 bg-orange-600">
-                                                <img class="" src="/assets/svg/addfriend.svg" loading="lazy"
+                                                <img class="" src="/assets/svg/addfriend.svg" alt="google logo">
+                                                <span class="text-white font-bold">Enviar solicitud d'amistat</span>
+                                            </Button>
+                                        </form>
+
+                                        <form v-if="profileStore.friendStatus === 'friend'"
+                                            @submit.prevent="deleteFriend" class="form">
+                                            <Button
+                                                class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 bg-white">
+                                                <img class="" src="/assets/svg/isfriend.svg" alt="google logo">
+                                                <span class="text-black font-bold">Amics</span>
+                                            </Button>
+                                        </form>
+
+                                        <form v-if="profileStore.friendStatus === 'sent'"
+                                            @submit.prevent="cancelFrientRequest" class="form">
+                                            <Button
+                                                class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 bg-red-600">
+                                                <img class="" src="/assets/svg/cancelfriendrequest.svg"
                                                     alt="google logo">
-                                                <span class="text-white font-bold">Enviar solicitut d'amistat</span>
+                                                <span class="text-white font-bold">Cancelar solicitud</span>
+                                            </Button>
+                                        </form>
+
+                                        <form v-if="profileStore.friendStatus === 'received'"
+                                            @submit.prevent="acceptRequest" class="form">
+                                            <Button
+                                                class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 bg-green-600">
+                                                <span class="text-white font-bold">Aceptar solicitud</span>
                                             </Button>
                                         </form>
 
