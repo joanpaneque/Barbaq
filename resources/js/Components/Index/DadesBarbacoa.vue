@@ -230,8 +230,4 @@ textarea {
 .modal-box{
     padding: 0;
 }
-
-.carousel * {
-    color: white !important;
-}
 </style>

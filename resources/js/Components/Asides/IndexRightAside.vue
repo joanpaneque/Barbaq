@@ -4,6 +4,7 @@
     import ScaleOnSteroids from '@/Components/Steroids/ScaleOnSteroids.vue';
     import SelectOnSteroids from '@/Components/Steroids/SelectOnSteroids.vue';
     import FilterOnSteroids from '@/Components/Steroids/FilterOnSteroids.vue';
+    import MapOnSteroids from '@/Components/Steroids/MapOnSteroids.vue';
 
     const scales = [
         { value: 10, label: '10 km' },
@@ -37,6 +38,9 @@
     const orderOption = ref('newest');
     const selectedFilters = ref([]);
 
+    const mapCenter = ref([42.2736, 2.9646]);
+
+
 </script>
 
 <template>
@@ -46,7 +50,15 @@
             <SearchOnSteroids v-model="searchValue" />
         </div>
         <div class="filter">
-            <h3>Distància</h3>
+            <div class="filters">
+                <h3>Distància</h3>
+                <MapOnSteroids
+                    :radius="scales[scaleValue].value"
+                    :offsetX="-550"
+                    :offsetY="0"
+                    v-model="mapCenter"
+                />
+            </div>
             <ScaleOnSteroids :scales="scales" v-model="scaleValue" />
         </div>
         <div class="filter">
@@ -64,7 +76,10 @@
             />
         </div>
         <div class="filter">
-            <h3>Filtres</h3>
+            <div class="filters">
+                <h3>Filtres</h3>
+                <span class="reset-filters" @click="selectedFilters = []">Elimina tots</span>
+            </div>
             <FilterOnSteroids
                 v-model="selectedFilters"
                 :filters="filters"
@@ -86,5 +101,21 @@
     h3 {
         font-size: 1.5rem;
         margin-bottom: 10px;
+    }
+
+    .filters {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .filters span {
+        color: #FF6100;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+
+    .reset-filters:hover {
+        text-decoration: underline;
     }
 </style>

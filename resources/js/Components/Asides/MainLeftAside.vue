@@ -1,24 +1,30 @@
 <script setup>
-
+    import { Link } from  '@inertiajs/vue3'
 </script>
 
 <template>
     <div class="main-left-aside-container">
-        <div class="item">
-            <img src="/assets/svg/home.svg" alt="Icon" />
-            <span>Inici</span>
-            <span class="counter"></span>
-        </div>
-        <div class="item active">
-            <img src="/assets/svg/following.svg" alt="Icon" />
-            <span>Amics</span>
-            <span class="counter">3</span>
-        </div>
-        <div class="item">
-            <img src="/assets/svg/envelope.svg" alt="Icon" />
-            <span>Missatges</span>
-            <span class="counter">12</span>
-        </div>
+        <Link href="/">
+            <div class="item" :class="{ active: route().current() === 'index' }">
+                <img src="/assets/svg/home.svg" alt="Icon" />
+                <span>Inici</span>
+                <span class="counter"></span>
+            </div>
+        </Link>
+        <Link href="/friends">
+            <div class="item" :class="{ active: route().current() === 'friends.index' }">
+                <img src="/assets/svg/following.svg" alt="Icon" />
+                <span>Amics</span>
+                <span class="counter">3</span>
+            </div>
+        </Link>
+        <Link href="/messages">
+            <div class="item">
+                <img src="/assets/svg/envelope.svg" alt="Icon" />
+                <span>Missatges</span>
+                <span class="counter">12</span>
+            </div>
+        </Link>
         <div class="item">
             <img src="/assets/svg/bell.svg" alt="Icon" />
             <span>Notificacions</span>
@@ -40,7 +46,7 @@
     }
 
     .counter {
-        background: #b5b5b5;
+        background: #FF6100;
         color: #fff;
         border-radius: 9999px;
         padding: 0 7px;
@@ -69,7 +75,11 @@
         height: 20px;
     }
 
-    .item:not(.active) {
+    .item:not(.active) img {
+        filter: opacity(0.6);
+    }
+
+    .item:not(.active) span:not(.counter) {
         filter: opacity(0.6);
     }
 
