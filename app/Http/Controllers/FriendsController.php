@@ -35,13 +35,9 @@ class FriendsController extends Controller
      */
     public function store(string $id)
     {
-    
-
        $sender = auth()->user();
        $receiver = User::findOrFail($id);
        $sender->sendFriendRequest($receiver);
-        
-       
     }
 
     /**
@@ -72,10 +68,10 @@ class FriendsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-public function destroy(string $id)
-{
-    $user = auth()->user();
-    $friend = User::findOrFail($id);
-    $user->removeFriend($friend);
-}
+    public function destroy(string $id)
+    {
+        $user = auth()->user();
+        $friend = User::findOrFail($id);
+        $user->removeFriend($friend);
+    }
 }
