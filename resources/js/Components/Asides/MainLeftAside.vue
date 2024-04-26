@@ -1,5 +1,9 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
+import { useAuthStore } from "@/stores/auth";
+
+const authStore = useAuthStore();
+
 </script>
 
 <template>
@@ -34,7 +38,11 @@ import { Link } from '@inertiajs/vue3';
             <div class="item">
                 <img src="/assets/svg/bell.svg" alt="Icon" />
                 <span>Notificacions</span>
-                <span class="counter">3213</span>
+                <div v-if="authStore.user">
+                    <span
+                        v-if="authStore.user.notifications.length > 0"
+                    class="counter">{{ authStore.user.notifications.length  }}</span>
+                </div>
             </div>
         </Link>
     </div>

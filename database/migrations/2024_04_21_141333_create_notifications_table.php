@@ -18,10 +18,13 @@ return new class extends Migration
         $table->foreignId('user_id')->constrained();
         $table->text('message');
         $table->boolean('seen')->default(false);
-        $table->string('primary_link')->nullable();
-        $table->string('secondary_link')->nullable();
         $table->string('primary_link_text')->default('Aceptar'); 
+        $table->string('primary_link')->nullable();
+        $table->string('primary_link_method')->default('post');
         $table->string('secondary_link_text')->default('Denegar'); 
+        $table->string('secondary_link')->nullable();
+        $table->string('secondary_link_method')->default('post');
+        
     });
 }
 

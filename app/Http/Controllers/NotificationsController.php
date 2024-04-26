@@ -67,6 +67,13 @@ class NotificationsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = auth()->user();
+        $notification = Notification::findOrFail($id);
+
+        if ($notification->user_id !== $user->id) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+        $notification->delete();
+        return response()->json(['message' => 'Notification deleted']);
     }
 }

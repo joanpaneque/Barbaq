@@ -115,21 +115,17 @@ class User extends Authenticatable
             return;
         }
 
-        $this->sentFriendRequests()->attach($user->id, ['accepted' => false]);
-    }
-
-    public function sendNotification(string $id)
-    {
-        $receiver = User::findOrFail($id);
-        $sender = auth()->user();
         Notification::create([
-            'user_id' => $receiver->id,
-            'message' => "T'han enviat una solicitud d'amistat",
-            'primary_link' => route('sendfriendrequest', ['id' => $sender->id]),
-            'secondary_link' => route('friends.destroy', ['id' => $sender->id]),
+            'user_id' => $user->id,
+            'message' => "{$this->name} {$this->surnames} t'ha enviat una sol·licitud d'amistat",
+            'primary_link' => route('sendfriendrequest', ['id' => $this->id]),
+            'secondary_link' => route('friends.destroy', ['id' => $this->id]),
             'primary_link_text' => 'Aceptar',
             'secondary_link_text' => 'Denegar',
+            'secondary_link_method' => 'delete'
         ]);
+
+        $this->sentFriendRequests()->attach($user->id, ['accepted' => false]);
     }
 
     public function acceptFriendRequest(User $user)
