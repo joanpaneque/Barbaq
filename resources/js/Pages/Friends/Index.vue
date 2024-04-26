@@ -11,19 +11,6 @@ const props = defineProps({
         required: true,
     },
 });
-
-function DeleteFriend(friendId) {
-    axios.post(route('friends.destroy', { id: friendId }), {
-        _method: 'DELETE'
-    })
-        .then(response => {
-            console.log("Amigo eliminado exitosamente.");
-            window.location.reload();
-        })
-        .catch(error => {
-            console.error('Error al eliminar al amigo:', error);
-        });
-}
 function searchFriends(searchTerm) {
     const friendCards = document.querySelectorAll('.friend-card');
 
@@ -59,26 +46,27 @@ document.addEventListener('DOMContentLoaded', () => {
                     class="input rounded-2xl input-bordered w-24 md:w-auto" />
             </div>
             <div class="grid grid-friends">
-                <div v-for="friend in friends" :key="friends.id"
+                <div v-for="friend in friends" :key="friend.id"
                     class="friend-card w-40 bg-white border border-gray-200 rounded-2xl dark:bg-gray-800 dark:border-gray-700">
                     <div class="flex justify-end px-2 pt-3">
                     </div>
                     <div class="flex flex-col items-center pb-5">
                         <Link :href="'/profile/' + friend.id">
                         <div class="flex flex-col items-center">
-                            <img class=" UserImage w-32 h-32 mb-3 rounded-full shadow-lg" :src="friend.image" alt="User Image"/>
+                            <img class="UserImage w-32 h-32 mb-3 rounded-full shadow-lg" :src="friend.image"
+                                alt="User Image" />
                             <h5 class="mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ friend.name }}</h5>
                         </div>
                         </Link>
-                        <div class="flex md:mt-2">
-                            <button @click="DeleteFriend(friend.id)"
-                                class="inline-flex items-center px-4 py-1 text-sm font-medium text-center text-white bg-red-700 rounded-2xl hover:bg-red-800 focus:ring-2 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
-                                Eliminar amic
-                            </button>
+                        <div class="flex items-center">
+                            <button
+                                class="enviar inline-flex items-center bg-gray-800 hover:bg-gray-900 px-2 py-1 text-sm font-medium text-center text-white rounded-xl">Enviar
+                                missatge</button>
                         </div>
                     </div>
                 </div>
             </div>
+
             <div class="flex justify-center mt-4">
                 <button type="button"
                     class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
@@ -90,10 +78,14 @@ document.addEventListener('DOMContentLoaded', () => {
         <template #right-aside>
             <div class="aside-menu">
                 <span class="text-2xl text-gray-800 dark:text-white font-bold">Gent a prop teu</span>
-                <div v-for="(person, index) in [0, 0, 0, 0, 0]" :key="index" class="flex aside-friend">
-                    <img class="w-12 h-12 rounded-full shadow-lg" src="assets/img/user.png" alt="User Image" />
-                    <span class="user text-xl text-gray-800 dark:text-white p-2.5">Marcos Cardat</span>
-                    <div class="plus pl-4 flex justify-end">
+                <div v-for="friend in friends" :key="friend.id"
+                    class="flex aside-friend">
+                    <img class="ImageUser w-12 h-12 rounded-full shadow-lg" :src="friend.image" alt="User Image" />
+                    <div class="flex">
+                        <span class="user text-base text-gray-800 dark:text-white p-2.5">{{ friend.name }} {{
+                            friend.surnames }}</span>
+                    </div>
+                    <div class="plus flex items-center">
                         <button class="w-8 h-8 rounded-full border-transparent hover:bg-gray-300">
                             <img src="assets/img/plus.png">
                         </button>
@@ -115,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
     height: 400px;
     background: white;
     border-radius: 20px;
-    padding: 26px 50px;
+    padding: 26px 30px;
 }
 
 .grid-friends {
@@ -132,8 +124,15 @@ document.addEventListener('DOMContentLoaded', () => {
     align-items: center;
     padding: 5px 0px;
 }
-.UserImage{
+
+.UserImage {
     object-fit: cover;
 }
 
+.ImageUser {
+    object-fit: cover;
+}
+.plus {
+    margin-left: auto;
+}
 </style>
