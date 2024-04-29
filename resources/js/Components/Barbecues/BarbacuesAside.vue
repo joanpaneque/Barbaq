@@ -31,13 +31,13 @@ function resetHighlight() {
                     CISTELLA</h1>
                 <div v-if="highlightedArea === 'baskets'">
                     <button class="p-4" @click="resetHighlight">
-                        <img src="assets/svg/deshacer.svg" alt="Desfer" class="img-fluid" style="width: 20px;">
+                        <img src="/assets/svg/deshacer.svg" alt="Desfer" class="img-fluid" style="width: 20px;">
                     </button>
                 </div>
             </div>
             <div v-if="highlightedArea !== 'baskets'">
                 <div class="img">
-                    <img src="assets/img/foodbaskets.png" alt="Cistella" class="img-fluid">
+                    <img src="/assets/img/foodbaskets.png" alt="Cistella" class="img-fluid">
                 </div>
             </div>
             <div v-if="highlightedArea === 'baskets'">
@@ -104,7 +104,7 @@ function resetHighlight() {
             'selected': highlightedArea === 'maps',
             'notSelected': highlightedArea !== 'maps' && highlightedArea !== null
         }">
-            <img src="assets/img/map.png" alt="Mapa" class="img-fluid">
+            <img src="/assets/img/map.png" alt="Mapa" class="img-fluid">
         </div>
         <div class="costs" :class="{
             
@@ -121,7 +121,7 @@ function resetHighlight() {
 
             <div class="bottom">
 
-                <img src="assets/img/money.png" alt="Targeta de crèdit" class="img-fluid">
+                <img src="/assets/img/money.png" alt="Targeta de crèdit" class="img-fluid">
 
                 <div class="pay">
                     <p>A pagar</p>
@@ -141,7 +141,7 @@ function resetHighlight() {
                     Veure tots els usuaris inscrits
                 </p>
 
-                <img src="assets/svg/arrow-right.svg" alt="Fletxa dreta" class="img-fluid">
+                <img src="/assets/svg/arrow-right.svg" alt="Fletxa dreta" class="img-fluid">
             </div>
         </div>
     </div>
