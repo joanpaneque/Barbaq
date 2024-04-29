@@ -41,6 +41,8 @@ Route::post('/sendfriendrequest/{id}', [FriendsController::class, 'store'])->nam
 
 Route::get('/api/user', [UserController::class, 'apiShowLogged']);
 
+Route::post('/updateuserphoto/{id}', [UserController::class, 'update'])->name('updateuserphoto');
+
 Route::resource('barbecues', BarbecuesController::class);
 
 Route::resource('notifications', NotificationsController::class);
