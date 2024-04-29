@@ -45,6 +45,7 @@ Route::post('/updateuserphoto/{id}', [UserController::class, 'update'])->name('u
 
 Route::resource('barbecues', BarbecuesController::class);
 
+
 Route::resource('notifications', NotificationsController::class);
 
 require __DIR__ . '/auth.php';

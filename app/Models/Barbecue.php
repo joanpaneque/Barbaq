@@ -16,6 +16,7 @@ class Barbecue extends Model
         'address',
         'title',
         'content',
+        'date',
     ];
 
     public function invitations()
@@ -66,5 +67,10 @@ class Barbecue extends Model
     public function owner()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function basket()
+    {
+        return $this->hasOne(Basket::class);
     }
 }

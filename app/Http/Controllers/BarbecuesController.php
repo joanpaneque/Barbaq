@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Barbecue;
+use App\Models\User;
 
 class BarbecuesController extends Controller
 {
@@ -12,7 +14,7 @@ class BarbecuesController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Barbecues/Index');
     }
 
     /**
@@ -39,7 +41,11 @@ class BarbecuesController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $barbecue = Barbecue::findOrFail($id);
+
+        return Inertia::render('Barbecues/Show', [
+            'barbecue' => $barbecue,
+        ]);
     }
 
     /**
