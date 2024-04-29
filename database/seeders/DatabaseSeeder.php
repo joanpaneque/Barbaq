@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
+use App\Models\Barbecue;
+
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -52,40 +54,92 @@ class DatabaseSeeder extends Seeder
         $user_roman->sendFriendRequest($user_emma);
         $user_joan->sendFriendRequest($user_emma);
 
-        // // joan
-        // $user_joan->sendFriendRequest($user_roman);
-        // $user_roman->acceptFriendRequest($user_joan);
+        // joan
+        $user_joan->sendFriendRequest($user_roman);
+        $user_roman->acceptFriendRequest($user_joan);
 
-        // $user_joan->sendFriendRequest($user_emma);
-        // $user_emma->acceptFriendRequest($user_joan);
+        $user_joan->sendFriendRequest($user_emma);
+        $user_emma->acceptFriendRequest($user_joan);
 
-        // $user_joan->sendFriendRequest($user_aniol);
-        // $user_aniol->acceptFriendRequest($user_joan);
+        $user_joan->sendFriendRequest($user_aniol);
+        $user_aniol->acceptFriendRequest($user_joan);
 
-        // $user_joan->sendFriendRequest($user_marcos);
-        // $user_marcos->acceptFriendRequest($user_joan);
+        $user_joan->sendFriendRequest($user_marcos);
+        $user_marcos->acceptFriendRequest($user_joan);
 
-        // // roman
-        // $user_roman->sendFriendRequest($user_emma);
-        // $user_emma->acceptFriendRequest($user_roman);
+        // roman
+        $user_roman->sendFriendRequest($user_emma);
+        $user_emma->acceptFriendRequest($user_roman);
 
-        // $user_roman->sendFriendRequest($user_aniol);
-        // $user_aniol->acceptFriendRequest($user_roman);
+        $user_roman->sendFriendRequest($user_aniol);
+        $user_aniol->acceptFriendRequest($user_roman);
 
-        // $user_roman->sendFriendRequest($user_marcos);
-        // $user_marcos->acceptFriendRequest($user_roman);
+        $user_roman->sendFriendRequest($user_marcos);
+        $user_marcos->acceptFriendRequest($user_roman);
 
-        // // emma
-        // $user_emma->sendFriendRequest($user_aniol);
-        // $user_aniol->acceptFriendRequest($user_emma);
+        // emma
+        $user_emma->sendFriendRequest($user_aniol);
+        $user_aniol->acceptFriendRequest($user_emma);
 
-        // $user_emma->sendFriendRequest($user_marcos);
-        // $user_marcos->acceptFriendRequest($user_emma);
+        $user_emma->sendFriendRequest($user_marcos);
+        $user_marcos->acceptFriendRequest($user_emma);
 
-        // // aniol
-        // $user_aniol->sendFriendRequest($user_marcos);
-        // $user_marcos->acceptFriendRequest($user_aniol);
+        // aniol
+        $user_aniol->sendFriendRequest($user_marcos);
+        $user_marcos->acceptFriendRequest($user_aniol);
 
-    
+        function random_float($min, $max): float
+        {
+            return $min + lcg_value() * abs($max - $min);
+        }
+
+        for ($i = 0; $i < 300; $i++) {
+            $random_user = User::inRandomOrder()->first();
+        
+            Barbecue::create([
+                'user_id' => $random_user->id,
+                'latitude' => random_float(40, 42),
+                'longitude' => random_float(1, 3),
+                'address' => "Adreça de la barbacoa nº$i",
+                'title' => "Barbacoa nº$i",
+                'content' => "<h1>Barbacoa nº$i</h1><p>Benvinguts a la barbacoa nº$i, en aquet lloc podreu gaudir de la millor barbacoa de la ciutat. Us esperem a tots!</p>"
+            ]);
+        }
+
+        Barbecue::create([
+            'user_id' => $user_joan->id,
+            'latitude' => 41.385063,
+            'longitude' => 2.173404,
+            'address' => 'Barcelona',
+            'title' => 'Barbacoa a barcelona',
+            'content' => '<h1>Barbacoa a barcelona</h1><>Benvinguts a la barbacoa a barcelona, en aquet lloc podreu gaudir de la millor barbacoa de la ciutat. Us esperem a tots!</p>'
+        ]);
+
+        Barbecue::create([
+            'user_id' => $user_roman->id,
+            'latitude' => 42.2666,
+            'longitude' => 2.9591,
+            'address' => 'Figueres, Girona',
+            'title' => 'Barbacoa a figueres, girona',
+            'content' => '<h1>Barbacoa a figueres, girona</h1><p>Benvinguts a la barbacoa a figueres, en aquet lloc podreu gaudir de la millor barbacoa de la ciutat. Us esperem a tots!</p>'
+        ]);
+
+        Barbecue::create([
+            'user_id' => $user_emma->id,
+            'latitude' => 42.2632,
+            'longitude' => 3.1600,
+            'address' => 'Roses, Girona',
+            'title' => 'Barbacoa a roses, girona',
+            'content' => '<h1>Barbacoa a roses, girona</h1><p>Benvinguts a la barbacoa a roses, en aquet lloc podreu gaudir de la millor barbacoa de la ciutat. Us esperem a tots!</p>'
+        ]);
+
+        Barbecue::create([
+            'user_id' => $user_aniol->id,
+            'latitude' => 42.0451,
+            'longitude' => 3.1856,
+            'address' => 'L\'Estartit, Girona',
+            'title' => 'Barbacoa a l\'estartit, girona',
+            'content' => '<h1>Barbacoa a l\'estartit, girona</h1><p>Benvinguts a la barbacoa a l\'estartit, en aquet lloc podreu gaudir de la millor barbacoa de la ciutat. Us esperem a tots!</p>'
+        ]);
     }
 }

@@ -2,6 +2,8 @@
 import { ref, onMounted } from 'vue';
 import EmojiPicker from 'vue3-emoji-picker';
 import "vue3-emoji-picker/css";
+import { useBarbecueStore } from "@/stores/barbecue";
+
 
 const messageInput = ref('');
 const showEmojiPicker = ref(false);
@@ -18,15 +20,13 @@ onMounted(() => {
     chatBox.value.scrollTop = chatBox.value.scrollHeight;
 });
 
-// close the emoji picker when clicking outside of it
+
 window.addEventListener('click', (e) => {
     if (showEmojiPicker.value && !e.target.closest('.emoji-picker') && !e.target.closest('.input-message')) {
         showEmojiPicker.value = false;
     }
 });
 
-
-// drag the emoji picker, only the div with the class emoji-picker
 let isDragging = false;
 let initialX = 0;
 let initialY = 0;
@@ -75,6 +75,8 @@ window.addEventListener('mouseup', dragEnd);
 
 window.addEventListener('touchmove', drag);
 window.addEventListener('touchend', dragEnd);
+
+const barbecueStore = useBarbecueStore();
 
 </script>
 

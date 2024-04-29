@@ -43,6 +43,7 @@ Route::get('/api/user', [UserController::class, 'apiShowLogged']);
 
 Route::resource('barbecues', BarbecuesController::class);
 
+
 Route::resource('notifications', NotificationsController::class);
 
 require __DIR__ . '/auth.php';
