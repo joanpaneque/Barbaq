@@ -16,6 +16,7 @@ class Barbecue extends Model
         'address',
         'title',
         'content',
+        'date',
     ];
 
     public function invitations()
