@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Barbecue;
 use App\Models\Product;
+use App\Models\BasketProduct;
 
 class Basket extends Model
 {
@@ -24,5 +25,10 @@ class Basket extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class)->withPivot('quantity', 'price', 'user_id');
+    }
+
+    public function basketProduct()
+    {
+        return $this->hasMany(BasketProduct::class);
     }
 }

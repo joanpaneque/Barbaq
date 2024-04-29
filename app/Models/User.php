@@ -13,6 +13,10 @@ use App\Models\Barbecue;
 use App\Models\BarbecueFriendship;
 use App\Models\ChatMessage;
 use App\Models\Notification;
+use App\Models\BasketProduct;
+use App\Models\Basket;
+
+
 
 class User extends Authenticatable
 {
@@ -168,5 +172,15 @@ class User extends Authenticatable
     public function notifications()
     {
         return $this->hasMany(Notification::class);
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    public function basketProducts()
+    {
+        return $this->hasMany(BasketProduct::class);
     }
 }
