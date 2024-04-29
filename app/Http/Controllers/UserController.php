@@ -61,7 +61,24 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+
+        
+        $user = User::findOrFail($id);
+
+        $image = $request->file('image');
+    
+        if ($image) {
+            $path = $image->move('assets/img');
+            
+            $filename = basename($path);
+            $url = '/assets/img/' . $filename;
+            $user->image = $url;
+        }
+
+        $user->save();
+
+        //reload the page
+        
     }
 
     /**

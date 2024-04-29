@@ -12,6 +12,7 @@ const authStore = useAuthStore();
 
 const form = useForm({
     id: '',
+    image: null,
 });
 
 
@@ -49,12 +50,30 @@ function closeModal() {
     showModal.value = false;
 }
 
+const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    form.image = file;
+};
+
 const updateUserPhoto = () => {
+    // showModal.value = false;
+    // let id = profileStore.user.id;
+    // let formData = new FormData();
+    // formData.append('image', form.image); 
+
+    // form.post(route('updateuserphoto', id), formData); 
+    
     let id = profileStore.user.id;
-    const fileName = formData.get('image').name;
-    console.log('Nombre del archivo seleccionado:', fileName);
-
-
+    let formData = new FormData();
+    formData.append('image', form.image);
+    profileStore.user.image = URL.createObjectURL(form.image);
+    showModal.value = false;
+    form.post(route('updateuserphoto', id), {...formData,
+        onSuccess: () => {
+            authStore.updateUserData();
+        }
+    });
+    
 };
 
 
@@ -63,6 +82,7 @@ const updateUserPhoto = () => {
 
 <template>
     <div v-if="profileStore.user && authStore.user">
+       
         <div class="w-full bg-cover bg-no-repeat bg-center rounded-t-[20px]" style="height: 150px; background: rgb(131,58,180);
         background: linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%);">
         </div>
@@ -116,8 +136,7 @@ const updateUserPhoto = () => {
                                                 </div>
 
 
-                                                <input type="file" id="file" name="image"
-                                                    @input="form.image = $event.target.files[0]">
+                                                <input type="file" id="file" name="image" @change="handleFileChange">
 
 
 
