@@ -67,4 +67,9 @@ class Barbecue extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function basket()
+    {
+        return $this->hasOne(Basket::class);
+    }
 }
