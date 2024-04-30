@@ -3,9 +3,20 @@ import { ref } from 'vue';
 
 let highlightedArea = ref(null);
 
+const showAddUsers = ref(false);
 function highlightArea(area) {
+
+    if (showAddUsers.value === false) {
+        showAddUsers.value = true;
+    }
+    else {
+        showAddUsers.value = false;
+    }
+
+
     if (highlightedArea.value === area) {
         highlightedArea.value = null;
+
         console.log('highlightedArea', highlightedArea.value);
     } else {
         highlightedArea.value = area;
@@ -87,8 +98,8 @@ function resetHighlight() {
 
 
 
-        <div class="dates"  :class="{
-            
+        <div class="dates" :class="{
+
             'notSelected': highlightedArea !== 'dates' && highlightedArea !== null
         }">
 
@@ -107,7 +118,7 @@ function resetHighlight() {
             <img src="/assets/img/map.png" alt="Mapa" class="img-fluid">
         </div>
         <div class="costs" :class="{
-            
+
             'notSelected': highlightedArea !== 'costs' && highlightedArea !== null
         }">
             <div class="top">
@@ -143,7 +154,20 @@ function resetHighlight() {
 
                 <img src="/assets/svg/arrow-right.svg" alt="Fletxa dreta" class="img-fluid">
             </div>
+            <div v-if="showAddUsers" class="mt-3">
+
+
+                <div class="flex items-center gap-2 bg-white p-1 rounded-xl">
+
+                    <img src="/assets/img/emma.jpg" alt="" class="fit-content h-10 w-10 rounded-full object-cover">
+                    <p>Emma Cardosa</p>
+                </div>
+
+
+
+            </div>
         </div>
+
     </div>
 </template>
 
@@ -195,16 +219,18 @@ function resetHighlight() {
     }
 
 
-    .grid-info{
+    .grid-info {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-     
+
         width: 100%;
     }
 
-    .producte1, .producte2, .producte3{
+    .producte1,
+    .producte2,
+    .producte3 {
         background-color: rgba(255, 255, 255, 0.5);
         border-radius: 10px;
         display: flex;
@@ -214,7 +240,7 @@ function resetHighlight() {
         padding: 5px;
         margin-bottom: 10px;
     }
- 
+
 
     .total {
         display: flex;
