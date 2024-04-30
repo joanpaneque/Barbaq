@@ -33,11 +33,39 @@ const toggleDropdown = () => {
 const submitBarbecueForm = () => {
     barbecueForm.content = quillContent.value.getHTML();
 
-    const mensaje = `👤 <b>${authStore.user.name} ${authStore.user.surnames}</b> ha creat la barbacoa 🔥 "${barbecueForm.title}"\n ✏️ Creat per: https://barbaq.es/profile/${authStore.user.id}`;
-    const textoCodificado = encodeURIComponent(mensaje);
-    const url = `https://api.telegram.org/bot7062247411:AAFn72YwZboq4fSt3YmOuAcLsMtX-l76fHk/sendMessage?chat_id=@bbqtest&text=${textoCodificado}&parse_mode=html`;
+    const mensajeTelegram = `👤 <b>${authStore.user.name} ${authStore.user.surnames}</b> ha creado la barbacoa 🔥 "${barbecueForm.title}"\n ✏️ Creat per: <a href="https://barbaq.es/profile/${authStore.user.id}">Perfil</a>`;
+    const textoCodificado = encodeURIComponent(mensajeTelegram);
+    const urlTelegram = `https://api.telegram.org/bot7062247411:AAFn72YwZboq4fSt3YmOuAcLsMtX-l76fHk/sendMessage?chat_id=@bbqtest&text=${textoCodificado}&parse_mode=html`;
 
-    axios.post(url);
+    axios.post(urlTelegram)
+        .then(() => {
+            console.log('Mensaje enviado a Telegram');
+        })
+        .catch((error) => {
+            console.error('Error al enviar el mensaje a Telegram:', error);
+        });
+
+
+
+    const mensajeDiscord = `Holaa 1`;
+    const payloadDiscord = {
+        content: mensajeDiscord
+    };
+
+    const webhookURL = 'https://discord.com/api/webhooks/1234888722391109712/MFQE_6mVi1ROVCTQgJmGuV5nKojCIXggHOmwptwqi9f55io7FLYb5hRrRVg8y3L8Si3Y';
+
+    axios.post(webhookURL, payloadDiscord, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(() => {
+            console.log('Mensaje enviado a Discord');
+        })
+        .catch((error) => {
+            console.error('Error al enviar el mensaje a Discord:', error);
+        });
+
 
 
     axios.post("/barbecues", barbecueForm)
