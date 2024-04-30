@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Barbecue;
 use App\Models\User;
+use App\Models\Basket;
+use App\Models\BasketProduct;
+use App\Models\Product;
+
 
 class BarbecuesController extends Controller
 {
@@ -42,7 +46,8 @@ class BarbecuesController extends Controller
     public function show(string $id)
     {
         $barbecue = Barbecue::findOrFail($id);
-
+        $barbecue = Barbecue::with('basket')->with('basket.basketProduct')->with('basket.basketProduct.product')->find($id);
+        
         return Inertia::render('Barbecues/Show', [
             'barbecue' => $barbecue,
         ]);

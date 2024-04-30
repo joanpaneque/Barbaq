@@ -9,6 +9,7 @@ use App\Models\Barbecue;
 use App\Models\Product;
 use App\Models\BasketProduct;
 
+
 class Basket extends Model
 {
     use HasFactory;

@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import { useBarbecueStore } from "@/stores/barbecue";
 
 let highlightedArea = ref(null);
 
@@ -28,6 +29,9 @@ function highlightArea(area) {
 function resetHighlight() {
     highlightedArea(null);
 }
+
+const barbecueStore = useBarbecueStore();
+const barbecue = barbecueStore.barbecue;
 </script>
 
 <template>
@@ -52,45 +56,49 @@ function resetHighlight() {
                 </div>
             </div>
             <div v-if="highlightedArea === 'baskets'">
-                <div class="grid-baskets">
+                <div class="grid-baskets" v-if="barbecue.basket.basket_product.length > 0">
                     <div class="title-grid-baskets">
                         <p class="product">Productes</p>
                         <p class="quantity">Quantitat</p>
                         <p class="price">Preu</p>
                     </div>
-                    <div class="grid-info">
-                        <div class="producte1">
-                            <p>Costelles de porc</p>
-                            <p>2</p>
-                            <p>23€</p>
-                        </div>
-                        <div class="producte2">
-                            <p>Costelles de porc</p>
-                            <p>2</p>
-                            <p>23€</p>
-                        </div>
-                        <div class="producte2">
-                            <p>Costelles de porc</p>
-                            <p>2</p>
-                            <p>23€</p>
-                        </div>
-                        <div class="producte2">
-                            <p>Costelles de porc</p>
-                            <p>2</p>
-                            <p>23€</p>
-                        </div>
-                        <div class="producte2">
-                            <p>Costelles de porc</p>
-                            <p>2</p>
-                            <p>23€</p>
-                        </div>
 
+
+
+
+                    <div class="grid-info">
+                        <div class="producte1"
+                            v-for="item in barbecue.basket.basket_product.filter((product, index, self) => self.findIndex(t => t.product.id === product.product.id) === index)"
+                            :key="item.product.id">
+                            <p class="w-2/5">
+                                {{ item.product.name }}</p>
+                            <p> {{ barbecue.basket.basket_product.filter(basket => basket.product.id ===
+                                item.product.id).length }} </p>
+                            <p class="w-1/3 text-right">
+                                {{ item.product.price }} €</p>
+                        </div>
                     </div>
                 </div>
+
+                <div class="grid-baskets" v-else>
+                    <h1>No hi ha productes a la cistella</h1>
+                </div>
+
+
                 <div class="total">
                     <p>Total: </p>
-                    <h1>25 <span>€</span></h1>
+
+                    <h1>
+                        {{
+                            barbecue.basket.basket_product.reduce(
+                                (total, item) => total + parseFloat(item.product.price),
+                                0
+                            ).toFixed(2)
+                        }}
+                        <span>€</span>
+                    </h1>
                 </div>
+
             </div>
         </div>
 
@@ -98,8 +106,8 @@ function resetHighlight() {
 
 
 
-        <div class="dates" :class="{
-
+        <div class="dates"  :class="{
+            
             'notSelected': highlightedArea !== 'dates' && highlightedArea !== null
         }">
 
