@@ -18,10 +18,7 @@
     authStore.updateUserData();
     barbecueStore.setBarbecue(props.barbecue);
 
-
-
-
-
+    console.log(barbecueStore.barbecue);
 
 </script>
 

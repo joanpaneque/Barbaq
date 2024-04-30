@@ -71,6 +71,6 @@ class Barbecue extends Model
 
     public function basket()
     {
-        return $this->hasOne(Basket::class);
+        return $this->HasOne(Basket::class);
     }
 }
