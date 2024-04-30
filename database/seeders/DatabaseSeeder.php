@@ -6,6 +6,9 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 
 use App\Models\Barbecue;
+use App\Models\BasketProduct;
+use App\Models\Basket;
+use App\Models\Product;
 
 class DatabaseSeeder extends Seeder
 {
@@ -104,6 +107,28 @@ class DatabaseSeeder extends Seeder
                 'title' => "Barbacoa nº$i",
                 'content' => "<h1>Barbacoa nº$i</h1><p>Benvinguts a la barbacoa nº$i, en aquet lloc podreu gaudir de la millor barbacoa de la ciutat. Us esperem a tots!</p>"
             ]);
+
+            Product::create([
+                'user_id' => $random_user->id,
+                'name' => "Producte nº$i",
+                'price' => random_float(1, 100),
+                'is_deleted' => false
+            ]);
+
+            Basket::create([
+              
+                'barbecue_id' => $random_user->barbecues()->inRandomOrder()->first()->id
+            ]);
+
+            BasketProduct::create([
+                'basket_id' => $random_user->barbecues()->inRandomOrder()->first()->id,
+                'product_id' => $random_user->barbecues()->inRandomOrder()->first()->id,
+                'user_id' => $random_user->id,
+                'quantity' => random_int(1, 10),
+                'price' => random_float(1, 100)
+            ]);
+
+            
         }
 
         Barbecue::create([

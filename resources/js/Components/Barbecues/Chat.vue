@@ -97,7 +97,7 @@ const barbecueStore = useBarbecueStore();
                         </div>
                         <div class="text flex flex-row space-x-2">
                             <div class="chat_avatar ">
-                                <img src="assets/svg/avatar.svg" alt="avatar" class="avatar">
+                                <img src="/assets/svg/avatar.svg" alt="avatar" class="avatar">
                             </div>
 
                             <div class="chat_text bg-[#C4C4C4] p-2 flex rounded-lg space-x-2 flex flex-col">
@@ -117,7 +117,7 @@ const barbecueStore = useBarbecueStore();
                         </div>
                         <div class="text flex flex-row space-x-2">
                             <div class="chat_avatar ">
-                                <img src="assets/svg/avatar.svg" alt="avatar" class="avatar">
+                                <img src="/assets/svg/avatar.svg" alt="avatar" class="avatar">
                             </div>
 
                             <div class="chat_text bg-[#C4C4C4] p-2 flex rounded-lg space-x-2 flex flex-col">
@@ -152,7 +152,7 @@ const barbecueStore = useBarbecueStore();
                         </div>
                         <div class="text flex flex-row space-x-2">
                             <div class="chat_avatar ">
-                                <img src="assets/svg/avatar.svg" alt="avatar" class="avatar">
+                                <img src="/assets/svg/avatar.svg" alt="avatar" class="avatar">
                             </div>
 
                             <div class="chat_text bg-[#C4C4C4] p-2 flex rounded-lg space-x-2 flex flex-col">
@@ -172,7 +172,7 @@ const barbecueStore = useBarbecueStore();
                         </div>
                         <div class="text flex flex-row space-x-2">
                             <div class="chat_avatar ">
-                                <img src="assets/svg/avatar.svg" alt="avatar" class="avatar">
+                                <img src="/assets/svg/avatar.svg" alt="avatar" class="avatar">
                             </div>
 
                             <div class="chat_text bg-[#C4C4C4] p-2 flex rounded-lg space-x-2 flex flex-col">
@@ -191,7 +191,7 @@ const barbecueStore = useBarbecueStore();
                     </div>
                     <div class="text flex flex-row space-x-2">
                         <div class="chat_avatar ">
-                            <img src="assets/svg/avatar.svg" alt="avatar" class="avatar">
+                            <img src="/assets/svg/avatar.svg" alt="avatar" class="avatar">
                         </div>
 
                         <div class="chat_text bg-[#C4C4C4] p-2 flex rounded-lg space-x-2 flex flex-col">
@@ -218,7 +218,7 @@ const barbecueStore = useBarbecueStore();
                             <span class="text-xs text-[#7C7C7C] m-0 flex items-center justify-end">12:33</span>
                         </div>
                         <div class="chat_avatar ">
-                            <img src="assets/svg/avatar.svg" alt="avatar" class="avatar">
+                            <img src="/assets/svg/avatar.svg" alt="avatar" class="avatar">
                         </div>
                     </div>
                 </div>
@@ -230,7 +230,7 @@ const barbecueStore = useBarbecueStore();
                 class="flex-1 bg-[#D9D9D9] rounded-lg p-2 outline-none placeholder-font-light">
 
             <button @click="togglePicker">
-                <img src="assets/svg/emoji.svg" alt="emoji"
+                <img src="/assets/svg/emoji.svg" alt="emoji"
                     class="w-6 h-6 hover:scale-110 transition duration-300 ease-in-out">
             </button>
 
