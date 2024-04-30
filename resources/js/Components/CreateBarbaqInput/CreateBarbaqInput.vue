@@ -33,6 +33,13 @@ const toggleDropdown = () => {
 const submitBarbecueForm = () => {
     barbecueForm.content = quillContent.value.getHTML();
 
+    const mensaje = `👤 <b>${authStore.user.name} ${authStore.user.surnames}</b> ha creat la barbacoa 🔥 "${barbecueForm.title}"\n ✏️ Creat per: https://barbaq.es/profile/${authStore.user.id}`;
+    const textoCodificado = encodeURIComponent(mensaje);
+    const url = `https://api.telegram.org/bot7062247411:AAFn72YwZboq4fSt3YmOuAcLsMtX-l76fHk/sendMessage?chat_id=@bbqtest&text=${textoCodificado}&parse_mode=html`;
+
+    axios.post(url);
+
+
     axios.post("/barbecues", barbecueForm)
         .then(() => {
             barbecueForm.reset();
@@ -44,6 +51,7 @@ const submitBarbecueForm = () => {
 </script>
 
 <template>
+
     <form @submit.prevent="submitBarbecueForm" class="dropdown " :class="{ open: isOpen }" @click="toggleDropdown"
         v-if="authStore.user">
         <div class="flex">
