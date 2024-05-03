@@ -1,6 +1,6 @@
 <script setup>
 import CreateBarbaqInput from "@/Components/CreateBarbaqInput/CreateBarbaqInput.vue";
-import DadesBarbacoa from "../Index/DadesBarbacoa.vue";
+import Barbecue from "../Index/Barbecue.vue";
 import { useProfileStore } from "@/stores/profile";
 import { useAuthStore } from "@/stores/auth";
 const profileStore = useProfileStore();
@@ -17,7 +17,7 @@ const authStore = useAuthStore();
                 </div>
             </div>
 
-            <DadesBarbacoa />
+            <Barbecue />
             
         </div>
         <div class="rigth mt-5">

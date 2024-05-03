@@ -12,6 +12,7 @@ class Comment extends Model
     protected $fillable = [
         'user_id',
         'barbecue_id',
+        'comment_id',
         'comment'
     ];
 
@@ -23,5 +24,10 @@ class Comment extends Model
     public function barbecue()
     {
         return $this->belongsTo(Barbecue::class);
+    }
+
+    public function replies()
+    {
+        return $this->hasMany(Comment::class, 'comment_id')->with('user')->with('replies')->orderBy('created_at', 'desc');
     }
 }

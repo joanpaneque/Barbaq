@@ -1,16 +1,19 @@
 <script setup>
-    import { ref } from 'vue';
+    import { onMounted, ref } from 'vue';
     import SearchOnSteroids from '@/Components/Steroids/SearchOnSteroids.vue';
     import ScaleOnSteroids from '@/Components/Steroids/ScaleOnSteroids.vue';
     import SelectOnSteroids from '@/Components/Steroids/SelectOnSteroids.vue';
     import FilterOnSteroids from '@/Components/Steroids/FilterOnSteroids.vue';
     import MapOnSteroids from '@/Components/Steroids/MapOnSteroids.vue';
+    import { useBarbecueStore } from '@/stores/barbecue';
+
+    const barbecueStore = useBarbecueStore();
 
     const scales = [
         { value: 10, label: '10 km' },
         { value: 50, label: '50 km' },
         { value: 100, label: '100 km' },
-        { value: Infinity, label: 'Sense límit' }
+        { value: undefined, label: 'Sense límit' }
     ]
 
     const timeOptions = {
@@ -21,8 +24,8 @@
     }
 
     const orderOptions = {
-        newest: 'Més recents',
-        oldest: 'Més antic'
+        desc: 'Més recents',
+        asc: 'Més antic'
     }
 
     const filters = {
@@ -35,11 +38,32 @@
     const scaleValue = ref(0);
     const searchValue = ref('');
     const timeOption = ref('forever');
-    const orderOption = ref('newest');
+    const orderOption = ref('desc');
     const selectedFilters = ref([]);
 
     const mapCenter = ref([42.2736, 2.9646]);
 
+
+    function updateBarbecues() {
+        console.log('Updating barbecues');
+
+        const filters = {
+            search: searchValue.value,
+            distance: scales[scaleValue.value].value,
+            latitude: mapCenter.value[0],
+            longitude: mapCenter.value[1],
+            time: timeOption.value,
+            order: orderOption.value,
+            filters: selectedFilters.value
+        }
+
+        barbecueStore.fetchBarbecues(filters);
+        document.querySelector(".main-layout-main-content").scrollTop = 0;
+    }
+
+    onMounted(() => {
+        updateBarbecues();
+    })
 
 </script>
 
@@ -47,7 +71,7 @@
     <div class="index-right-aside-container">
         <div class="filter">
             <h3>Cercar barbacoes</h3>
-            <SearchOnSteroids v-model="searchValue" />
+            <SearchOnSteroids v-model="searchValue" @input="updateBarbecues" />
         </div>
         <div class="filter">
             <div class="filters">
@@ -55,17 +79,21 @@
                 <MapOnSteroids
                     :radius="scales[scaleValue].value"
                     :offsetX="-550"
-                    :offsetY="0"
+                    :offsetY="20"
                     v-model="mapCenter"
+                    :allowChangeLocation="true"
+                    @input="updateBarbecues"
+                    :markers="barbecueStore.barbecues"
                 />
             </div>
-            <ScaleOnSteroids :scales="scales" v-model="scaleValue" />
+            <ScaleOnSteroids :scales="scales" v-model="scaleValue" @input="updateBarbecues" />
         </div>
         <div class="filter">
             <h3>Data de publicació</h3>
             <SelectOnSteroids
                 v-model="timeOption"
                 :options="timeOptions"
+                @input="updateBarbecues"
             />
         </div>
         <div class="filter">
@@ -73,6 +101,7 @@
             <SelectOnSteroids
                 v-model="orderOption"
                 :options="orderOptions"
+                @input="updateBarbecues"
             />
         </div>
         <div class="filter">
@@ -83,6 +112,7 @@
             <FilterOnSteroids
                 v-model="selectedFilters"
                 :filters="filters"
+                @input="updateBarbecues"
             />
         </div>
     </div>
@@ -109,8 +139,9 @@
         align-items: center;
     }
 
-    .filters span {
-        color: #FF6100;
+    .filters span {       
+        color: #cc4e00;
+        filter: brightness(1.23);
         cursor: pointer;
         font-size: 0.9rem;
     }
