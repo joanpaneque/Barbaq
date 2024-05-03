@@ -26,10 +26,11 @@
     const hash = randomCharacterHash(5);
 
 
-    const emit = defineEmits(['update:modelValue']);
+    const emit = defineEmits(['update:modelValue', 'input']);
 
     const updateValue = (value) => {
         emit('update:modelValue', value);
+        emit('input', value);
     };
 
     const isOpen = ref(false);

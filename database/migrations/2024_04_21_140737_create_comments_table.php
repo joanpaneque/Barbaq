@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
 
-            $table->foreignId('barbecue_id')->constrained();
+            $table->foreignId('barbecue_id')->nullable()->constrained();
             $table->foreignId('user_id')->constrained();
+            $table->foreignId('comment_id')->nullable()->constrained();
             $table->text('comment');
         });
     }

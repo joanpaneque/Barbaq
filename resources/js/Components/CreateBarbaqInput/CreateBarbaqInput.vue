@@ -3,11 +3,13 @@ import { ref } from 'vue';
 import { createApp } from 'vue'
 import { QuillEditor } from '@vueup/vue-quill'
 import { useAuthStore } from "@/stores/auth";
+import { useBarbecueStore } from '@/stores/barbecue';
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import { useForm } from '@inertiajs/vue3';
 import axios from 'axios';
 
 const authStore = useAuthStore();
+const barbecueStore = useBarbecueStore();
 
 
 const app = createApp()
@@ -35,6 +37,7 @@ const submitBarbecueForm = () => {
 
     axios.post("/barbecues", barbecueForm)
         .then(() => {
+            barbecueStore.insertBarbacue(barbecueForm, authStore.user);
             barbecueForm.reset();
             quillContent.value.setHTML('');
             isOpen.value = false;
@@ -50,7 +53,7 @@ const submitBarbecueForm = () => {
             <img :src="authStore.user.image" alt="Foto de perfil" class="mr-2 h-16 w-16 rounded-full imgprofile">
             <div class="w-full mt-auto mb-auto ">
                 <div class="input-container">
-                    <input type="text" placeholder="Crear nova barbacoa..." v-model="barbecueForm.title">
+                    <input type="text" placeholder="Crear nova barbacoa..." v-model="barbecueForm.title" aria-label="Títol de la barbacoa">
                 </div>
             </div>
             <img src="/assets/svg/edit.svg" alt="Imatge de editar" class="">

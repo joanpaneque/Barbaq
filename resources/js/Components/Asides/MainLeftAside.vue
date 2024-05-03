@@ -60,7 +60,8 @@ const authStore = useAuthStore();
     }
 
     .counter {
-        background: #FF6100;
+        background: #cc4e00;
+        filter: brightness(1.23);
         color: #fff;
         border-radius: 9999px;
         padding: 0 7px;
@@ -72,7 +73,8 @@ const authStore = useAuthStore();
     }
 
     .item.active .counter {
-        background: #FF6100;
+        background: #cc4e00;
+        filter: brightness(1.23);
     }
 
     .item {

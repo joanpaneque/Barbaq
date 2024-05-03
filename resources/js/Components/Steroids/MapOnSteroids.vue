@@ -1,8 +1,13 @@
 <script setup>
-import "leaflet/dist/leaflet.css"
-import { icon } from 'leaflet'
+import L from 'leaflet'
+globalThis.L = L
 import { LMap, LTileLayer, LMarker, LCircle } from '@vue-leaflet/vue-leaflet'
-import { ref, defineProps, onMounted, computed } from 'vue';
+import { LMarkerClusterGroup } from 'vue-leaflet-markercluster'
+import 'leaflet/dist/leaflet.css'
+import 'vue-leaflet-markercluster/dist/style.css'
+import { icon } from 'leaflet'
+import { ref, defineProps, onMounted, onUnmounted, computed } from 'vue';
+
 
 const props = defineProps({
     modelValue: {
@@ -11,7 +16,6 @@ const props = defineProps({
     },
     radius: {
         type: Number,
-        required: true
     },
     offsetX: {
         type: Number,
@@ -20,6 +24,17 @@ const props = defineProps({
     offsetY: {
         type: Number,
         default: 0
+    },
+    text: {
+        type: String,
+    },
+    allowChangeLocation: {
+        type: Boolean,
+        default: false
+    },
+    markers: {
+        type: Array,
+        default: []
     }
 });
 
@@ -29,19 +44,13 @@ const coordinates = ref(props.modelValue);
 const opener = ref(null);
 const openerRect = ref(null);
 
-onMounted(() => {
-    openerRect.value = opener.value.getBoundingClientRect();
-    window.addEventListener('resize', () => {
-        openerRect.value = opener.value.getBoundingClientRect();
-    });
-});
-
 const map = ref(null);
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'input']);
 
 const tileLayerImage = ref('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}.png');
 const tileLayer = ref('smooth');
+
 
 const trackCoordinates = (value) => {
     coordinates.value = [value.lat, value.lng];
@@ -51,6 +60,7 @@ const trackCoordinates = (value) => {
 const updateCoordinates = () => {
     changingLocation.value = false;
     emit('update:modelValue', coordinates.value);
+    emit('input', coordinates.value);
 };
 
 const toggleFullScreen = () => {
@@ -70,6 +80,7 @@ const toggleFullScreen = () => {
     }
 };
 
+
 const isOpen = ref(false);
 const changingLocation = ref(false);
 const fullscreen = ref(false);
@@ -79,6 +90,12 @@ const customIcon = icon({
     iconUrl: "/assets/img/default/marker.png",
     iconSize: [50, 50],
     iconAnchor: [25, 50],
+});
+
+const bbqIcon = icon({
+    iconUrl: "/assets/img/default/barbecue_point.png",
+    iconSize: [10, 10],
+    iconAnchor: [5, 5],
 });
 
 const calculateZoom = computed(() => {
@@ -103,27 +120,50 @@ function toggleMapLayer() {
     }
 }
 
+
+const handleClickOutside = (event) => {
+
+};
+
+onMounted(() => {
+    openerRect.value = opener.value.getBoundingClientRect();
+    window.addEventListener('resize', () => {
+        openerRect.value = opener.value.getBoundingClientRect();
+    });
+    document.addEventListener('click', handleClickOutside);
+});
+
+onUnmounted(() => {
+    document.removeEventListener('click', handleClickOutside);
+});
+
+function toggleChangingLocation() {
+    changingLocation.value = !changingLocation.value;
+}
+
+
+
+
 </script>
 
 <template>
     <div class="map-on-steroids-container">
-        <span ref="opener" @click="isOpen = !isOpen" class="map-on-steroids-opener">{{ isOpen ? 'Ocultar' : 'Mostrar' }}
-            mapa</span>
-        <div class="map-on-steroids-map-wrapper" v-if="isOpen" :class="{ 'fullscreen': fullscreen }" :style="{
-            top: `${openerRect.top + openerRect.height}px`,
-            left: `${openerRect.left}px`,
+        <span ref="opener" @click="isOpen = !isOpen" class="map-on-steroids-opener">{{ props.text ?? (isOpen ? 'Ocultar mapa' : 'Mostrar mapa') }}</span>
+        <div :scroller="scrollY" class="map-on-steroids-map-wrapper" v-if="isOpen" :class="{ 'fullscreen': fullscreen }" :style="{
+            top: `${openerRect.y}px`,
+            left: `${openerRect.x}px`,
             transform: `translate(${props.offsetX}px, ${props.offsetY}px)`
         }">
             <div class="map-on-steroids-map">
                 <div v-if="changingLocation" class="map-on-steroids-options">
-                    <span @click="changingLocation = false">Cancel·lar</span>
+                    <span @click="toggleChangingLocation">Cancel·lar</span>
                     <span @click="updateCoordinates"><img src="/assets/svg/check.svg" alt="Icon" /></span>
                     <span @click="toggleFullScreen">
                         <img src="/assets/svg/expand.svg" alt="Expand icon" />
                     </span>
                 </div>
                 <div v-else class="map-on-steroids-options">
-                    <span @click="changingLocation = true">Canviar ubicació</span>
+                    <span v-if="props.allowChangeLocation" @click="changingLocation = true">Canviar ubicació</span>
                     <span @click="toggleFullScreen">
                         <img src="/assets/svg/expand.svg" alt="Expand icon" />
                     </span>
@@ -148,10 +188,9 @@ function toggleMapLayer() {
                     <l-tile-layer :url="tileLayerImage"
                         layer-type="base" name="OpenStreetMap">
                     </l-tile-layer>
-
+                    <l-marker v-for="marker in props.markers" :key="marker.id" :lat-lng="[marker.latitude, marker.longitude]" :icon="bbqIcon"></l-marker>
                     <l-marker :lat-lng="props.modelValue" :icon="customIcon"></l-marker>
-
-                    <l-circle :lat-lng="props.modelValue" :radius="props.radius * 1000" :color="'#FF6100'" />
+                    <l-circle :lat-lng="props.modelValue" :radius="props.radius ? props.radius * 1000 : 0" :color="'#FF6100'" />
                 </l-map>
             </div>
         </div>
@@ -212,8 +251,8 @@ function toggleMapLayer() {
 .map-on-steroids-options {
     position: absolute;
     z-index: 999;
-    right: 20px;
-    top: 20px;
+    right: 10px;
+    top: 10px;
     display: flex;
     gap: 10px;
 }
@@ -221,6 +260,7 @@ function toggleMapLayer() {
 .map-on-steroids-options span {
     background: #fff;
     padding: 5px 10px;
+    height: 35px;
     border-radius: 20px;
     box-shadow: 0 0 10px 0 #00000088;
     cursor: pointer;
@@ -247,9 +287,9 @@ function toggleMapLayer() {
 .map-on-steroids-map-wrapper {
     width: 300px;
     height: 300px;
-    position: absolute;
+    position: fixed;
     background: #fff;
-    z-index: 999;
+    z-index: 9999;
     border: 10px solid white;
     border-radius: 35px;
     box-shadow: 0 0 10px 0 #00000088;
@@ -259,9 +299,9 @@ function toggleMapLayer() {
 
 .map-on-steroids-map-wrapper.fullscreen {
     width: 90vw;
-    height: 90vh;
+    height: calc(90vh - 90px);
     transition: 0.5s;
-    top: 50% !important;
+    top: calc(50% + 45px) !important;
     left: 50% !important;
     transform: translate(-50%, -50%) !important;
 }
