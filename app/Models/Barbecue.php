@@ -5,6 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\User;
+use App\Models\Image;
+use App\Models\Comment;
+
 class Barbecue extends Model
 {
     use HasFactory, \Staudenmeir\LaravelMergedRelations\Eloquent\HasMergedRelationships;
@@ -64,7 +68,7 @@ class Barbecue extends Model
         $this->invitations()->updateExistingPivot($user->id, ['accepted' => true, 'barbecue_id' => $this->id]);
     }
 
-    public function owner()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -72,5 +76,15 @@ class Barbecue extends Model
     public function basket()
     {
         return $this->HasOne(Basket::class);
+    }
+    
+    public function images()
+    {
+        return $this->hasMany(Image::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class)->with('user', 'replies')->orderBy('created_at', 'desc');
     }
 }

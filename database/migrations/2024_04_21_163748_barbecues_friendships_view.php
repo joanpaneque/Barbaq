@@ -12,7 +12,7 @@ return new class extends Migration
     {
         Schema::createOrReplaceMergeView(
             'barbecues_friendships_view',
-            [(new Barbecue())->acceptedInvitations(), (new Barbecue())->acceptedRequests(), (new Barbecue())->owner()],
+            [(new Barbecue())->acceptedInvitations(), (new Barbecue())->acceptedRequests(), (new Barbecue())->user()],
             true
         );
     }

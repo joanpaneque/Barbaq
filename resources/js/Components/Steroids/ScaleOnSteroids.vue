@@ -12,7 +12,7 @@
         }
     });
 
-    const emit = defineEmits(['update:modelValue']);
+    const emit = defineEmits(['update:modelValue', 'input']);
 
     const currentValue = ref(props.modelValue);
 
@@ -24,6 +24,7 @@
         const index = Math.round((value - 10) / step);
 
         emit('update:modelValue', index);
+        emit('input', index);
     };
 
 </script>

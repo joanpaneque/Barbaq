@@ -6,13 +6,14 @@ const props = defineProps({
     modelValue: String
 });
 
-const emits = defineEmits(['update:modelValue']);
+const emits = defineEmits(['update:modelValue', 'input']);
 
 const inputValue = ref(props.modelValue);
 
 const onInput = (event) => {
     inputValue.value = event.target.value;
     emits('update:modelValue', inputValue.value);
+    emits('input', inputValue.value);
 };
 </script>
 

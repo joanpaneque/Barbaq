@@ -12,10 +12,11 @@
 
     // modelValues in an array of strings that represent the selected filters
 
-    const emit = defineEmits(['update:modelValue']);
+    const emit = defineEmits(['update:modelValue', 'input']);
 
     const updateValue = (value) => {
         emit('update:modelValue', value);
+        emit('input', value);
     };
 
     function handleFilterClick(key) {
