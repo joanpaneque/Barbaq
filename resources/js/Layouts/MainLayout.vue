@@ -30,7 +30,7 @@ const props = defineProps({
         </div>
         <div class="main-layout-content">
             <div class="main-layout-left-aside">
-                <MainLeftAside :friends="friends"/>
+                <MainLeftAside/>
             </div>
             <div class="main-layout-content-wrapper">
                 <slot name="main-content"></slot>

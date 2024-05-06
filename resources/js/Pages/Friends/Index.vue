@@ -11,6 +11,7 @@ const props = defineProps({
         required: true,
     },
 });
+
 function searchFriends(searchTerm) {
     const friendCards = document.querySelectorAll('.friend-card');
 
@@ -39,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <template>
-    <MainLayout :friends="props.friends" title="Inici">
+    <MainLayout title="Inici">
         <template #main-content>
             <div class="form-control">
                 <input id="search-input" type="text" placeholder="Buscar amics..."

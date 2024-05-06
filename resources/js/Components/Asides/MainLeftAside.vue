@@ -27,7 +27,7 @@ const props = defineProps({
             <div class="item active">
                 <img src="/assets/svg/following.svg" alt="Icon" />
                 <span>Amics</span>
-                <span class="counter">{{friends.length}}</span>
+                <span class="counter">{{ authStore.user?.friends?.length }}</span>
             </div>
         </Link>
 
