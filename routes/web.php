@@ -40,12 +40,15 @@ Route::delete('friends/{id}', [FriendsController::class, 'destroy'])->name('frie
 
 Route::post('/sendfriendrequest/{id}', [FriendsController::class, 'store'])->name('sendfriendrequest');
 
+
 Route::get('/api/user', [UserController::class, 'apiShowLogged']);
 
 Route::post('/updateuserphoto/{id}', [UserController::class, 'update'])->name('updateuserphoto');
 
 Route::resource('barbecues', BarbecuesController::class);
 Route::get('/api/barbecues', [BarbecuesController::class, 'apiIndex']);
+Route::post('/sendinvitation/{id}', [BarbecuesController::class, 'sendInvitation'])->name('sendinvitation');
+
 
 
 Route::resource('notifications', NotificationsController::class);

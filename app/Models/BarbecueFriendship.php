@@ -6,10 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Barbecue;
+use App\Models\User;
 
 class BarbecueFriendship extends Model
 {
     use HasFactory;
+
+    protected $table = 'barbecues_friendships';
 
     protected $fillable = [
         'barbecue_id',
@@ -23,4 +26,6 @@ class BarbecueFriendship extends Model
     {
         return $this->belongsTo(Barbecue::class);
     }
+
+
 }
