@@ -3,13 +3,11 @@ import { ref } from 'vue';
 import { createApp } from 'vue'
 import { QuillEditor } from '@vueup/vue-quill'
 import { useAuthStore } from "@/stores/auth";
-import { useBarbecueStore } from '@/stores/barbecue';
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import { useForm } from '@inertiajs/vue3';
 import axios from 'axios';
 
 const authStore = useAuthStore();
-const barbecueStore = useBarbecueStore();
 
 
 const app = createApp()
@@ -49,33 +47,23 @@ const submitBarbecueForm = () => {
 
 
 
-    const mensajeDiscord = `Holaa 1`;
-    const payloadDiscord = {
-        content: mensajeDiscord
-    };
-
-    const webhookURL = 'https://discord.com/api/webhooks/1234888722391109712/MFQE_6mVi1ROVCTQgJmGuV5nKojCIXggHOmwptwqi9f55io7FLYb5hRrRVg8y3L8Si3Y';
-
-    axios.post(webhookURL, payloadDiscord, {
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-        .then(() => {
-            console.log('Mensaje enviado a Discord');
-        })
-        .catch((error) => {
-            console.error('Error al enviar el mensaje a Discord:', error);
-        });
-
-
 
     axios.post("/barbecues", barbecueForm)
         .then(() => {
-            barbecueStore.insertBarbacue(barbecueForm, authStore.user);
-            barbecueForm.reset();
+
             quillContent.value.setHTML('');
             isOpen.value = false;
+
+            axios.post("/api/discordbot", {
+                message: `👤 **${authStore.user.name} ${authStore.user.surnames}** ha creat la barbacoa 🔥 "${barbecueForm.title}"\n ✏️ Creat per: https://barbaq.es/profile/${authStore.user.id}\n `
+            })
+                .then(() => {
+
+                })
+                .catch((error) => {
+                    console.error('Error al enviar la barbacoa:', error);
+                });
+            barbecueForm.reset();
         });
 };
 
@@ -89,7 +77,7 @@ const submitBarbecueForm = () => {
             <img :src="authStore.user.image" alt="Foto de perfil" class="mr-2 h-16 w-16 rounded-full imgprofile">
             <div class="w-full mt-auto mb-auto ">
                 <div class="input-container">
-                    <input type="text" placeholder="Crear nova barbacoa..." v-model="barbecueForm.title" aria-label="Títol de la barbacoa">
+                    <input type="text" placeholder="Crear nova barbacoa..." v-model="barbecueForm.title">
                 </div>
             </div>
             <img src="/assets/svg/edit.svg" alt="Imatge de editar" class="">
