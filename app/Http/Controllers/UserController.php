@@ -82,6 +82,15 @@ class UserController extends Controller
         
     }
 
+    public function togglePrivate()
+    {
+        $user = User::find(auth()->id());
+        $user->public = !$user->public;
+        $user->save();
+
+        return redirect()->back();
+    }
+
     /**
      * Remove the specified resource from storage.
      */

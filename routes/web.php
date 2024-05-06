@@ -52,7 +52,7 @@ Route::post('/api/discordbot', [DiscordBotController::class, 'broadcast']);
 
 Route::post('/sendinvitation/{id}', [BarbecuesController::class, 'sendInvitation'])->name('sendinvitation');
 
-
+Route::post('/toggleprivate', [UserController::class, 'togglePrivate'])->name('toggleprivate');
 
 
 Route::resource('notifications', NotificationsController::class);
