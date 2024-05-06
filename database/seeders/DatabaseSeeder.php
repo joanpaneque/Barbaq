@@ -6,6 +6,10 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 
 use App\Models\Barbecue;
+use App\Models\BasketProduct;
+use App\Models\Basket;
+use App\Models\Product;
+use App\Models\BarbecueFriendship;
 
 class DatabaseSeeder extends Seeder
 {
@@ -161,5 +165,51 @@ class DatabaseSeeder extends Seeder
                 'created_at' => now()->subDays(rand(0, 30))
             ]);
         }
+        
+
+        Barbecue::create([
+            'user_id' => $user_joan->id,
+            'latitude' => 41.385063,
+            'longitude' => 2.173404,
+            'address' => 'Barcelona',
+            'title' => 'Barbacoa a barcelona',
+            'content' => '<h1>Barbacoa a barcelona</h1><>Benvinguts a la barbacoa a barcelona, en aquet lloc podreu gaudir de la millor barbacoa de la ciutat. Us esperem a tots!</p>'
+        ]);
+
+        Barbecue::create([
+            'user_id' => $user_roman->id,
+            'latitude' => 42.2666,
+            'longitude' => 2.9591,
+            'address' => 'Figueres, Girona',
+            'title' => 'Barbacoa a figueres, girona',
+            'content' => '<h1>Barbacoa a figueres, girona</h1><p>Benvinguts a la barbacoa a figueres, en aquet lloc podreu gaudir de la millor barbacoa de la ciutat. Us esperem a tots!</p>'
+        ]);
+
+        Barbecue::create([
+            'user_id' => $user_emma->id,
+            'latitude' => 42.2632,
+            'longitude' => 3.1600,
+            'address' => 'Roses, Girona',
+            'title' => 'Barbacoa a roses, girona',
+            'content' => '<h1>Barbacoa a roses, girona</h1><p>Benvinguts a la barbacoa a roses, en aquet lloc podreu gaudir de la millor barbacoa de la ciutat. Us esperem a tots!</p>'
+        ]);
+
+        Barbecue::create([
+            'user_id' => $user_aniol->id,
+            'latitude' => 42.0451,
+            'longitude' => 3.1856,
+            'address' => 'L\'Estartit, Girona',
+            'title' => 'Barbacoa a l\'estartit, girona',
+            'content' => '<h1>Barbacoa a l\'estartit, girona</h1><p>Benvinguts a la barbacoa a l\'estartit, en aquet lloc podreu gaudir de la millor barbacoa de la ciutat. Us esperem a tots!</p>'
+        ]);
+
+        BarbecueFriendship::create([
+            'barbecue_id' => 1,
+            'user_id' => 1,
+            'guest_id' => 2,
+            'is_admin' => false,
+            'accepted' => true
+        ]);
     }
+
 }

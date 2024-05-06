@@ -1,25 +1,28 @@
 <script setup>
-    import MainLayout from "@/Layouts/MainLayout.vue";
-    import Chat from "@/Components/Barbecues/Chat.vue"; 
-    import BarbacuesAside from "@/Components/Barbecues/BarbacuesAside.vue";
-    import { defineProps } from "vue";
-    import { useAuthStore } from "@/stores/auth";
-    import { useBarbecueStore } from "@/stores/barbecue";
+import MainLayout from "@/Layouts/MainLayout.vue";
+import Chat from "@/Components/Barbecues/Chat.vue";
+import BarbacuesAside from "@/Components/Barbecues/BarbacuesAside.vue";
+import { defineProps } from "vue";
+import { useAuthStore } from "@/stores/auth";
+import { useBarbecueStore } from "@/stores/barbecue";
+const authStore = useAuthStore();
+authStore.updateUserData();
 
-    const props = defineProps({
-        barbecue: {
-            type: Object,
-            required: true
-        }
-    });
+const props = defineProps({
+    barbecue: {
+        type: Object,
+        required: true
+    },
+    friends: {
+        type: Object,
+        required: true,
+    },
+});
 
-    const authStore = useAuthStore();
-    const barbecueStore = useBarbecueStore();
-    authStore.updateUserData();
-    barbecueStore.setBarbecue(props.barbecue);
-
-    console.log(barbecueStore.barbecue);
-
+const barbecueStore = useBarbecueStore();
+barbecueStore.setBarbecue(props.barbecue);
+console.log(barbecueStore.barbecue);
+console.log(props.friends);
 </script>
 
 <template>
@@ -29,17 +32,17 @@
         </template>
         <template #right-aside>
             <div class="aside-menu">
-                <BarbacuesAside />
+                <BarbacuesAside :friends="friends" />
             </div>
         </template>
     </MainLayout>
 </template>
 
 <style scoped>
-    .aside-menu {
-        width: 100%;
-        height: 400px;
-        background: white;
-        border-radius: 20px;
-    }
+.aside-menu {
+    width: 100%;
+    height: 400px;
+    background: white;
+    border-radius: 20px;
+}
 </style>

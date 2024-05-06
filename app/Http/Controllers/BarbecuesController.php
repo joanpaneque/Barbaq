@@ -106,11 +106,26 @@ class BarbecuesController extends Controller
      */
     public function show(string $id)
     {
+        $user = auth()->user();
+        $friends = $user->friends()->get();
         $barbecue = Barbecue::findOrFail($id);
-        $barbecue = Barbecue::with('basket')->with('basket.basketProduct')->with('basket.basketProduct.product')->find($id);
+        $barbecue = Barbecue::with('basket')
+        ->with('basket.basketProduct')
+        ->with('basket.basketProduct.product')
+        ->with('members')
+        ->find($id);
+       
+        $members = $barbecue->members()->get();
+
+        foreach ($members as $member) {
+            $friends = $friends->reject(function ($friend) use ($member) {
+                return $friend->id === $member->id;
+            });
+        }
         
         return Inertia::render('Barbecues/Show', [
             'barbecue' => $barbecue,
+            'friends' => $friends,
         ]);
     }
 
@@ -136,5 +151,17 @@ class BarbecuesController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    /**
+     * Send invitation to join barbecue.
+     */
+    public function sendInvitation(Request $request, string $id)
+    {
+        $barbecue = Barbecue::findOrFail($id);
+        $user = User::findOrFail($request->friend_id);
+        $barbecue->sendInvitation($user);
+
+        return redirect()->route('barbecues.show', ['barbecue' => $id]);
     }
 }
