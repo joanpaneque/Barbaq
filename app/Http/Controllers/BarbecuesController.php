@@ -126,6 +126,7 @@ class BarbecuesController extends Controller
         return Inertia::render('Barbecues/Show', [
             'barbecue' => $barbecue,
             'friends' => $friends,
+            'members' => $members,
         ]);
     }
 
