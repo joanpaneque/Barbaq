@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Basket;
 use App\Models\BasketProduct;
 use App\Models\Product;
+use App\Models\BarbecueFriendship;
 
 
 
@@ -160,9 +161,23 @@ class BarbecuesController extends Controller
     public function sendInvitation(Request $request, string $id)
     {
         $barbecue = Barbecue::findOrFail($id);
-        $user = User::findOrFail($request->friend_id);
+        $user = User::findOrFail($request->user_id);
         $barbecue->sendInvitation($user);
 
         return redirect()->route('barbecues.show', ['barbecue' => $id]);
     }
+
+    /**
+     * Destroy frienship by user id and barbecue id.
+     */
+    public function destroyFriendship(Request $request, string $id)
+    {
+        $barbecue = Barbecue::findOrFail($id);
+        $user = User::findOrFail($request->user_id);
+        $friendship = BarbecueFriendship::where('barbecue_id', $id)->where('guest_id', $user->id)->firstOrFail();
+        $friendship->delete();
+
+        return redirect()->route('barbecues.show', ['barbecue' => $id]);
+    }
+
 }
