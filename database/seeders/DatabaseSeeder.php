@@ -9,6 +9,7 @@ use App\Models\Barbecue;
 use App\Models\BasketProduct;
 use App\Models\Basket;
 use App\Models\Product;
+use App\Models\BarbecueFriendship;
 
 class DatabaseSeeder extends Seeder
 {
@@ -128,7 +129,6 @@ class DatabaseSeeder extends Seeder
                 'price' => random_float(1, 100)
             ]);
 
-            
         }
 
         Barbecue::create([
@@ -165,6 +165,14 @@ class DatabaseSeeder extends Seeder
             'address' => 'L\'Estartit, Girona',
             'title' => 'Barbacoa a l\'estartit, girona',
             'content' => '<h1>Barbacoa a l\'estartit, girona</h1><p>Benvinguts a la barbacoa a l\'estartit, en aquet lloc podreu gaudir de la millor barbacoa de la ciutat. Us esperem a tots!</p>'
+        ]);
+
+        BarbecueFriendship::create([
+            'barbecue_id' => 1,
+            'user_id' => 1,
+            'guest_id' => 2,
+            'is_admin' => false,
+            'accepted' => true
         ]);
     }
 }

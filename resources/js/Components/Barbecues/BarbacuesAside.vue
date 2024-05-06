@@ -1,6 +1,15 @@
 <script setup>
 import { ref } from 'vue';
 import { useBarbecueStore } from "@/stores/barbecue";
+import { defineProps } from 'vue';
+import { Head, Link, router, useForm } from '@inertiajs/vue3';
+
+const props = defineProps({
+    friends: {
+        type: Object,
+        required: true,
+    },
+});
 
 let highlightedArea = ref(null);
 
@@ -32,6 +41,17 @@ function resetHighlight() {
 
 const barbecueStore = useBarbecueStore();
 const barbecue = barbecueStore.barbecue;
+
+const form = useForm({
+    friend_id: null,
+});
+
+const inviteUser = (friendId) => {
+form.friend_id = friendId;
+form.post('/sendinvitation/' + barbecue.id);
+
+}
+
 </script>
 
 <template>
@@ -98,7 +118,6 @@ const barbecue = barbecueStore.barbecue;
                         <span>€</span>
                     </h1>
                 </div>
-
             </div>
         </div>
 
@@ -106,8 +125,8 @@ const barbecue = barbecueStore.barbecue;
 
 
 
-        <div class="dates"  :class="{
-            
+        <div class="dates" :class="{
+
             'notSelected': highlightedArea !== 'dates' && highlightedArea !== null
         }">
 
@@ -149,33 +168,57 @@ const barbecue = barbecueStore.barbecue;
                 </div>
             </div>
         </div>
-        <div class="users" @click="highlightArea('users')" :class="{
-            'selected': highlightedArea === 'users',
-            'notSelected': highlightedArea !== 'users' && highlightedArea !== null
+        <div class="users" :class="{
+            'selected': highlightedArea === 'users' || highlightedArea === 'usersinvite',
+            'notSelected': highlightedArea !== 'users' && highlightedArea !== null && highlightedArea !== 'usersinvite' && highlightedArea !== null
         }">
             <h1>USUARIS</h1>
-
-            <div class="usersdiv">
-                <p>
-                    Veure tots els usuaris inscrits
-                </p>
-
-                <img src="/assets/svg/arrow-right.svg" alt="Fletxa dreta" class="img-fluid">
-            </div>
-            <div v-if="showAddUsers" class="mt-3">
+            <div class="usersbarbaq" @click="highlightArea('users')" :class="{
+                'selected': highlightedArea === 'users',
+                'notSelected': highlightedArea !== 'users' && highlightedArea !== null
+            }">
 
 
-                <div class="flex items-center gap-2 bg-white p-1 rounded-xl">
-
-                    <img src="/assets/img/emma.jpg" alt="" class="fit-content h-10 w-10 rounded-full object-cover">
-                    <p>Emma Cardosa</p>
+                <div class="usersdiv">
+                    <p>
+                        Veure tots els usuaris inscrits
+                    </p>
+                    <img src="/assets/svg/arrow-right.svg" alt="Fletxa dreta" class="img-fluid">
                 </div>
+                <div v-if="highlightedArea === 'users'">
+                    <div class="flex items-center gap-2 bg-white p-1 rounded-xl">
 
+                        <img src="/assets/img/user.png" alt="" class="fit-content h-10 w-10 rounded-full object-cover">
+                        <p>Emma Cardosa</p>
+                    </div>
+                </div>
+            </div>
 
+            <div class="inviteusers" @click="highlightArea('usersinvite')" :class="{
+                'selected': highlightedArea === 'usersinvite',
+                'notSelected': highlightedArea !== 'usersinvite' && highlightedArea !== null
+            }">
+                <div class="usersdiv">
+                    <p>
+                        Invitar als teus amics
+                    </p>
+                    <img src="/assets/svg/arrow-right.svg" alt="Fletxa dreta" class="img-fluid">
+                </div>
+                <div v-for="friend in friends" :key="friend.id" v-if="highlightedArea === 'usersinvite'">
+                    <div class="flex items-center gap-2 bg-white p-1 rounded-xl mb-2 w-full">
 
+                        <img :src="friend.image" alt="" class="fit-content h-10 w-10 rounded-full object-cover">
+                        <p>{{ friend.name }}</p>
+
+                        <Link 
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" 
+                        @click="inviteUser(friend.id)">
+                            Invitar
+                        </Link>
+                    </div>
+                </div>
             </div>
         </div>
-
     </div>
 </template>
 
