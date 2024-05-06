@@ -12,6 +12,7 @@ use App\Models\BasketProduct;
 use App\Models\Product;
 
 
+
 class BarbecuesController extends Controller
 {
     /**
@@ -93,6 +94,9 @@ class BarbecuesController extends Controller
     {
         $user = auth()->user();
         $barbecue = $user->barbecues()->create($request->all());
+        
+       
+
 
         return response()->json($barbecue);
     }
