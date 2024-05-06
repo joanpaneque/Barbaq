@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue';
 import EmojiPicker from 'vue3-emoji-picker';
 import "vue3-emoji-picker/css";
 import { useBarbecueStore } from "@/stores/barbecue";
+import { useAuthStore } from "@/stores/auth";
 
 
 const messageInput = ref('');
@@ -77,6 +78,11 @@ window.addEventListener('touchmove', drag);
 window.addEventListener('touchend', dragEnd);
 
 const barbecueStore = useBarbecueStore();
+const authStore = useAuthStore();
+authStore.updateUserData();
+
+
+console.log(authStore.user);
 
 </script>
 

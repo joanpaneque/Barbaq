@@ -10,6 +10,8 @@ use App\Models\User;
 use App\Models\Basket;
 use App\Models\BasketProduct;
 use App\Models\Product;
+use App\Models\BarbecueFriendship;
+
 
 
 class BarbecuesController extends Controller
@@ -93,6 +95,9 @@ class BarbecuesController extends Controller
     {
         $user = auth()->user();
         $barbecue = $user->barbecues()->create($request->all());
+        
+       
+
 
         return response()->json($barbecue);
     }
@@ -102,11 +107,27 @@ class BarbecuesController extends Controller
      */
     public function show(string $id)
     {
+        $user = auth()->user();
+        $friends = $user->friends()->get();
         $barbecue = Barbecue::findOrFail($id);
-        $barbecue = Barbecue::with('basket')->with('basket.basketProduct')->with('basket.basketProduct.product')->find($id);
+        $barbecue = Barbecue::with('basket')
+        ->with('basket.basketProduct')
+        ->with('basket.basketProduct.product')
+        ->with('members')
+        ->find($id);
+       
+        $members = $barbecue->members()->get();
+
+        foreach ($members as $member) {
+            $friends = $friends->reject(function ($friend) use ($member) {
+                return $friend->id === $member->id;
+            });
+        }
         
         return Inertia::render('Barbecues/Show', [
             'barbecue' => $barbecue,
+            'friends' => $friends,
+            'members' => $members,
         ]);
     }
 
@@ -133,4 +154,30 @@ class BarbecuesController extends Controller
     {
         //
     }
+
+    /**
+     * Send invitation to join barbecue.
+     */
+    public function sendInvitation(Request $request, string $id)
+    {
+        $barbecue = Barbecue::findOrFail($id);
+        $user = User::findOrFail($request->user_id);
+        $barbecue->sendInvitation($user);
+
+        return redirect()->route('barbecues.show', ['barbecue' => $id]);
+    }
+
+    /**
+     * Destroy frienship by user id and barbecue id.
+     */
+    public function destroyFriendship(Request $request, string $id)
+    {
+        $barbecue = Barbecue::findOrFail($id);
+        $user = User::findOrFail($request->user_id);
+        $friendship = BarbecueFriendship::where('barbecue_id', $id)->where('guest_id', $user->id)->firstOrFail();
+        $friendship->delete();
+
+        return redirect()->route('barbecues.show', ['barbecue' => $id]);
+    }
+
 }

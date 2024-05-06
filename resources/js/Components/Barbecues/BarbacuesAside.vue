@@ -1,6 +1,16 @@
 <script setup>
 import { ref } from 'vue';
 import { useBarbecueStore } from "@/stores/barbecue";
+import { defineProps } from 'vue';
+import { Head, Link, router, useForm } from '@inertiajs/vue3';
+import BarbaqUserProfile from '../UserProfile/BarbaqUserProfile.vue';
+
+const props = defineProps({
+    friends: {
+        type: Object,
+        required: true,
+    },
+});
 
 let highlightedArea = ref(null);
 
@@ -32,6 +42,22 @@ function resetHighlight() {
 
 const barbecueStore = useBarbecueStore();
 const barbecue = barbecueStore.barbecue;
+
+const form = useForm({
+    user_id: null,
+});
+
+const inviteUser = (friendId) => {
+    form.user_id = friendId;
+    form.post('/sendinvitation/' + barbecue.id);
+}
+
+const deleteMember = (memberId) => {
+    form.user_id = memberId;
+    form.delete('/destroyfriendship/' + barbecue.id);
+    console.log('Delete member', memberId);
+}
+
 </script>
 
 <template>
@@ -98,7 +124,6 @@ const barbecue = barbecueStore.barbecue;
                         <span>€</span>
                     </h1>
                 </div>
-
             </div>
         </div>
 
@@ -106,8 +131,8 @@ const barbecue = barbecueStore.barbecue;
 
 
 
-        <div class="dates"  :class="{
-            
+        <div class="dates" :class="{
+
             'notSelected': highlightedArea !== 'dates' && highlightedArea !== null
         }">
 
@@ -149,33 +174,99 @@ const barbecue = barbecueStore.barbecue;
                 </div>
             </div>
         </div>
-        <div class="users" @click="highlightArea('users')" :class="{
-            'selected': highlightedArea === 'users',
-            'notSelected': highlightedArea !== 'users' && highlightedArea !== null
+        <div class="users" :class="{
+            'selected': highlightedArea === 'users' || highlightedArea === 'usersinvite',
+            'notSelected': highlightedArea !== 'users' && highlightedArea !== null && highlightedArea !== 'usersinvite' && highlightedArea !== null
         }">
             <h1>USUARIS</h1>
-
-            <div class="usersdiv">
-                <p>
-                    Veure tots els usuaris inscrits
-                </p>
-
-                <img src="/assets/svg/arrow-right.svg" alt="Fletxa dreta" class="img-fluid">
-            </div>
-            <div v-if="showAddUsers" class="mt-3">
+            <div class="usersbarbaq" @click="highlightArea('users')" :class="{
+                'selected': highlightedArea === 'users',
+                'notSelected': highlightedArea !== 'users' && highlightedArea !== null
+            }">
 
 
-                <div class="flex items-center gap-2 bg-white p-1 rounded-xl">
-
-                    <img src="/assets/img/emma.jpg" alt="" class="fit-content h-10 w-10 rounded-full object-cover">
-                    <p>Emma Cardosa</p>
+                <div class="usersdiv">
+                    <p>
+                        Veure tots els usuaris inscrits
+                    </p>
+                    <img src="/assets/svg/arrow-right.svg" alt="Fletxa dreta" class="img-fluid">
                 </div>
 
+                <div v-if="highlightedArea === 'users'" v-for="member in $page.props.members" :key="member.id">
+                    <div class="flex items-center gap-2 bg-white p-1 rounded-xl mb-2 w-full mt-2">
 
+                        <img :src="member.image" alt="" class="fit-content h-10 w-10 rounded-full object-cover">
+                        <div class="flex flex-row items-center gap-1 w-full">
+                            <p>
+                                {{ member.name }}
+                            </p>
+                            <p>
+                                {{ member.surnames }}
+                            </p>
+                        </div>
 
+                        <div class="flex justify-end" v-if="member.id !== barbecue.user_id">
+                            <Link @click="deleteMember(member.id)" class="flex items-center pr-1">
+                            <button title="Add New" class="group cursor-pointer outline-none hover:rotate-[135deg]
+                                duration-300 rotate-45">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 24 24"
+                                    class="stroke-pink-400 fill-none group-hover:fill-pink-800 group-active:stroke-pink-200 group-active:fill-pink-600 group-active:duration-0 duration-300">
+                                    <path
+                                        d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
+                                        stroke-width="1.5"></path>
+                                    <path d="M8 12H16" stroke-width="1.5"></path>
+                                    <path d="M12 16V8" stroke-width="1.5"></path>
+                                </svg>
+                            </button>
+                            </Link>
+                        </div>
+
+                        <div v-if="member.id === barbecue.user_id" class="flex justify-end w-full">
+
+                            <div class="badge badge-outline border-transparent text-pink-400 ">
+                                Admin</div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="inviteusers" @click="highlightArea('usersinvite')" :class="{
+                'selected': highlightedArea === 'usersinvite',
+                'notSelected': highlightedArea !== 'usersinvite' && highlightedArea !== null
+            }">
+                <div class="usersdiv">
+                    <p>
+                        Invitar als teus amics
+                    </p>
+                    <img src="/assets/svg/arrow-right.svg" alt="Fletxa dreta" class="img-fluid">
+                </div>
+                <div v-for="friend in friends" :key="friend.id" v-if="highlightedArea === 'usersinvite'">
+                    <div class="flex items-center gap-2 bg-white p-1 rounded-xl mb-2 w-full">
+                        <img :src="friend.image" alt="" class="fit-content h-10 w-10 rounded-full object-cover">
+                        <p>{{ friend.name }} </p>
+
+                        <div class="flex justify-end w-full">
+                            <Link @click="inviteUser(friend.id)" class="flex items-center pr-1">
+                            <button title="Add New"
+                                class="group cursor-pointer outline-none hover:rotate-90 duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 24 24"
+                                    class="stroke-pink-400 fill-none group-hover:fill-pink-800 group-active:stroke-pink-200 group-active:fill-pink-600 group-active:duration-0 duration-300">
+                                    <path
+                                        d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
+                                        stroke-width="1.5"></path>
+                                    <path d="M8 12H16" stroke-width="1.5"></path>
+                                    <path d="M12 16V8" stroke-width="1.5"></path>
+                                </svg>
+                            </button>
+
+                            </Link>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
     </div>
 </template>
 

@@ -13,7 +13,7 @@ use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\ImagesController;
-
+use App\Http\Controllers\DiscordBotController;
 
 Route::get('/', [IndexController::class, 'show'])->name('index');
 
@@ -41,6 +41,7 @@ Route::delete('friends/{id}', [FriendsController::class, 'destroy'])->name('frie
 
 Route::post('/sendfriendrequest/{id}', [FriendsController::class, 'store'])->name('sendfriendrequest');
 
+
 Route::get('/api/user', [UserController::class, 'apiShowLogged']);
 
 Route::post('/updateuserphoto/{id}', [UserController::class, 'update'])->name('updateuserphoto');
@@ -48,6 +49,13 @@ Route::post('/updateuserphoto/{id}', [UserController::class, 'update'])->name('u
 Route::resource('barbecues', BarbecuesController::class);
 Route::resource('/barbecues/{barbecueId}/images', ImagesController::class);
 Route::get('/api/barbecues', [BarbecuesController::class, 'apiIndex']);
+
+Route::post('/api/discordbot', [DiscordBotController::class, 'broadcast']);
+
+Route::post('/sendinvitation/{id}', [BarbecuesController::class, 'sendInvitation'])->name('sendinvitation');
+Route::delete('/destroyfriendship/{id}', [BarbecuesController::class, 'destroyFriendship'])->name('destroyfriendship');
+
+Route::post('/toggleprivate', [UserController::class, 'togglePrivate'])->name('toggleprivate');
 
 
 Route::resource('notifications', NotificationsController::class);

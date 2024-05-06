@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { useAuthStore } from "@/stores/auth";
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import { useProfileStore } from "@/stores/profile";
+import axios from 'axios';
 
 import { toFormData } from "axios";
 
@@ -62,19 +63,32 @@ const updateUserPhoto = () => {
     // formData.append('image', form.image); 
 
     // form.post(route('updateuserphoto', id), formData); 
-    
+
     let id = profileStore.user.id;
     let formData = new FormData();
     formData.append('image', form.image);
     profileStore.user.image = URL.createObjectURL(form.image);
     showModal.value = false;
-    form.post(route('updateuserphoto', id), {...formData,
+    form.post(route('updateuserphoto', id), {
+        ...formData,
         onSuccess: () => {
             authStore.updateUserData();
         }
     });
-    
+
 };
+
+const togglePrivateOrPublic = () => {
+    console.log('togglePrivate');
+    axios.post(route('toggleprivate'))
+        .then(response => {
+            console.log(response.data);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
+
 
 
 
@@ -82,7 +96,7 @@ const updateUserPhoto = () => {
 
 <template>
     <div v-if="profileStore.user && authStore.user">
-       
+
         <div class="w-full bg-cover bg-no-repeat bg-center rounded-t-[20px]" style="height: 150px; background: rgb(131,58,180);
         background: linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%);">
         </div>
@@ -169,9 +183,26 @@ const updateUserPhoto = () => {
                             </div>
                         </div>
                         <div class="flex flex-col text-right ml-auto">
-                            <div v-if="authStore.user && profileStore.user">
+                            <div v-if="authStore.user && profileStore.user" class="flex gap-3 ">
+                                <button class="content-center justify-center" v-if="authStore.user.id == profileStore.user.id">
+                                    <label v-if="authStore.user.public == 1" class="swap">
+                                        <input type="checkbox" />
+                                        
+                                        <div @click="togglePrivateOrPublic" class="swap-on px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 transition duration-150"> <p class="text-red-600 font-bold">Privat</p> </div>
+                                        <div @click="togglePrivateOrPublic" class="swap-off px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 transition duration-150"> <p class="text-green-600 font-bold">Public</p> </div>
+                                    </label>
+
+                                    <label v-else class="swap">
+                                        <input type="checkbox" />
+                                        
+                                        <div @click="togglePrivateOrPublic" class="swap-on px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 transition duration-150"> <p class="text-green-600 font-bold">Public</p> </div>
+                                        <div @click="togglePrivateOrPublic" class="swap-off px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 transition duration-150"> <p class="text-red-600 font-bold">Privat</p> </div>
+                                    </label>
+                                    
+                                </button>
                                 <Link :href="route('profile.edit', { profile: profileStore.user.id })"
                                     v-if="authStore.user.id == profileStore.user.id">
+
                                 <button
                                     class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150">
                                     <img class="" src="/assets/svg/editprofile.svg" loading="lazy" alt="google logo">

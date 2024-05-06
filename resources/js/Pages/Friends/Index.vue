@@ -7,10 +7,11 @@ authStore.updateUserData();
 
 const props = defineProps({
     friends: {
-        type: Object,
+        type: Array,
         required: true,
     },
 });
+
 function searchFriends(searchTerm) {
     const friendCards = document.querySelectorAll('.friend-card');
 

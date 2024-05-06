@@ -43,9 +43,8 @@ class UserController extends Controller
 
     public function apiShowLogged()
     {
-        $user = User::with('notifications')->find(auth()->id());
-
-        return response()->json($user);
+        $user = User::with('notifications','friends')->where('id', auth()->id())->first();
+            return response()->json($user);
     }
 
     /**
@@ -80,6 +79,15 @@ class UserController extends Controller
         //reload the page
         
         
+    }
+
+    public function togglePrivate()
+    {
+        $user = User::find(auth()->id());
+        $user->public = !$user->public;
+        $user->save();
+
+        return redirect()->back();
     }
 
     /**
