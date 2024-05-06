@@ -185,11 +185,25 @@ const inviteUser = (friendId) => {
                     </p>
                     <img src="/assets/svg/arrow-right.svg" alt="Fletxa dreta" class="img-fluid">
                 </div>
-                <div v-if="highlightedArea === 'users'">
-                    <div class="flex items-center gap-2 bg-white p-1 rounded-xl">
 
-                        <img src="/assets/img/user.png" alt="" class="fit-content h-10 w-10 rounded-full object-cover">
-                        <p>Emma Cardosa</p>
+                <div v-if="highlightedArea === 'users'" v-for="member in $page.props.members" :key="member.id">
+                    <div class="flex items-center gap-2 bg-white p-1 rounded-xl mb-2 w-full mt-2">
+
+                        <img :src="member.image" alt="" class="fit-content h-10 w-10 rounded-full object-cover">
+                        <div class="flex flex-row items-center gap-1 w-full">
+                        <p >
+                            {{ member.name }} 
+                        </p>
+                        <p>{{ member.surnames }}</p>
+                   
+                    </div>
+                        <div v-if="member.id === barbecue.user_id" class="flex justify-end w-full">
+
+                            <div class="badge badge-outline border-transparent text-pink-400 ">
+                                Admin</div>
+
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -206,9 +220,9 @@ const inviteUser = (friendId) => {
                 </div>
                 <div v-for="friend in friends" :key="friend.id" v-if="highlightedArea === 'usersinvite'">
                     <div class="flex items-center gap-2 bg-white p-1 rounded-xl mb-2 w-full">
-
                         <img :src="friend.image" alt="" class="fit-content h-10 w-10 rounded-full object-cover">
-                        <p>{{ friend.name }}</p>
+                        <p>{{ friend.name }} </p>
+
                         <div class="flex justify-end w-full">
                             <Link @click="inviteUser(friend.id)" class="flex items-center pr-1">
                             <button title="Add New"
