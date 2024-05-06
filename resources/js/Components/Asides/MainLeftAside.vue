@@ -1,9 +1,15 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
 import { useAuthStore } from "@/stores/auth";
+import { defineProps, onMounted } from 'vue';
 
 const authStore = useAuthStore();
-
+const props = defineProps({
+    friends: {
+        type: Array,
+        required: true,
+    },
+});
 </script>
 
 <template>
@@ -21,7 +27,7 @@ const authStore = useAuthStore();
             <div class="item active">
                 <img src="/assets/svg/following.svg" alt="Icon" />
                 <span>Amics</span>
-                <span class="counter">3</span>
+                <span class="counter">{{ authStore.user?.friends?.length }}</span>
             </div>
         </Link>
 
