@@ -8,7 +8,11 @@ const props = defineProps({
     title: {
         type: String,
         required: false
-    }
+    },
+  friends: {
+    type: Array,
+    required: true
+  }
 });
 
 </script>
@@ -26,70 +30,37 @@ const props = defineProps({
         </div>
         <div class="main-layout-content">
             <div class="main-layout-left-aside">
-                <MainLeftAside />
+                <MainLeftAside :friends="friends"/>
             </div>
-            <div class="main-layout-right-wrapper">
-                <div class="main-layout-main-content">
-                    <slot name="main-content"></slot>
-                </div>
-                <div class="main-layout-right-aside">
-                    <slot name="right-aside"></slot>
-                </div>
+            <div class="main-layout-content-wrapper">
+                <slot name="main-content"></slot>
             </div>
-
+            <div class="main-layout-right-aside">
+                <slot name="right-aside"></slot>
+            </div>
         </div>
-
-
-
     </div>
 </template>
 
 <style scoped>
-
-.main-layout-left-aside {
-    margin-top: 20px;
-}
-
+.main-layout-header,
 .main-layout-content {
-    padding-top: 90px;
-    display: grid;
-    grid-template-columns: 270px auto;
-    padding-left: 12vw;
-    gap: 20px;
-    height: 100%;
-    overflow: hidden;
-}
-
-.main-layout-right-aside {
-    width: 350px;
-    float: right;
-    position: fixed;
-    top: 110px;
-    right: 12vw;
-}
-
-.main-layout-main-content {
-    height: calc(100vh - 90px);
-    width: 100%;
-    padding-right: calc(12vw + 350px + 4px);
-    padding-bottom: 200px;
-    scrollbar-gutter: stable;
-    padding-top: 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.main-layout-right-wrapper {
-    width: 100%;
-    height: 100%;
-}
-
-/* Header */
-.main-layout-header {
     padding-inline: 12%;
     grid-template-columns: 270px auto 350px;
+}
+
+.main-layout-application-logo {
+    display: flex;
+    align-items: center;
+
+}
+
+.main-layout-container {
+    height: 100vh;
+    background: #E9E9E9;
+}
+
+.main-layout-header {
     display: grid;
     grid-template-rows: 100%;
     height: 90px;
@@ -99,14 +70,13 @@ const props = defineProps({
     z-index: 100;
 }
 
-.main-layout-application-logo {
-    display: flex;
-    align-items: center;
-}
-
-.main-layout-container {
-    height: 100vh;
-    background: #E9E9E9;
+.main-layout-content {
+    --gap: 20px;
+    display: grid;
+    height: 100%;
+    gap: var(--gap);
+    grid-template-rows: 100%;
+    padding-top: calc(90px + var(--gap));
 }
 
 .main-layout-title {
@@ -116,9 +86,14 @@ const props = defineProps({
     font-size: 24px;
     font-weight: bold;
 }
+
+.main-layout-content-wrapper {
+    height: 100%;
+}
+
 .main-layout-profile {
     display: flex;
     justify-content: center;
     align-items: center;
-}
+} 
 </style>

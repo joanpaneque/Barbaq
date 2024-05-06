@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <template>
-    <MainLayout title="Inici">
+    <MainLayout :friends="props.friends" title="Inici">
         <template #main-content>
             <div class="form-control">
                 <input id="search-input" type="text" placeholder="Buscar amics..."
