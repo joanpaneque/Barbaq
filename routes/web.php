@@ -12,6 +12,7 @@ use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\CommentsController;
+use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\DiscordBotController;
 
 Route::get('/', [IndexController::class, 'show'])->name('index');
@@ -46,6 +47,7 @@ Route::get('/api/user', [UserController::class, 'apiShowLogged']);
 Route::post('/updateuserphoto/{id}', [UserController::class, 'update'])->name('updateuserphoto');
 
 Route::resource('barbecues', BarbecuesController::class);
+Route::resource('/barbecues/{barbecueId}/images', ImagesController::class);
 Route::get('/api/barbecues', [BarbecuesController::class, 'apiIndex']);
 
 Route::post('/api/discordbot', [DiscordBotController::class, 'broadcast']);
