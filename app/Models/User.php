@@ -183,8 +183,4 @@ class User extends Authenticatable
     {
         return $this->hasMany(BasketProduct::class);
     }
-
-    public function friendsCount() {
-        return $this->friends()->count();
-    }
 }
