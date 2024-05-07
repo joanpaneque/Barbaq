@@ -21,7 +21,7 @@ const authStore = useAuthStore();
             <div class="item active">
                 <img src="/assets/svg/following.svg" alt="Icon" />
                 <span>Amics</span>
-                <span class="counter">3</span>
+                <span class="counter">{{ authStore.user?.friends?.length }}</span>
             </div>
         </Link>
 
