@@ -8,7 +8,11 @@ const props = defineProps({
     title: {
         type: String,
         required: false
-    }
+    },
+  friends: {
+    type: Array,
+    required: true
+  }
 });
 
 </script>
