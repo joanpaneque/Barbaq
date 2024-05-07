@@ -7,6 +7,7 @@ const authStore = useAuthStore();
 authStore.updateUserData();
 const friendsPerPage = 6;
 const currentPage = ref(1);
+const searching = ref(false);
 const props = defineProps({
     friends: {
         type: Object,
@@ -26,12 +27,17 @@ function searchFriends(searchTerm) {
         const startsWithSearchTerm = friendName.toLowerCase().startsWith(searchTerm.toLowerCase());
         card.style.display = startsWithSearchTerm ? 'block' : 'none';
     });
+    searching.value = searchTerm !== '';
 }
 
 function handleSearchInput() {
     const searchInput = document.getElementById('search-input');
     const searchTerm = searchInput.value.trim();
     searchFriends(searchTerm);
+
+    if (searchTerm === '') {
+        handlePagination();
+    }
 }
 
 function goToPage(page) {
@@ -103,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
             </div>
-            <div class="join flex items-center justify-center">
+            <div class="join flex items-center justify-center" v-if="!searching">
                 <button v-for="page in totalPages" :key="page" @click="goToPage(page)"
                     class="pagination-button join-item btn btn-sm"
                     :class="{ 'active-button': isPageActive(page), 'inactive': !isPageActive(page) }">
