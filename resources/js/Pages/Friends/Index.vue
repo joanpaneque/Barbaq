@@ -15,7 +15,7 @@ const props = defineProps({
 });
 
 function isPageActive(page) {
-    return page === currentPage;
+    return page === currentPage.value;
 }
 
 function searchFriends(searchTerm) {
@@ -42,13 +42,12 @@ function goToPage(page) {
     } else {
         currentPage.value = page;
     }
-    console.log('Current Page:', currentPage.value); // Debugging: Log current page
-    handlePagination(); // Ensure handlePagination is called
+    handlePagination();
 }
 
 function handlePagination() {
     const startIndex = (currentPage.value - 1) * friendsPerPage;
-    const endIndex = Math.min(startIndex + friendsPerPage, props.friends.length); // Avoid index out of bounds
+    const endIndex = Math.min(startIndex + friendsPerPage, props.friends.length);
     const friendCards = document.querySelectorAll('.friend-card');
 
     friendCards.forEach((card, index) => {
@@ -105,12 +104,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
             <div class="join flex items-center justify-center">
-        <button v-for="page in totalPages" :key="page" @click="goToPage(page)"
-            class="pagination-button join-item btn btn-sm"
-            :class="{ 'active': isPageActive(page), 'inactive': !isPageActive(page) }">
-            <span :style="{ color: isPageActive(page) ? 'white' : 'black' }">{{ page }}</span>
-        </button>
-    </div>
+                <button v-for="page in totalPages" :key="page" @click="goToPage(page)"
+                    class="pagination-button join-item btn btn-sm"
+                    :class="{ 'active-button': isPageActive(page), 'inactive': !isPageActive(page) }">
+                    <span>{{ page }}</span>
+                </button>
+            </div>
         </template>
         <template #right-aside>
             <div class="aside-menu">
@@ -133,6 +132,11 @@ document.addEventListener('DOMContentLoaded', () => {
     </MainLayout>
 </template>
 <style scoped>
+.active-button {
+    background-color: #2d3748;
+    color: white;
+}
+
 .aside-menu {
     width: 100%;
     height: 400px;
