@@ -12,6 +12,9 @@ const props = defineProps({
     },
 });
 
+const friendsPerPage = 6;
+let currentPage = 1;
+
 function searchFriends(searchTerm) {
     const friendCards = document.querySelectorAll('.friend-card');
 
@@ -28,6 +31,33 @@ function handleSearchInput() {
     searchFriends(searchTerm);
 }
 
+function goToPage(page) {
+    if (page < 1) {
+        currentPage = 1;
+    } else if (page > totalPages) {
+        currentPage = totalPages;
+    } else {
+        currentPage = page;
+    }
+    handlePagination();
+}
+
+function handlePagination() {
+    const startIndex = (currentPage- 1) * friendsPerPage;
+    const endIndex = startIndex + friendsPerPage;
+    const friendCards = document.querySelectorAll('.friend-card');
+
+    friendCards.forEach((card, index) => {
+        if (index >= startIndex && index < endIndex) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+const totalPages = Math.ceil(props.friends.length / friendsPerPage);
+
 document.addEventListener('input', event => {
     if (event.target && event.target.id === 'search-input') {
         handleSearchInput();
@@ -36,6 +66,7 @@ document.addEventListener('input', event => {
 
 document.addEventListener('DOMContentLoaded', () => {
     handleSearchInput();
+    handlePagination();
 });
 </script>
 
@@ -47,7 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     class="input rounded-2xl input-bordered w-24 md:w-auto" />
             </div>
             <div class="grid grid-friends">
-                <div v-for="friend in friends" :key="friend.id"
+                <div v-for="(friend, index) in friends" :key="friend.id"
+                    :class="['friend-card', { 'hidden': index >= friendsPerPage }]"
                     class="friend-card w-40 bg-white border border-gray-200 rounded-2xl dark:bg-gray-800 dark:border-gray-700">
                     <div class="flex justify-end px-2 pt-3">
                     </div>
@@ -67,36 +99,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
             </div>
-
-            <div class="flex justify-center mt-4">
-                <button type="button"
-                    class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-                >
-                    Mostrar més
-                </button>
+            <div class="join flex items-center justify-center">
+                <button v-for="page in totalPages" :key="page"
+                    @click="goToPage(page)"
+                    :class="['pagination-button join-item btn btn-sm', { 'active': page === currentPage }]">{{ page }} </button>
             </div>
         </template>
         <template #right-aside>
             <div class="aside-menu">
                 <span class="text-2xl text-gray-800 dark:text-white font-bold">Gent a prop teu</span>
-                <div v-for="friend in friends" :key="friend.id"
-                    class="flex aside-friend">
-                    <img class="ImageUser w-12 h-12 rounded-full shadow-lg" :src="friend.image" alt="User Image" />
-                    <div class="flex">
-                        <span class="user text-base text-gray-800 dark:text-white p-2.5">{{ friend.name }} {{
-                            friend.surnames }}</span>
-                    </div>
-                    <div class="plus flex items-center">
-                        <button class="w-8 h-8 rounded-full border-transparent hover:bg-gray-300">
-                            <img src="assets/img/plus.png">
-                        </button>
-                    </div>
+                <div class="flex">
+                    <span class="user text-base text-gray-800 dark:text-white p-2.5"></span>
                 </div>
-                <div class="people-nearby text-center">
-                    <button>
-                        <span class="text-lg text-gray-800 dark:text-white font-bold">Mostrar més</span>
+                <div class="plus flex items-center">
+                    <button class="w-8 h-8 rounded-full border-transparent hover:bg-gray-300">
+                        <img src="assets/img/plus.png">
                     </button>
                 </div>
+            </div>
+            <div class="people-nearby text-center">
+                <button>
+                    <span class="text-lg text-gray-800 dark:text-white font-bold">Mostrar més</span>
+                </button>
             </div>
         </template>
     </MainLayout>
@@ -132,6 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
 .ImageUser {
     object-fit: cover;
 }
+
 .plus {
     margin-left: auto;
 }
