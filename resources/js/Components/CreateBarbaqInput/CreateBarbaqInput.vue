@@ -45,6 +45,9 @@ const submitBarbecueForm = () => {
             console.error('Error al enviar el mensaje a Telegram:', error);
         });
 
+    axios.post("/api/discordbot", {
+            message: `👤 **${authStore.user.name} ${authStore.user.surnames}** ha creat la barbacoa 🔥 "${barbecueForm.title}"\n ✏️ Creat per: https://barbaq.es/profile/${authStore.user.id}\n `
+        })
 
 
     const mensajeDiscord = `Holaa 1`;
@@ -74,9 +77,7 @@ const submitBarbecueForm = () => {
             quillContent.value.setHTML('');
             isOpen.value = false;
 
-            axios.post("/api/discordbot", {
-                message: `👤 **${authStore.user.name} ${authStore.user.surnames}** ha creat la barbacoa 🔥 "${barbecueForm.title}"\n ✏️ Creat per: https://barbaq.es/profile/${authStore.user.id}\n `
-            })
+
 
             const barbecueId = response.data.id;
 
