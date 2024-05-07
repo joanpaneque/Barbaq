@@ -26,7 +26,7 @@ authStore.updateUserData();
                     :href="'/profile/' + authStore.user.id" v-if="authStore.user">
 
                     <img src="/assets/svg/flecha-izquierda.svg" alt="flecha-izquierda" 
-                    class="w-5 h-5 cursor-pointer hover:opacity-70 transition-opacity pl-4 pr-2 w-auto" >
+                    class="w-5 h-5 cursor-pointer hover:opacity-70 transition-opacity pl-4 pr-2" >
 
                     <h1 class="text-lg font-medium text-gray-900">Tornar al perfil</h1>
                     </Link>

@@ -119,11 +119,6 @@ const imagesForm = useForm({
 const handleFileChange = (event) => {
     imagesForm.image = event.target.files;
 
-    if (imagesForm.image.length > 4) {
-        alert('Només pots pujar fins a 4 imatges.');
-        imagesForm.image = [];
-    }
-
     const fileList = Array.from(imagesForm.image);
     const fileNames = fileList.map(file => file.name).join(', ');
     const imagesNamesElement = document.getElementById('imagesNames');
@@ -185,19 +180,19 @@ const handleFileChange = (event) => {
 
         <dialog id="my_modal_3" class="modal cursor-auto" :open="showModal" @click.self="closeModal">
             <div class="modal-box w-auto min-w-[30%] max-w-5xl">
-                <button 
-                    class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-                    @click="closeModal"
-                >
-                    ✕
-                </button>
-            
                 <form 
                     @submit.prevent="closeModal"
                     class="flex flex-col items-center gap-4"
                 >
-                                  
-                    <h3 class="font-bold text-lg mb-2">Selecciona la imatge/s </h3>
+                    <button 
+                        class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                        @click="closeModal"
+                    >
+                        ✕
+                    </button>
+                
+                    <h3 class="font-bold text-lg mb-2">Selecciona la imatge/s</h3>
+
                     <label class="custum-file-upload" for="file">
                         <div class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="" viewBox="0 0 24 24">

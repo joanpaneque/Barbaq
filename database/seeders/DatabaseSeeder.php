@@ -45,7 +45,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'Aniol',
             'surnames' => 'Moreno',
             'email' => 'amoreno@cendrassos.net',
-            'password' => bcrypt('123456')
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/aniol.jpg'
         ]);
 
         $user_marcos = User::create([
