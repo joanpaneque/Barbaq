@@ -1,9 +1,8 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
 import { useAuthStore } from "@/stores/auth";
-
+import { defineProps, onMounted } from 'vue';
 const authStore = useAuthStore();
-
 </script>
 
 <template>
