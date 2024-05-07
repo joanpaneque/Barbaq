@@ -2,9 +2,11 @@
 import MainLayout from "@/Layouts/MainLayout.vue";
 import { useAuthStore } from "@/stores/auth";
 import { Head, Link } from '@inertiajs/vue3';
+import { ref } from 'vue';
 const authStore = useAuthStore();
 authStore.updateUserData();
-
+const friendsPerPage = 6;
+const currentPage = ref(1);
 const props = defineProps({
     friends: {
         type: Object,
@@ -12,8 +14,9 @@ const props = defineProps({
     },
 });
 
-const friendsPerPage = 6;
-let currentPage = 1;
+function isPageActive(page) {
+    return page === currentPage;
+}
 
 function searchFriends(searchTerm) {
     const friendCards = document.querySelectorAll('.friend-card');
@@ -33,18 +36,19 @@ function handleSearchInput() {
 
 function goToPage(page) {
     if (page < 1) {
-        currentPage = 1;
+        currentPage.value = 1;
     } else if (page > totalPages) {
-        currentPage = totalPages;
+        currentPage.value = totalPages;
     } else {
-        currentPage = page;
+        currentPage.value = page;
     }
-    handlePagination();
+    console.log('Current Page:', currentPage.value); // Debugging: Log current page
+    handlePagination(); // Ensure handlePagination is called
 }
 
 function handlePagination() {
-    const startIndex = (currentPage- 1) * friendsPerPage;
-    const endIndex = startIndex + friendsPerPage;
+    const startIndex = (currentPage.value - 1) * friendsPerPage;
+    const endIndex = Math.min(startIndex + friendsPerPage, props.friends.length); // Avoid index out of bounds
     const friendCards = document.querySelectorAll('.friend-card');
 
     friendCards.forEach((card, index) => {
@@ -55,6 +59,7 @@ function handlePagination() {
         }
     });
 }
+
 
 const totalPages = Math.ceil(props.friends.length / friendsPerPage);
 
@@ -100,10 +105,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
             <div class="join flex items-center justify-center">
-                <button v-for="page in totalPages" :key="page"
-                    @click="goToPage(page)"
-                    :class="['pagination-button join-item btn btn-sm', { 'active': page === currentPage }]">{{ page }} </button>
-            </div>
+        <button v-for="page in totalPages" :key="page" @click="goToPage(page)"
+            class="pagination-button join-item btn btn-sm"
+            :class="{ 'active': isPageActive(page), 'inactive': !isPageActive(page) }">
+            <span :style="{ color: isPageActive(page) ? 'white' : 'black' }">{{ page }}</span>
+        </button>
+    </div>
         </template>
         <template #right-aside>
             <div class="aside-menu">
