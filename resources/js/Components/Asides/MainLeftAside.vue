@@ -3,7 +3,12 @@ import { Link } from '@inertiajs/vue3';
 import { useAuthStore } from "@/stores/auth";
 
 const authStore = useAuthStore();
-
+const props = defineProps({
+    friends: {
+        type: Array,
+        required: true,
+    },
+});
 </script>
 
 <template>
