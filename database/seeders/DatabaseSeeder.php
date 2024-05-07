@@ -100,6 +100,13 @@ class DatabaseSeeder extends Seeder
 
         for ($i = 0; $i < 30; $i++) {
             $random_user = User::inRandomOrder()->first();
+
+            $user = User::create([
+                'name' => 'Usuari' . $i,
+                'surnames' => 'Cognoms' . $i,
+                'email' => 'prova' . $i . '@cendrassos.net',
+                'password' => bcrypt('123456')
+            ]);
         
             $barbecue = Barbecue::create([
                 'user_id' => $random_user->id,
@@ -211,6 +218,7 @@ class DatabaseSeeder extends Seeder
             'is_admin' => false,
             'accepted' => true
         ]);
+        
     }
 
 }

@@ -2,6 +2,7 @@
 import MainLayout from "@/Layouts/MainLayout.vue";
 import { useAuthStore } from "@/stores/auth";
 import { Head, Link } from '@inertiajs/vue3';
+import FindFriendsRightAside from "@/Components/Asides/FindFriendsRightAside.vue";
 const authStore = useAuthStore();
 authStore.updateUserData();
 
@@ -76,27 +77,11 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         </template>
         <template #right-aside>
-            <div class="aside-menu">
-                <span class="text-2xl text-gray-800 dark:text-white font-bold">Gent a prop teu</span>
-                <div v-for="friend in friends" :key="friend.id"
-                    class="flex aside-friend">
-                    <img class="ImageUser w-12 h-12 rounded-full shadow-lg" :src="friend.image" alt="User Image" />
-                    <div class="flex">
-                        <span class="user text-base text-gray-800 dark:text-white p-2.5">{{ friend.name }} {{
-                            friend.surnames }}</span>
-                    </div>
-                    <div class="plus flex items-center">
-                        <button class="w-8 h-8 rounded-full border-transparent hover:bg-gray-300">
-                            <img src="assets/img/plus.png">
-                        </button>
-                    </div>
-                </div>
-                <div class="people-nearby text-center">
-                    <button>
-                        <span class="text-lg text-gray-800 dark:text-white font-bold">Mostrar més</span>
-                    </button>
-                </div>
-            </div>
+             <div class="aside-menu">
+                <FindFriendsRightAside />
+            </div> 
+
+            
         </template>
     </MainLayout>
 </template>
