@@ -7,7 +7,7 @@ authStore.updateUserData();
 
 const props = defineProps({
     friends: {
-        type: Array,
+        type: Object,
         required: true,
     },
 });
