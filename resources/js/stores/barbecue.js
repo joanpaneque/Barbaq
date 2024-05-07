@@ -13,7 +13,7 @@ export const useBarbecueStore = defineStore('barbecue', {
         setBarbecue(barbecue) {
             this.barbecue = barbecue;
         },
-        fetchBarbecues(filters) {
+        fetchBarbecues(filters = this.filters) {
             this.filters = filters;
 
             axios.get('/api/barbecues', {
@@ -28,7 +28,7 @@ export const useBarbecueStore = defineStore('barbecue', {
             });
         },
         insertBarbacue(data, user) {
-            this.preInsertedBarbecues.push({...data, user, created_at: new Date()});
+            this.preInsertedBarbecues.push({...data, user, created_at: new Date(), comments: []});
         },
         fetchNext() {
             const offset = this.barbecues.length + this.preInsertedBarbecues.length;

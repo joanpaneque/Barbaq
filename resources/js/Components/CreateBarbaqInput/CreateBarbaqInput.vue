@@ -76,6 +76,7 @@ const submitBarbecueForm = () => {
             barbecueForm.reset();
             quillContent.value.setHTML('');
             isOpen.value = false;
+            barbecueStore.fetchBarbecues();
         });
 };
 

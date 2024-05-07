@@ -95,7 +95,7 @@ function openModal(image) {
 <style scoped>
 
     .gallery-modal {
-        position: absolute;
+        position: fixed;
         top: 0;
         left: 0;
         width: 100vw;
@@ -106,6 +106,7 @@ function openModal(image) {
         grid-template-rows: 80% auto;
         padding: 100px;
         gap: 10px;
+
     }
 
     .gallery-modal-carousel {
