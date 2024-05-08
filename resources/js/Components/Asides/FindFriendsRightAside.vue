@@ -28,7 +28,8 @@ const sendFriendRequest = (user_id) => {
         v-for="(user, index) in $page.props.filteredUsers.slice(0, usersToShow)" :key="index">
         <div class="flex flex-row items-center gap-2">
         <Link :href="`/profile/${user.id}`">
-            <img src="/assets/img/user.png" alt="" class="fit-content h-10 w-10 rounded-full object-cover">
+            <img :src="user.image" alt="profile image"
+            class="fit-content h-10 w-10 rounded-full object-cover">
         </Link>
         <Link :href="`/profile/${user.id}`">
             <div class="flex flex-row items-center gap-1 w-full">
