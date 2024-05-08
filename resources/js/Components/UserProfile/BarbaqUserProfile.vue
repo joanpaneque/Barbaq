@@ -1,8 +1,8 @@
 <script setup>
 import CreateBarbaqInput from "@/Components/CreateBarbaqInput/CreateBarbaqInput.vue";
-import PrivateUserProfile from "../PrivateUserProfile/PrivateUserProfile.vue";
+import PrivateUserProfile from "@/Components/PrivateUserProfile/PrivateUserProfile.vue";
 
-import Barbecue from "../Index/Barbecue.vue";
+import Barbecue from "@/Components/Index/Barbecue.vue";
 import { useProfileStore } from "@/stores/profile";
 import { useAuthStore } from "@/stores/auth";
 const profileStore = useProfileStore();
@@ -12,12 +12,24 @@ const authStore = useAuthStore();
 <template>
 
     <div class="barbaq-user-template">
-        <div class="left">
+        <div class="left mt-5">
 
             <div v-if="authStore.user && profileStore.user">
                 
                 <PrivateUserProfile
-                    v-if="authStore.user.id != profileStore.user.id && profileStore.user.public == 0 && profileStore.friendStatus != 'friend'" />
+                    v-if="authStore.user.id != profileStore.user.id 
+                    && profileStore.user.public == 0 
+                    && profileStore.friendStatus != 'friend'" 
+                />
+
+                <div
+                    v-if="profileStore.user.public == 1 
+                    || profileStore.friendStatus == 'friend'"
+                >
+                    <div v-for="barbecue in profileStore.user.barbecues" :key="barbecue.id">
+                        <Barbecue :barbecue="barbecue" class="mb-5"/>
+                    </div>
+                </div>
             </div>
 
             <div v-if="authStore.user && profileStore.user">

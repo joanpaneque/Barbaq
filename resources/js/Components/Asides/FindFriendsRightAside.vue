@@ -5,7 +5,7 @@ import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import { useProfileStore } from "@/stores/profile";
 const profileStore = useProfileStore();
 
-
+ 
 const usersToShow = ref(5)
 const showMoreUsers = () => {
     usersToShow.value = usersToShow.value === 10 ? 5 : usersToShow.value + 5
@@ -52,7 +52,7 @@ const sendFriendRequest = (user_id) => {
             </form>
         </div>
     </div>
-
+ 
     <div class="people-nearby text-center">
         <button @click="showMoreUsers">
             <span class="text-gray-800 font-bold hover:text-orange-400 transition duration-300">{{ buttonText }}</span>

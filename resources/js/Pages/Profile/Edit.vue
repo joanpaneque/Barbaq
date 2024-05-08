@@ -22,13 +22,13 @@ authStore.updateUserData();
 
                 <div class="flex justify-start items-center bg-white shadow sm:rounded-[20px] p-2 w-full" >
                     <Link 
-                    class="flex items-center gap-2 cursor-pointer hover:opacity-70 transition-opacity"
-                    :href="'/profile/' + authStore.user.id" v-if="authStore.user">
+                        class="flex items-center gap-2 cursor-pointer hover:opacity-70 transition-opacity"
+                        :href="'/profile/' + authStore.user.id" v-if="authStore.user">
 
-                    <img src="/assets/svg/flecha-izquierda.svg" alt="flecha-izquierda" 
-                    class="w-5 h-5 cursor-pointer hover:opacity-70 transition-opacity pl-4 pr-2" >
+                        <img src="/assets/svg/flecha-izquierda.svg" alt="flecha-izquierda" 
+                        class="w-5 h-5 cursor-pointer hover:opacity-70 transition-opacity pl-4 pr-2" >
 
-                    <h1 class="text-lg font-medium text-gray-900">Tornar al perfil</h1>
+                        <h1 class="text-lg font-medium text-gray-900">Tornar al perfil</h1>
                     </Link>
                 </div>
 

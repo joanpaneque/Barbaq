@@ -26,7 +26,7 @@ const props = defineProps({
             <div class="barbecue-left-section">
                 <div class="barbecue-profile-image">
                     <Link :href="route('profile.show', barbecue.user.id)">
-                    <img :src="barbecue.user.image" alt="Profile image">
+                        <img :src="barbecue.user.image" alt="Profile image">
                     </Link>
                 </div>
                 <div class="barbecue-left-texts">
@@ -53,7 +53,6 @@ const props = defineProps({
 </template>
 
 <style scoped>
-
 
 .barbecue-container {
     width: 100%;
