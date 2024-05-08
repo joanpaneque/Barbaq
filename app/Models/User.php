@@ -151,7 +151,7 @@ class User extends Authenticatable
 
     public function barbecues()
     {
-        return $this->hasMany(Barbecue::class);
+        return $this->hasMany(Barbecue::class)->with('user', 'images', 'comments');
     }
 
     public function sendBarbecueJoinRequest(Barbecue $barbecue)
