@@ -22,8 +22,10 @@ class ProfileController extends Controller
     public function show(string $id)
     {   
         $user = auth()->user();
-        $profile = User::with('barbecues')->where('id', $id)->first();
-
+        $profile = User::with(['barbecues' => function ($query) {
+            $query->orderBy('created_at', 'desc');
+        }])->where('id', $id)->first();
+        
         $friendStatus = "none";
 
         if ($user->isFriendWith($profile)) {
