@@ -92,7 +92,7 @@ function sendComment() {
             <div class="barbecue-left-section">
                 <div class="barbecue-profile-image">
                     <Link :href="route('profile.show', barbecue.user.id)">
-                    <img :src="barbecue.user.image" alt="Profile image">
+                        <img :src="barbecue.user.image" alt="Profile image">
                     </Link>
                 </div>
                 <div class="barbecue-left-texts">
@@ -150,8 +150,6 @@ function sendComment() {
 </template>
 
 <style scoped>
-
-
 .barbecue-comment-send {
     background: #FF6100;
     color: #fff;

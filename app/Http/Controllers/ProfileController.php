@@ -11,10 +11,9 @@ use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\User;
+use App\Models\UserBarbecues;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
-
-
 
 
 class ProfileController extends Controller
@@ -23,7 +22,7 @@ class ProfileController extends Controller
     public function show(string $id)
     {   
         $user = auth()->user();
-        $profile = User::findOrFail($id);
+        $profile = User::with('barbecues')->where('id', $id)->first();
 
         $friendStatus = "none";
 
@@ -35,14 +34,11 @@ class ProfileController extends Controller
             $friendStatus = 'received';
         } 
         
-        
-
         return Inertia::render('UserProfile/Index', [
             'user' => $profile,
             'friendStatus' => $friendStatus,
         ]);
 
-        //return response()->json($user);
     }	
     /**
      * Display the user's profile form.

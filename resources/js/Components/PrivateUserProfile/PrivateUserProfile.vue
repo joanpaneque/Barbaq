@@ -119,8 +119,6 @@ const profileStore = useProfileStore();
     border-radius: 5px;
 }
 
-.barbecue-comment-input-itself-answer-cross:hover {}
-
 .barbecue-comment-input-itself-answer-cross img {
     height: 60%;
     width: 20px;
