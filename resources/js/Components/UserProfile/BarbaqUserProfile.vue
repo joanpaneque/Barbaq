@@ -23,9 +23,10 @@ const authStore = useAuthStore();
                 />
 
                 <div
-                    v-if="profileStore.user.public == 1"
+                    v-if="profileStore.user.public == 1 
+                    || profileStore.friendStatus == 'friend'"
                 >
-                    <div v-for="barbecue in profileStore.user.barbecues">
+                    <div v-for="barbecue in profileStore.user.barbecues" :key="barbecue.id">
                         <Barbecue :barbecue="barbecue" class="mb-5"/>
                     </div>
                 </div>
