@@ -23,8 +23,7 @@ const authStore = useAuthStore();
                 />
 
                 <div
-                    v-if="authStore.user.id != profileStore.user.id 
-                    && profileStore.user.public == 1"
+                    v-if="profileStore.user.public == 1"
                 >
                     <div v-for="barbecue in profileStore.user.barbecues">
                         <Barbecue :barbecue="barbecue" class="mb-5"/>
