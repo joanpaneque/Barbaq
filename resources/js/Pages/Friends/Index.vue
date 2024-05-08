@@ -2,16 +2,23 @@
 import MainLayout from "@/Layouts/MainLayout.vue";
 import { useAuthStore } from "@/stores/auth";
 import { Head, Link } from '@inertiajs/vue3';
-import FindFriendsRightAside from "@/Components/Asides/FindFriendsRightAside.vue";
+import { ref } from 'vue';
 const authStore = useAuthStore();
 authStore.updateUserData();
-
+const friendsPerPage = 6;
+const currentPage = ref(1);
+const searching = ref(false);
 const props = defineProps({
     friends: {
         type: Object,
         required: true,
     },
 });
+
+function isPageActive(page) {
+    return page === currentPage.value;
+}
+
 function searchFriends(searchTerm) {
     const friendCards = document.querySelectorAll('.friend-card');
 
@@ -20,13 +27,46 @@ function searchFriends(searchTerm) {
         const startsWithSearchTerm = friendName.toLowerCase().startsWith(searchTerm.toLowerCase());
         card.style.display = startsWithSearchTerm ? 'block' : 'none';
     });
+    searching.value = searchTerm !== '';
 }
 
 function handleSearchInput() {
     const searchInput = document.getElementById('search-input');
     const searchTerm = searchInput.value.trim();
     searchFriends(searchTerm);
+
+    if (searchTerm === '') {
+        handlePagination();
+    }
 }
+
+function goToPage(page) {
+    if (page < 1) {
+        currentPage.value = 1;
+    } else if (page > totalPages) {
+        currentPage.value = totalPages;
+    } else {
+        currentPage.value = page;
+    }
+    handlePagination();
+}
+
+function handlePagination() {
+    const startIndex = (currentPage.value - 1) * friendsPerPage;
+    const endIndex = Math.min(startIndex + friendsPerPage, props.friends.length);
+    const friendCards = document.querySelectorAll('.friend-card');
+
+    friendCards.forEach((card, index) => {
+        if (index >= startIndex && index < endIndex) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+
+const totalPages = Math.ceil(props.friends.length / friendsPerPage);
 
 document.addEventListener('input', event => {
     if (event.target && event.target.id === 'search-input') {
@@ -36,6 +76,7 @@ document.addEventListener('input', event => {
 
 document.addEventListener('DOMContentLoaded', () => {
     handleSearchInput();
+    handlePagination();
 });
 </script>
 
@@ -47,7 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     class="input rounded-2xl input-bordered w-24 md:w-auto" />
             </div>
             <div class="grid grid-friends">
-                <div v-for="friend in friends" :key="friend.id"
+                <div v-for="(friend, index) in friends" :key="friend.id"
+                    :class="['friend-card', { 'hidden': index >= friendsPerPage }]"
                     class="friend-card w-40 bg-white border border-gray-200 rounded-2xl dark:bg-gray-800 dark:border-gray-700">
                     <div class="flex justify-end px-2 pt-3">
                     </div>
@@ -67,25 +109,40 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
             </div>
-
-            <div class="flex justify-center mt-4">
-                <button type="button"
-                    class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-                >
-                    Mostrar més
+            <div class="join flex items-center justify-center" v-if="!searching">
+                <button v-for="page in totalPages" :key="page" @click="goToPage(page)"
+                    class="pagination-button join-item btn btn-sm"
+                    :class="{ 'active-button': isPageActive(page), 'inactive': !isPageActive(page) }">
+                    <span>{{ page }}</span>
                 </button>
             </div>
         </template>
         <template #right-aside>
-             <div class="aside-menu">
-                <FindFriendsRightAside />
-            </div> 
-
-            
+            <div class="aside-menu">
+                <span class="text-2xl text-gray-800 dark:text-white font-bold">Gent a prop teu</span>
+                <div class="flex">
+                    <span class="user text-base text-gray-800 dark:text-white p-2.5"></span>
+                </div>
+                <div class="plus flex items-center">
+                    <button class="w-8 h-8 rounded-full border-transparent hover:bg-gray-300">
+                        <img src="assets/img/plus.png">
+                    </button>
+                </div>
+            </div>
+            <div class="people-nearby text-center">
+                <button>
+                    <span class="text-lg text-gray-800 dark:text-white font-bold">Mostrar més</span>
+                </button>
+            </div>
         </template>
     </MainLayout>
 </template>
 <style scoped>
+.active-button {
+    background-color: #2d3748;
+    color: white;
+}
+
 .aside-menu {
     width: 100%;
     height: 400px;
@@ -116,6 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
 .ImageUser {
     object-fit: cover;
 }
+
 .plus {
     margin-left: auto;
 }
