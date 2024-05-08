@@ -35,7 +35,9 @@ const props = defineProps({
             </div>
             <div class="main-layout-content-wrapper">
                 <Banner class="banner-profile "/>
-                <slot name="main-content"></slot>
+                <slot name="main-content">
+                    
+                </slot>
             </div>
         </div>
     </div>
