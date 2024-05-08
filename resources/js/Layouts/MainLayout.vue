@@ -24,66 +24,97 @@ const props = defineProps({
                 <AuthAccount />
             </div>
         </div>
-        <div class="main-layout-content">
+        <div class="main-layout-content-wrapper">
             <div class="main-layout-left-aside">
                 <MainLeftAside />
             </div>
-            <div class="main-layout-right-wrapper">
-                <div class="main-layout-main-content">
-                    <slot name="main-content"></slot>
-                </div>
-                <div class="main-layout-right-aside">
-                    <slot name="right-aside"></slot>
-                </div>
+            <div class="main-layout-content">
+                <slot name="main-content"></slot>
             </div>
-
+            <div class="main-layout-right-aside">
+                <slot name="right-aside"></slot>
+            </div>
         </div>
-
-
-
     </div>
 </template>
 
 <style scoped>
 
-.main-layout-left-aside {
-    margin-top: 20px;
+.main-layout-container {
+    height: 100vh;
+    width: 100%;
 }
 
-.main-layout-content {
-    padding-top: 90px;
+.main-layout-content-wrapper {
+    height: calc(100% - 90px);
+    overflow-y: scroll;
+    overflow-x: hidden;
+    /* no scrollbar space */
+    scrollbar-gutter: stable;
+    position: absolute;
+    top: 90px;
+    width: 100%;
     display: grid;
-    grid-template-columns: 270px auto;
-    padding-left: 12vw;
+    grid-template-columns: auto 720px auto;
     gap: 20px;
-    height: 100%;
-    overflow: hidden;
+    padding-top: 20px;
+    padding-inline: 20px;
+    justify-content: center;
+    position: absolute;
+}
+
+.main-layout-left-aside {
+    width: 245px;
 }
 
 .main-layout-right-aside {
-    width: 350px;
-    float: right;
-    position: fixed;
-    top: 110px;
-    right: 12vw;
+    width: 400px;
 }
 
-.main-layout-main-content {
-    height: calc(100vh - 90px);
-    width: 100%;
-    padding-right: calc(12vw + 350px + 4px);
-    padding-bottom: 200px;
-    scrollbar-gutter: stable;
-    padding-top: 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+@media (max-width: 1450px) {
+    .main-layout-left-aside {
+        position: fixed;
+        bottom: 0;
+        z-index: 100;
+    }
+
+    .main-layout-content-wrapper {
+        grid-template-columns: 720px auto;
+    }
 }
 
-.main-layout-right-wrapper {
-    width: 100%;
-    height: 100%;
+@media (max-width: 1200px) {
+    .main-layout-content-wrapper {
+        grid-template-columns: 720px;
+    }
+
+    .main-layout-right-aside {
+        width: 100vw;
+        height: 200px;
+        position: fixed;
+        bottom: 0;
+    }
+
+    .main-layout-header {
+        grid-template-columns: 270px auto !important;
+        justify-content: space-between;
+
+    }
+
+    .main-layout-title {
+        display: none !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-layout-content-wrapper {
+        grid-template-columns: 100%;
+    }
+
+    .main-layout-header {
+        grid-template-columns: 150px auto !important;    
+        justify-content: space-between;
+    }
 }
 
 /* Header */
@@ -121,4 +152,10 @@ const props = defineProps({
     justify-content: center;
     align-items: center;
 }
+</style>
+
+<style>
+    body {
+        overflow: hidden;
+    }
 </style>

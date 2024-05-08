@@ -11,11 +11,9 @@ const authStore = useAuthStore();
             <div class="item" :class="{ active: route().current() === 'index' }">
                 <img src="/assets/svg/home.svg" alt="Icon" />
                 <span>Inici</span>
-                <span class="counter"></span>
+                <!-- <span class="counter"></span> -->
             </div>
         </Link>
-
-
         <Link :href="route('friends.index')">
             <div class="item active">
                 <img src="/assets/svg/following.svg" alt="Icon" />
@@ -50,12 +48,13 @@ const authStore = useAuthStore();
     .main-left-aside-container {
         background: #fff;
         height: 400px;
-        width: 100%;
+        width: 245px;
         border-radius: 20px;
         display: grid;
         height: fit-content;
         padding: 5px 5px;
         gap: 5px;
+        position:fixed;
     }
 
     .counter {
@@ -106,5 +105,28 @@ const authStore = useAuthStore();
 
     .item.active {
         background: #f2f2f2;
+    }
+
+    @media (max-width: 1450px) {
+        .main-left-aside-container {
+            display: flex;
+            justify-content: center;
+            border-radius: 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            height: 60px;
+            align-items: center;
+            position: static;
+            width: 100vw;
+        }
+    }
+
+    @media (max-width: 850px) {
+        .item span:not(.counter) {
+            display: none;
+        }
+
+        .item {
+            grid-template-columns: 20px auto;
+        }
     }
 </style>

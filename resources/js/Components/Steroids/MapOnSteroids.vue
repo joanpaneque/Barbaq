@@ -1,13 +1,12 @@
 <script setup>
-import L from 'leaflet'
-globalThis.L = L
-import { LMap, LTileLayer, LMarker, LCircle } from '@vue-leaflet/vue-leaflet'
-import { LMarkerClusterGroup } from 'vue-leaflet-markercluster'
-import 'leaflet/dist/leaflet.css'
-import 'vue-leaflet-markercluster/dist/style.css'
-import { icon } from 'leaflet'
+import L from 'leaflet';
+globalThis.L = L;
+import { LMap, LTileLayer, LMarker, LCircle } from '@vue-leaflet/vue-leaflet';
+import { LMarkerClusterGroup } from 'vue-leaflet-markercluster';
+import 'leaflet/dist/leaflet.css';
+import 'vue-leaflet-markercluster/dist/style.css';
+import { icon } from 'leaflet';
 import { ref, defineProps, onMounted, onUnmounted, computed } from 'vue';
-
 
 const props = defineProps({
     modelValue: {
@@ -72,7 +71,7 @@ const toggleFullScreen = () => {
     animateResize();
     function animateResize() {
         const currentTime = new Date().getTime();
-        window.dispatchEvent(new Event('resize'))
+        window.dispatchEvent(new Event('resize'));
         if (currentTime - timeClicked > resizingAnimationDuration) {
             return;
         }
@@ -128,7 +127,7 @@ const handleClickOutside = (event) => {
 onMounted(() => {
     openerRect.value = opener.value.getBoundingClientRect();
     window.addEventListener('resize', () => {
-        openerRect.value = opener.value.getBoundingClientRect();
+        openerRect.value = opener.value?.getBoundingClientRect();
     });
     document.addEventListener('click', handleClickOutside);
 });
@@ -140,10 +139,6 @@ onUnmounted(() => {
 function toggleChangingLocation() {
     changingLocation.value = !changingLocation.value;
 }
-
-
-
-
 </script>
 
 <template>

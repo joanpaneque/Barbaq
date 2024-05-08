@@ -13,7 +13,7 @@ authStore.updateUserData();
 const barbecueStore = useBarbecueStore();
 
 onMounted(() => {
-    const barbecueScroller = document.querySelector(".main-layout-main-content");
+    const barbecueScroller = document.querySelector(".main-layout-content-wrapper");
 
     barbecueScroller.addEventListener("scroll", () => {
         const maxPossibleScroll = barbecueScroller.scrollHeight - barbecueScroller.clientHeight;
@@ -46,6 +46,7 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    margin-top: 20px;
 }
 
 </style>

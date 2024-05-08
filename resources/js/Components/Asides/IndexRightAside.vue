@@ -35,7 +35,7 @@
         'lactose-free': 'Sense lactosa'
     }
 
-    const scaleValue = ref(0);
+    const scaleValue = ref(3);
     const searchValue = ref('');
     const timeOption = ref('forever');
     const orderOption = ref('desc');
@@ -58,7 +58,7 @@
         }
 
         barbecueStore.fetchBarbecues(filters);
-        document.querySelector(".main-layout-main-content").scrollTop = 0;
+        document.querySelector(".main-layout-content-wrapper").scrollTop = 0;
     }
 
     onMounted(() => {
@@ -121,11 +121,12 @@
 <style scoped>
     .index-right-aside-container {
         background: #fff;
-        width: 100%;
+        width: 400px;
         border-radius: 20px;
         padding: 20px 30px;
         display: grid;
         gap: 20px;
+        position: fixed;
     }
 
     h3 {
@@ -148,5 +149,18 @@
 
     .reset-filters:hover {
         text-decoration: underline;
+    }
+
+    @media (max-width: 1200px) {
+        .index-right-aside-container {
+            width: 100%;
+            border-radius: 0;
+            height: 100%;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+
+        h3 {
+            display: none;
+        }
     }
 </style>
