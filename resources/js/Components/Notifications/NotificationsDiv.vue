@@ -22,7 +22,7 @@ function executeNotification(primary, notification) {
       <div class="flex justify-start items-center">
         <img src="/assets/img/adduser.png" alt="Imagen de usuario" class="p-2 " />
         <div class="flex flex-col justify-start items-start w-full">
-          <Link :href="'/profile/' + notification.user_id"> <!-- Enlace al perfil del remitente -->
+          <Link :href="'/profile/' + notification.primary_link.slice(-1)">
             <p class="">
               {{ notification.message }}
             </p>

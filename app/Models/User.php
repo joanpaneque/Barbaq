@@ -104,23 +104,21 @@ class User extends Authenticatable
         return $this->id === $user->id;
     }
 
-    public function sendFriendRequest($userId)
+    public function sendFriendRequest(User $user)
     {
-        $user = User::findOrFail($userId);
-    
         if ($this->isTheSameAs($user)) {
             return;
         }
-    
+
         if ($this->alreadySentFriendRequestTo($user)) {
             return;
         }
-    
+
         if ($this->alreadyHasFriendRequestFrom($user)) {
             $this->acceptFriendRequest($user);
             return;
         }
-    
+
         Notification::create([
             'user_id' => $user->id,
             'message' => "{$this->name} {$this->surnames} t'ha enviat una sol·licitud d'amistat",
@@ -130,10 +128,9 @@ class User extends Authenticatable
             'secondary_link_text' => 'Denegar',
             'secondary_link_method' => 'delete'
         ]);
-    
+
         $this->sentFriendRequests()->attach($user->id, ['accepted' => false]);
     }
-    
 
     public function acceptFriendRequest(User $user)
     {
