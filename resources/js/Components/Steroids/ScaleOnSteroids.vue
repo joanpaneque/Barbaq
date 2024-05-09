@@ -16,7 +16,9 @@
 
     const currentValue = ref(props.modelValue);
 
+    const changed = ref(false);
     const updateValue = (value) => {
+        changed.value = true;
         currentValue.value = value;
 
         const step = (100 - 10) / (props.scales.length - 1);
@@ -32,7 +34,7 @@
 <template>
     <div class="scales-on-steroids-container">
         <input type="range" min="10" max="100" :step="100 / (props.scales.length)"
-        :value="currentValue"
+        :value="changed ? currentValue : '100'"
         @input="updateValue($event.target.value)" :style="{
             width: `calc(100% + ${100 / (props.scales.length)}% - 17px)`,
         }">

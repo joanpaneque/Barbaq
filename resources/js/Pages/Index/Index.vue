@@ -15,7 +15,7 @@ const barbecueStore = useBarbecueStore();
 const showModal = ref(true); // Mostrar el modal al cargar la página
 
 onMounted(() => {
-    // Verificar si se ha aceptado la cookie
+    const barbecueScroller = document.querySelector(".main-layout-content-wrapper");
     if (getCookie("cookieAccepted")) {
         showModal.value = false; // Si la cookie ha sido aceptada, no mostrar el modal
     }
@@ -100,6 +100,7 @@ const deleteCookie = (name) => {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    margin-top: 20px;
 }
 
 </style>

@@ -5,6 +5,9 @@ import PrivateUserProfile from "@/Components/PrivateUserProfile/PrivateUserProfi
 import Barbecue from "@/Components/Index/Barbecue.vue";
 import { useProfileStore } from "@/stores/profile";
 import { useAuthStore } from "@/stores/auth";
+import FindFriendsRightAside from "@/Components/Asides/FindFriendsRightAside.vue";
+
+
 const profileStore = useProfileStore();
 const authStore = useAuthStore();
 </script>
@@ -15,19 +18,15 @@ const authStore = useAuthStore();
         <div class="left mt-5">
 
             <div v-if="authStore.user && profileStore.user">
-                
-                <PrivateUserProfile
-                    v-if="authStore.user.id != profileStore.user.id 
-                    && profileStore.user.public == 0 
-                    && profileStore.friendStatus != 'friend'" 
-                />
 
-                <div
-                    v-if="authStore.user.id != profileStore.user.id 
-                    && profileStore.user.public == 1"
-                >
-                    <div v-for="barbecue in profileStore.user.barbecues">
-                        <Barbecue :barbecue="barbecue" class="mb-5"/>
+                <PrivateUserProfile v-if="authStore.user.id != profileStore.user.id
+                    && profileStore.user.public == 0
+                    && profileStore.friendStatus != 'friend'" />
+
+                <div v-if="profileStore.user.public == 1
+                    || profileStore.friendStatus == 'friend'">
+                    <div v-for="barbecue in profileStore.user.barbecues" :key="barbecue.id">
+                        <Barbecue :barbecue="barbecue" class="mb-5" />
                     </div>
                 </div>
             </div>
@@ -41,8 +40,8 @@ const authStore = useAuthStore();
             <Barbecue />
 
         </div>
-        <div class="rigth mt-5">
-
+        <div class="rigth mt-5 p-5">
+            <FindFriendsRightAside />
         </div>
     </div>
 </template>
@@ -60,6 +59,8 @@ const authStore = useAuthStore();
 }
 
 .rigth {
-    background-color: red;
+    background-color: white;
+    border-radius: 20px;
+    height: auto;
 }
 </style>

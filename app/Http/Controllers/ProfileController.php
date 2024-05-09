@@ -22,8 +22,12 @@ class ProfileController extends Controller
     public function show(string $id)
     {   
         $user = auth()->user();
-        $profile = User::with('barbecues')->where('id', $id)->first();
+        $friends = $user->friends()->get();
 
+        $profile = User::with(['barbecues' => function ($query) {
+            $query->orderBy('created_at', 'desc');
+        }])->where('id', $id)->first();
+        
         $friendStatus = "none";
 
         if ($user->isFriendWith($profile)) {
@@ -33,10 +37,37 @@ class ProfileController extends Controller
         } else if ($user->alreadyHasFriendRequestFrom($profile)) {
             $friendStatus = 'received';
         } 
-        
+
+        $users = User::whereNotIn('id', $friends->pluck('id'))
+        ->where('id', '!=', $user->id)
+        ->inRandomOrder()
+        ->get();
+
+        for ($i = 0; $i < count($users); $i++) {
+            $friendStatus1 = "none";
+            if ($user->isFriendWith($users[$i])) {
+                $friendStatus1 = 'friend';
+            } else if ($user->alreadySentFriendRequestTo($users[$i])) {
+                $friendStatus1 = 'sent';
+            } else if ($user->alreadyHasFriendRequestFrom($users[$i])) {
+                $friendStatus1 = 'received';
+            } 
+            $users[$i]->friendStatus1 = $friendStatus1;
+        }
+
+        // get only the users that the friend status is none
+        $filteredUsers = [];
+        foreach ($users as $user) {
+            if ($user->friendStatus1 === 'none') {
+                $filteredUsers[] = $user;
+            }
+        }
+
         return Inertia::render('UserProfile/Index', [
             'user' => $profile,
             'friendStatus' => $friendStatus,
+            'friends' => $friends,
+            'filteredUsers' => $filteredUsers,
         ]);
 
     }	
