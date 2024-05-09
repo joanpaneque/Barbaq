@@ -181,7 +181,8 @@ class DatabaseSeeder extends Seeder
             'longitude' => 2.173404,
             'address' => 'Barcelona',
             'title' => 'Barbacoa a barcelona',
-            'content' => '<h1>Barbacoa a barcelona</h1><>Benvinguts a la barbacoa a barcelona, en aquet lloc podreu gaudir de la millor barbacoa de la ciutat. Us esperem a tots!</p>'
+            'content' => '<h1>Barbacoa a barcelona</h1><>Benvinguts a la barbacoa a barcelona, en aquet lloc podreu gaudir de la millor barbacoa de la ciutat. Us esperem a tots!</p>',
+            'date' => 'Dia 08/08/2026 a les 16:15h'
         ]);
 
         Barbecue::create([
@@ -189,8 +190,9 @@ class DatabaseSeeder extends Seeder
             'latitude' => 42.2666,
             'longitude' => 2.9591,
             'address' => 'Figueres, Girona',
-            'title' => 'Barbacoa a figueres, girona',
-            'content' => '<h1>Barbacoa a figueres, girona</h1><p>Benvinguts a la barbacoa a figueres, en aquet lloc podreu gaudir de la millor barbacoa de la ciutat. Us esperem a tots!</p>'
+            'title' => 'Barbacoa a Figueres, Girona',
+            'content' => '<h1>Barbacoa a Figueres, Girona</h1><p>Benvinguts a la barbacoa a figueres, en aquet lloc podreu gaudir de la millor barbacoa de la ciutat. Us esperem a tots!</p>',
+            'date' => 'Dia 31/02/2025 a les 12:45h'
         ]);
 
         Barbecue::create([
@@ -198,8 +200,9 @@ class DatabaseSeeder extends Seeder
             'latitude' => 42.2632,
             'longitude' => 3.1600,
             'address' => 'Roses, Girona',
-            'title' => 'Barbacoa a roses, girona',
-            'content' => '<h1>Barbacoa a roses, girona</h1><p>Benvinguts a la barbacoa a roses, en aquet lloc podreu gaudir de la millor barbacoa de la ciutat. Us esperem a tots!</p>'
+            'title' => 'Barbacoa a Roses, Girona',
+            'content' => '<h1>Barbacoa a roses, Girona</h1><p>Benvinguts a la barbacoa a roses, en aquet lloc podreu gaudir de la millor barbacoa de la ciutat. Us esperem a tots!</p>',
+            'date' => 'Dia 25/06/2024 a les 13:00h'
         ]);
 
         Barbecue::create([
@@ -207,8 +210,9 @@ class DatabaseSeeder extends Seeder
             'latitude' => 42.0451,
             'longitude' => 3.1856,
             'address' => 'L\'Estartit, Girona',
-            'title' => 'Barbacoa a l\'estartit, girona',
-            'content' => '<h1>Barbacoa a l\'estartit, girona</h1><p>Benvinguts a la barbacoa a l\'estartit, en aquet lloc podreu gaudir de la millor barbacoa de la ciutat. Us esperem a tots!</p>'
+            'title' => 'Barbacoa a l\'Estartit, Girona',
+            'content' => '<h1>Barbacoa a l\'estartit, girona</h1><p>Benvinguts a la barbacoa a l\'estartit, en aquet lloc podreu gaudir de la millor barbacoa de la ciutat. Us esperem a tots!</p>',
+            'date' => 'Dia 08/08/2024 a les 20:30h'
         ]);
 
         BarbecueFriendship::create([

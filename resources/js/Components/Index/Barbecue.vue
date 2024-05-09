@@ -7,7 +7,6 @@ import Timestamp from "@/Components/Time/Timestamp.vue";
 import Gallery from '@/Components/Galleries/Gallery.vue';
 import CommentSystem from "@/Components/Comments/CommentSystem.vue"
 import { useAuthStore } from '@/stores/auth';
-import axios from 'axios';
 
 const auth = useAuthStore();
 
@@ -38,12 +37,13 @@ const props = defineProps({
                     </div>
                 </div>
             </div>
-            <div class="barbecue-date">
+            <div class="barbecue-creation">
                 <Timestamp :datetime="barbecue.created_at" />
             </div>
         </div>
         <div class="barbecue-content-wrapper">
             <Link :href="'/barbecues/' + barbecue.id " class="barbecue-title">{{ barbecue.title }}</Link>
+            <span class="barbecue-date">{{ barbecue.date }}</span>
             <div class="barbecue-content" v-html="barbecue.content"></div>
         </div>
         <div class="barbecue-gallery" v-if="barbecue.images">
@@ -54,6 +54,110 @@ const props = defineProps({
 </template>
 
 <style scoped>
+.barbecue-comment-send {
+    background: #FF6100;
+    color: #fff;
+    margin-left: auto;
+    padding: 5px 10px;
+    border-radius: 10px;
+    width: fit-content;
+    border: 1px solid transparent;
+
+}
+
+.barbecue-comment-send:disabled {
+    border: 1px solid #ddd;
+    color: #ddd;
+    background: none;
+}
+
+.barbecue-comment-input-itself-answer-content-text {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.barbecue-comment-input textarea {
+    resize: none;
+    padding-inline: 10px;
+    padding-top: 5px;
+    width: 100%;
+}
+
+.barbecue-comment-input textarea:focus-visible {
+    outline: none;
+}
+
+.barbecue-comment-input-itself {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.barbecue-comment-input-itself-answer {
+    background: #f9f9f9;
+    border-bottom: 1px solid #ddd;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    height: 30px;
+    gap: 5px;
+}
+
+.barbecue-comment-input-itself-answer-cross {
+    cursor: pointer;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+}
+
+.barbecue-comment-input-itself-answer-cross:hover {
+    background: #dfdfdf;
+}
+
+.barbecue-comment-input-itself-answer-cross img {
+    height: 60%;
+    width: 20px;
+}
+
+.barbecue-comment-input-itself-answer-content {
+    cursor: pointer;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    gap: 5px;
+    font-size: 14px;
+    padding: 5px;
+    filter: opacity(0.6);
+}
+
+.barbecue-comment-input-itself-answer-content:hover {
+    background: #dfdfdf;
+    cursor: pointer;
+}
+
+
+.barbecue-comment-input-itself-answer-content img {
+    width: 15px;
+    height: 15px;
+}
+
+.barbecue-comment-input {
+    border-radius: 10px;
+    display: grid;
+    grid-template-columns: 50px auto;
+    gap: 10px;
+}
+
+.barbecue-comment-input-wrapper {
+    padding: 10px;
+    display: grid;
+    gap: 5px;
+} 
+
 .barbecue-container {
     width: 100%;
     height: fit-content;
@@ -80,7 +184,7 @@ const props = defineProps({
     gap: 10px;
 }
 
-.barbecue-date {
+.barbecue-creation {
     height: 100%;
     width: fit-content;
     display: flex;
@@ -122,6 +226,12 @@ const props = defineProps({
 
 .barbecue-title {
     font-size: 24px;
+}
+
+.barbecue-date {
+    display: block;
+    font-size: 14px;
+    color: #888888;
 }
 
 .barbecue-content {
