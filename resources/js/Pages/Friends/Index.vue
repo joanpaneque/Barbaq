@@ -114,7 +114,7 @@ const deletefriend = (id) => {
             <div class="grid grid-friends">
                 <div v-for="(friend, index) in friends" :key="friend.id"
                     :class="['friend-card', { 'hidden': index >= friendsPerPage }]"
-                    class="friend-card w-40 bg-white border border-gray-200 rounded-2xl dark:bg-gray-800 dark:border-gray-700">
+                    class="friend-card w-40 bg-white border border-gray-200 rounded-2xl dark:bg-gray-800 dark:border-gray-700 mt-4">
                     <div class="flex justify-end px-2 pt-3">
                     </div>
                     <div class="flex flex-col items-center pb-5">

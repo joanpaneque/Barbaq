@@ -15,12 +15,11 @@ class NotificationsController extends Controller
     public function index()
     {
         $user = auth()->user();
-        // $notifications = $user->notifications()->get();
-
+    
         return Inertia::render('Notifications/Index', [
-            // 'notifications' => $notifications,
         ]);
     }
+    
 
     /**
      * Show the form for creating a new resource.
