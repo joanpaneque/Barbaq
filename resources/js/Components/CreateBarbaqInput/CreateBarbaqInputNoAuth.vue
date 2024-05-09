@@ -1,13 +1,11 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { createApp } from 'vue'
-
+import { createApp } from 'vue';
 
 </script>
 
 <template>
     <div class="dropdown skeleton">
-
         <div class="flex content ">
             <img src="/assets/img/profile.jpg" alt="Foto de perfil" class="mr-2 h-16 w-16 rounded-full imgprofile">
             <form action="" class="w-full mt-auto mb-auto ">
@@ -17,7 +15,6 @@ import { createApp } from 'vue'
             </form>
             <img src="/assets/svg/lockdiv.svg" alt="Imatge de editar" class="imgprofile opacity-25">
         </div>
-
     </div>
 </template>
 

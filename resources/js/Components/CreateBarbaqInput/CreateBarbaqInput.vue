@@ -3,11 +3,13 @@ import { ref } from 'vue';
 import { createApp } from 'vue'
 import { QuillEditor } from '@vueup/vue-quill'
 import { useAuthStore } from "@/stores/auth";
+import { useBarbecueStore } from '@/stores/barbecue';
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import { useForm } from '@inertiajs/vue3';
 import axios from 'axios';
 
 const authStore = useAuthStore();
+const barbecueStore = useBarbecueStore();
 
 
 const app = createApp()
@@ -77,14 +79,12 @@ const submitBarbecueForm = () => {
             quillContent.value.setHTML('');
             isOpen.value = false;
 
-
-
             const barbecueId = response.data.id;
-
             const formData = new FormData();
             for (const image of imagesForm.image) {
                 formData.append('images[]', image);
             }
+            barbecueStore.fetchBarbecues();
 
             axios.post(`/barbecues/${barbecueId}/images`, formData, {
                 headers: {
@@ -93,6 +93,7 @@ const submitBarbecueForm = () => {
             })
                 .then(() => {
                     console.log('Imatges pujades correctament');
+                    barbecueStore.fetchBarbecues();
 
                     imagesForm.image = [];
                 })
@@ -127,7 +128,6 @@ const handleFileChange = (event) => {
     console.log("File names:", fileNames);
 
     console.log("Selected images:", imagesForm.image);
-
 };
 
 function cancelImages() {

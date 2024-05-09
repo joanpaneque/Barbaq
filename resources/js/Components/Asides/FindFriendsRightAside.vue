@@ -5,7 +5,7 @@ import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import { useProfileStore } from "@/stores/profile";
 const profileStore = useProfileStore();
 
- 
+
 const usersToShow = ref(5)
 const showMoreUsers = () => {
     usersToShow.value = usersToShow.value === 10 ? 5 : usersToShow.value + 5
@@ -23,20 +23,21 @@ const sendFriendRequest = (user_id) => {
 </script>
 
 <template>
+
     <span class="text-xl text-gray-800 dark:text-white font-bold">Gent a prop teu</span>
     <div class="flex items-center  gap-2 bg-white p-1 rounded-xl mb-2 w-full mt-2 justify-between"
         v-for="(user, index) in $page.props.filteredUsers.slice(0, usersToShow)" :key="index">
         <div class="flex flex-row items-center gap-2">
-        <Link :href="`/profile/${user.id}`">
-            <img src="/assets/img/user.png" alt="" class="fit-content h-10 w-10 rounded-full object-cover">
-        </Link>
-        <Link :href="`/profile/${user.id}`">
+            <Link :href="`/profile/${user.id}`">
+            <img :src="user.image" alt="profile image" class="fit-content h-10 w-10 rounded-full object-cover">
+            </Link>
+            <Link :href="`/profile/${user.id}`">
             <div class="flex flex-row items-center gap-1 w-full">
                 <p>{{ user.name }}</p>
                 <p>{{ user.surnames }}</p>
             </div>
-        </Link>
-    </div>
+            </Link>
+        </div>
         <div class="flex justify-end">
             <form class="flex items-center pr-1" @submit.prevent="sendFriendRequest(user.id)">
                 <button title="Add New" class="group cursor-pointer outline-none hover:rotate-90 duration-300"
@@ -52,7 +53,9 @@ const sendFriendRequest = (user_id) => {
             </form>
         </div>
     </div>
- 
+
+
+
     <div class="people-nearby text-center">
         <button @click="showMoreUsers">
             <span class="text-gray-800 font-bold hover:text-orange-400 transition duration-300">{{ buttonText }}</span>

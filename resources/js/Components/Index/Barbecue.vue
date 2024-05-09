@@ -5,9 +5,8 @@ import UserLink from "@/Components/User/UserLink.vue"
 import { Link } from '@inertiajs/vue3';
 import Timestamp from "@/Components/Time/Timestamp.vue";
 import Gallery from '@/Components/Galleries/Gallery.vue';
-import Comment from "@/Components/Comments/Comment.vue"
+import CommentSystem from "@/Components/Comments/CommentSystem.vue"
 import { useAuthStore } from '@/stores/auth';
-import axios from 'axios';
 
 const auth = useAuthStore();
 
@@ -18,81 +17,16 @@ const props = defineProps({
     }
 });
 
-const answerComment = ref(null);
-const answerPath = ref([]);
-
-function writeComment(treePath) {
-    answerPath.value = treePath;
-    const deepSearch = (backtrackNode, treePath) => {
-        for (let i = 0; i < treePath.length - 1; i++) {
-            backtrackNode = backtrackNode.find(node => node.id === treePath[i]).replies;
-        }
-        return backtrackNode.find(node => node.id === treePath[treePath.length - 1]);
-    }
-
-    let currentNode = props.barbecue.comments;
-    const lastNode = deepSearch(currentNode, treePath);
-    answerComment.value = lastNode;
-
-    const commentInput = document.getElementById(`comment-input-${props.barbecue.id}`);
-    commentInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    commentTextarea.value.focus();
-}
-
-function removeReply() {
-    answerComment.value = null;
-    answerPath.value = [];
-
-    const commentInput = document.getElementById(`comment-input-${props.barbecue.id}`);
-    commentInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    commentTextarea.value.focus();
-}
-
-const commentContent = ref('');
-const commentTextarea = ref(null);
-
-function adjustTextareaHeight() {
-    const textarea = commentTextarea.value;
-    textarea.style.height = 'auto';
-    textarea.style.height = `${textarea.scrollHeight + 2}px`;
-}
-
-function focusComment(commentId) {
-    const comment = document.getElementById(`comment-${commentId}`);
-    comment.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    comment.classList.add('highlight');
-    setTimeout(() => {
-        comment.classList.remove('highlight');
-    }, 2000);
-}
-
-function sendComment() {
-    axios.post(route('comments.store'), {
-        comment_id: answerComment.value ? answerComment.value.id : null,
-        barbecue_id: answerComment.value ? null : props.barbecue.id,
-        comment: commentContent.value
-    }).then(response => {
-        const commentObject = {...response.data, replies: []};
-        let currentNode = props.barbecue.comments;
-        for (let i = 0; i < answerPath.value.length; i++) {
-            currentNode = currentNode.find(node => node.id === answerPath.value[i]).replies;
-        }
-        currentNode.unshift(commentObject);
-        commentContent.value = '';
-        answerComment.value = null;
-        answerPath.value = [];
-    });
-}
-
 </script>
 
 <template>
+   
     <div class="barbecue-container" v-if="barbecue">
         <div class="barbecue-header">
             <div class="barbecue-left-section">
                 <div class="barbecue-profile-image">
                     <Link :href="route('profile.show', barbecue.user.id)">
-                        <img :src="barbecue.user.image" alt="Profile image">
+                    <img :src="barbecue.user.image" alt="Profile image">
                     </Link>
                 </div>
                 <div class="barbecue-left-texts">
@@ -108,45 +42,14 @@ function sendComment() {
             </div>
         </div>
         <div class="barbecue-content-wrapper">
-            <span class="barbecue-title">{{ barbecue.title }}</span>
+            <Link :href="'/barbecues/' + barbecue.id " class="barbecue-title">{{ barbecue.title }}</Link>
             <span class="barbecue-date">{{ barbecue.date }}</span>
             <div class="barbecue-content" v-html="barbecue.content"></div>
         </div>
-        <div class="barbecue-gallery">
+        <div class="barbecue-gallery" v-if="barbecue.images">
             <Gallery :images="barbecue.images.map(image => image.path)" />
         </div>
-        <div class="barbecue-comment-input-wrapper">
-        <span>Comentaris ({{ barbecue.comments.length }}) </span>
-        <div class="barbecue-comment-input">
-            <div class="barbecue-comment-profile-image">
-                <img :src="auth.user.image" alt="Profile image">
-            </div>
-            <div class="barbecue-comment-input-itself" :id="'comment-input-' + barbecue.id">
-                <div class="barbecue-comment-input-itself-answer" v-if="answerComment">
-                    <div class="barbecue-comment-input-itself-answer-cross" @click="removeReply">
-                        <img class="barbecue-comment-input-itself-answer-cross"
-                        src="/assets/svg/cross.svg" alt="Answering" />
-                    </div>
-                    <div class="barbecue-comment-input-itself-answer-content">
-                        <img src="/assets/svg/redo.svg" alt="Answering" />
-                        <div class="barbecue-comment-input-itself-answer-content-text" @click="focusComment(answerComment.id)">{{ answerComment.user.name }} {{
-                            answerComment.user.surnames }} | {{ answerComment.comment }}</div>
-                    </div>
-                </div>
-                <textarea ref="commentTextarea" v-model="commentContent" @input="adjustTextareaHeight"
-                    :placeholder="answerComment ? 'Respon a ' + answerComment.user.name + ' ' + answerComment.user.surnames : 'Escriu un comentari...'">
-                </textarea>
-            </div>
-        </div>
-        <button class="barbecue-comment-send" @click="sendComment" :disabled="!commentContent"
-        >Enviar</button>
-        </div>
-        <div class="barbecue-footer">
-            <div class="barbecue-comments" v-for="(comment, index) in barbecue.comments">
-                <Comment @writeComment="writeComment" :comment="comment"
-                    :isLast="index === barbecue.comments.length - 1" :isFirst="index === 0" />
-            </div>
-        </div>
+        <CommentSystem :root="barbecue.comments" :barbecueId="barbecue.id" />
     </div>
 </template>
 
@@ -296,18 +199,6 @@ function sendComment() {
 }
 
 .barbecue-profile-image img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.barbecue-comment-profile-image {
-    display: flex;
-    height: 100%;
-}
-
-.barbecue-comment-profile-image img {
     width: 50px;
     height: 50px;
     border-radius: 50%;

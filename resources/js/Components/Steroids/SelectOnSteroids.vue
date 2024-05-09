@@ -115,4 +115,12 @@
         background: #e9e9e9;
         cursor: pointer;
     }
+
+    @media (max-width: 1200px) {
+        /* the select options will be displayed on the top of the input */
+        .select-on-steroids-dropdown {
+            bottom: 55px;
+        }
+
+    }
 </style>
