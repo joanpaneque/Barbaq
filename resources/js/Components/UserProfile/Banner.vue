@@ -1,9 +1,10 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useAuthStore } from "@/stores/auth";
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import { useProfileStore } from "@/stores/profile";
 import axios from 'axios';
+import ColorThief from 'colorthief';
 
 import { toFormData } from "axios";
 
@@ -73,6 +74,7 @@ const updateUserPhoto = () => {
         ...formData,
         onSuccess: () => {
             authStore.updateUserData();
+            analyzeImageColors(profileStore.user.image);
         }
     });
 
@@ -89,34 +91,56 @@ const togglePrivateOrPublic = () => {
         });
 }
 
+
+
+const bgcolor1 = ref('');
+const bgcolor2 = ref('');
+const bgcolor3 = ref('');
+
+onMounted(() => {
+    analyzeImageColors(profileStore.user.image);
+});
+
+async function analyzeImageColors(imageUrl) {
+  const colorThief = new ColorThief();
+  const img = new Image();
+  img.crossOrigin = 'Anonymous';
+  img.src = imageUrl;
+  
+  img.onload = () => {
+    const [color1, color2, color3] = colorThief.getPalette(img, 3);
+    bgcolor1.value = rgbToHex(color1[0], color1[1], color1[2]);
+    bgcolor2.value = rgbToHex(color2[0], color2[1], color2[2]);
+    bgcolor3.value = rgbToHex(color3[0], color3[1], color3[2]);
+  };
+}
+
+function rgbToHex(r, g, b) {
+  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+}
 </script>
 
 <template>
     <div v-if="profileStore.user && authStore.user">
 
-        <div
-            class="background w-full h-[150px] bg-cover bg-no-repeat bg-center rounded-t-[20px]" 
-        />
+        <div class="background w-full h-[150px] bg-cover bg-no-repeat bg-center rounded-t-[20px]" :style="{ backgroundImage: `linear-gradient(to right, ${bgcolor1}, ${bgcolor2}, ${bgcolor3})` }"></div>
+
+
+
         <div class="relative flex flex-1 w-full bg-white rounded-b-[20px] p-4">
+            
             <div style="margin-top: -6rem;">
 
-                <div 
-                    v-if="profileStore.user.id == authStore.user.id" 
-                >
+                <div v-if="profileStore.user.id == authStore.user.id">
 
-                    <div 
-                        class="avatar tooltip relative w-36 h-36 rounded-full" 
-                        data-tip="Canvia la foto" 
-                        @click="openModal"
-                    >
+                    <div class="avatar tooltip relative w-36 h-36 rounded-full" data-tip="Canvia la foto"
+                        @click="openModal">
                         <div class="image-container relative w-36 h-36 rounded-full border-4 border-white bg-white">
-                            <img 
-                                class="image-profile absolute w-36 h-36 rounded-full" 
-                                :src="profileStore.user.image" 
-                                alt="avatar"
-                            >
+                            <img class="image-profile absolute w-36 h-36 rounded-full" :src="profileStore.user.image"
+                                alt="avatar">
 
-                            <div class="middle flex items-center justify-center opacity-0 transition-opacity duration-500">
+                            <div
+                                class="middle flex items-center justify-center opacity-0 transition-opacity duration-500">
                                 <img src="/assets/img/camara.png" alt="Llàpis" class="!w-12 !h-12 cursor-pointer">
                             </div>
                         </div>
@@ -126,20 +150,15 @@ const togglePrivateOrPublic = () => {
                     <dialog id="my_modal_3" class="modal" :open="showModal" @click.self="closeModal">
                         <div class="modal-box">
                             <form @submit.prevent="closeModal" method="dialog">
-                                <button 
-                                    class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-                                >
+                                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
                                     ✕
                                 </button>
                             </form>
 
-                            <form 
-                                @submit.prevent="updateUserPhoto"
-                                class="flex flex-col items-center gap-4"
-                            >
+                            <form @submit.prevent="updateUserPhoto" class="flex flex-col items-center gap-4">
 
                                 <h3 class="font-bold text-lg mb-2">Selecciona una nova foto de perfil</h3>
-                                
+
                                 <label class="custum-file-upload" for="file">
                                     <div class="icon">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="" viewBox="0 0 24 24">
@@ -174,11 +193,8 @@ const togglePrivateOrPublic = () => {
 
 
                 <div v-else class="relative w-36 h-36 rounded-full avatar">
-                    <img
-                        class="relative w-36 h-36 rounded-full border-4 border-white bg-white"
-                        :src="profileStore.user.image" 
-                        alt="avatar"
-                    >
+                    <img class="relative w-36 h-36 rounded-full border-4 border-white bg-white"
+                        :src="profileStore.user.image" alt="avatar">
                     <div class="absolute"></div>
                 </div>
 
@@ -199,113 +215,88 @@ const togglePrivateOrPublic = () => {
                     <button class="content-center justify-center" v-if="authStore.user.id == profileStore.user.id">
                         <label v-if="authStore.user.public == 1" class="swap">
                             <input type="checkbox" />
-                            
-                            <div 
-                                @click="togglePrivateOrPublic" 
-                                class="swap-on px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 transition duration-150"
-                            > 
+
+                            <div @click="togglePrivateOrPublic"
+                                class="swap-on px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 transition duration-150">
                                 <p class="text-red-600 font-bold">Privat</p>
                             </div>
 
-                            <div 
-                                @click="togglePrivateOrPublic" 
-                                class="swap-off px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 transition duration-150"
-                            > 
+                            <div @click="togglePrivateOrPublic"
+                                class="swap-off px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 transition duration-150">
                                 <p class="text-green-600 font-bold">Públic</p>
                             </div>
                         </label>
 
                         <label v-else class="swap">
                             <input type="checkbox" />
-                            
-                            <div 
-                                @click="togglePrivateOrPublic" 
-                                class="swap-on px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 transition duration-150"
-                            >
+
+                            <div @click="togglePrivateOrPublic"
+                                class="swap-on px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 transition duration-150">
                                 <p class="text-green-600 font-bold">Public</p>
                             </div>
 
-                            <div 
-                                @click="togglePrivateOrPublic"
-                                class="swap-off px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 transition duration-150"
-                            > 
+                            <div @click="togglePrivateOrPublic"
+                                class="swap-off px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 transition duration-150">
                                 <p class="text-red-600 font-bold">Privat</p>
                             </div>
                         </label>
-                        
-                    </button>
-                    <Link 
-                        :href="route('profile.edit', { profile: profileStore.user.id })"
-                        v-if="authStore.user.id == profileStore.user.id"
-                    >
 
-                        <button
-                            class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150"
-                        >
-                            <img class="" src="/assets/svg/editprofile.svg" loading="lazy" alt="Google Logo">
-                            <span class="font-medium">Editar</span>
-                        </button>
+                    </button>
+                    <Link :href="route('profile.edit', { profile: profileStore.user.id })"
+                        v-if="authStore.user.id == profileStore.user.id">
+
+                    <button
+                        class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150">
+                        <img class="" src="/assets/svg/editprofile.svg" loading="lazy" alt="Google Logo">
+                        <span class="font-medium">Editar</span>
+                    </button>
 
                     </Link>
                     <div v-else>
                         <div class="flex items-center justify-center dark:bg-gray-800 gap-2">
                             <Link
-                                class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 bg-white"
-                            >
-                                <img class="" src="/assets/svg/sendmessage.svg" loading="lazy" alt="Google Logo">
-                                <span class="text-black font-bold">Enviar missatge</span>
+                                class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 bg-white">
+                            <img class="" src="/assets/svg/sendmessage.svg" loading="lazy" alt="Google Logo">
+                            <span class="text-black font-bold">Enviar missatge</span>
                             </Link>
 
-                            <form 
-                                v-if="profileStore.friendStatus === 'none'"
-                                @submit.prevent="sendFriendRequest" class="form"
-                            >
-                            
+                            <form v-if="profileStore.friendStatus === 'none'" @submit.prevent="sendFriendRequest"
+                                class="form">
+
                                 <Button
-                                    class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 bg-orange-600"
-                                >
+                                    class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 bg-orange-600">
                                     <img class="" src="/assets/svg/addfriend.svg" alt="Google Logo">
                                     <span class="text-white font-bold">Enviar solicitud d'amistat</span>
                                 </Button>
 
                             </form>
 
-                            <form 
-                                v-if="profileStore.friendStatus === 'friend'"
-                                @submit.prevent="deleteFriend" class="form"
-                            >
+                            <form v-if="profileStore.friendStatus === 'friend'" @submit.prevent="deleteFriend"
+                                class="form">
 
                                 <Button
-                                    class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 bg-white"
-                                >
+                                    class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 bg-white">
                                     <img class="" src="/assets/svg/isfriend.svg" alt="google logo">
                                     <span class="text-black font-bold">Amics</span>
                                 </Button>
 
                             </form>
 
-                            <form 
-                                v-if="profileStore.friendStatus === 'sent'"
-                                @submit.prevent="cancelFrientRequest" class="form"
-                            >
+                            <form v-if="profileStore.friendStatus === 'sent'" @submit.prevent="cancelFrientRequest"
+                                class="form">
                                 <Button
-                                    class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 bg-red-600"
-                                >
-                                    <img class="" src="/assets/svg/cancelfriendrequest.svg"
-                                        alt="google logo">
+                                    class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 bg-red-600">
+                                    <img class="" src="/assets/svg/cancelfriendrequest.svg" alt="google logo">
                                     <span class="text-white font-bold">Cancelar solicitud</span>
                                 </Button>
 
                             </form>
 
-                            <form 
-                                v-if="profileStore.friendStatus === 'received'"
-                                @submit.prevent="acceptRequest" class="form"
-                            >
+                            <form v-if="profileStore.friendStatus === 'received'" @submit.prevent="acceptRequest"
+                                class="form">
 
                                 <Button
-                                    class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 bg-green-600"
-                                >
+                                    class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 bg-green-600">
                                     <span class="text-white font-bold">Aceptar solicitud</span>
                                 </Button>
                             </form>
@@ -348,15 +339,7 @@ const togglePrivateOrPublic = () => {
     cursor: pointer;
 }
 
-.background {
-    background: rgb(131,58,180); 
-    background: linear-gradient(
-        90deg, 
-        rgba(131,58,180,1) 0%, 
-        rgba(253,29,29,1) 50%, 
-        rgba(252,176,69,1) 100%
-    );
-}
+.background {}
 
 .modal {
     background-color: rgba(0, 0, 0, 0.5);
