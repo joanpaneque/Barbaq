@@ -12,29 +12,25 @@ authStore.updateUserData();
 
 const barbecueStore = useBarbecueStore();
 
-const showModal = ref(true); // Mostrar el modal al cargar la página
+const showModal = ref(true);
 
 onMounted(() => {
     const barbecueScroller = document.querySelector(".main-layout-content-wrapper");
     if (getCookie("cookieAccepted")) {
-        showModal.value = false; // Si la cookie ha sido aceptada, no mostrar el modal
+        showModal.value = false; 
     }
 });
 
-// Función para aceptar la cookie
 const acceptCookie = () => {
-    // Lógica para aceptar la cookie...
-    setCookie("cookieAccepted", true, 365); // Establecer la cookie para un año
-    showModal.value = false; // Cerrar el modal
+    setCookie("cookieAccepted", true, 365);
+    showModal.value = false;
 }
 
-// Función para denegar la cookie
 const denyCookie = () => {
-    // Lógica para denegar la cookie...
-    showModal.value = false; // Cerrar el modal
+    showModal.value = false; 
 }
 
-// Función para establecer una cookie
+
 const setCookie = (name, value, days) => {
     const date = new Date();
     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
@@ -42,7 +38,6 @@ const setCookie = (name, value, days) => {
     document.cookie = name + "=" + value + ";" + expires + ";path=/";
 }
 
-// Función para obtener el valor de una cookie
 const getCookie = (name) => {
     const cookieName = name + "=";
     const decodedCookie = decodeURIComponent(document.cookie);
