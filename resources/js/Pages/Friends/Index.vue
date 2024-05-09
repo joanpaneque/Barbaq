@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
             </div>
-            <div class="join flex items-center justify-center" v-if="!searching">
+            <div class="join flex items-center justify-center" v-if="!searching && totalPages > 1">
                 <button v-for="page in totalPages" :key="page" @click="goToPage(page)"
                     class="pagination-button join-item btn btn-sm"
                     :class="{ 'active-button': isPageActive(page), 'inactive': !isPageActive(page) }">
