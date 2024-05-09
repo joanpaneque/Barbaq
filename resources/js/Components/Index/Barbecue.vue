@@ -103,12 +103,13 @@ function sendComment() {
                     </div>
                 </div>
             </div>
-            <div class="barbecue-date">
+            <div class="barbecue-creation">
                 <Timestamp :datetime="barbecue.created_at" />
             </div>
         </div>
         <div class="barbecue-content-wrapper">
             <span class="barbecue-title">{{ barbecue.title }}</span>
+            <span class="barbecue-date">{{ barbecue.date }}</span>
             <div class="barbecue-content" v-html="barbecue.content"></div>
         </div>
         <div class="barbecue-gallery">
@@ -161,14 +162,11 @@ function sendComment() {
 
 }
 
-
 .barbecue-comment-send:disabled {
     border: 1px solid #ddd;
     color: #ddd;
     background: none;
 }
-
-
 
 .barbecue-comment-input-itself-answer-content-text {
     width: 100%;
@@ -283,7 +281,7 @@ function sendComment() {
     gap: 10px;
 }
 
-.barbecue-date {
+.barbecue-creation {
     height: 100%;
     width: fit-content;
     display: flex;
@@ -337,6 +335,12 @@ function sendComment() {
 
 .barbecue-title {
     font-size: 24px;
+}
+
+.barbecue-date {
+    display: block;
+    font-size: 14px;
+    color: #888888;
 }
 
 .barbecue-content {

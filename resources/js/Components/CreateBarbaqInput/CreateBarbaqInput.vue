@@ -22,6 +22,7 @@ const barbecueForm = useForm({
     latitude: '123',
     longitude: '123',
     address: '123',
+    date: '',
 });
 
 const toggleDropdown = () => {
@@ -70,7 +71,6 @@ const submitBarbecueForm = () => {
         });
 
 
-    // Send barbacue form
     axios.post("/barbecues", barbecueForm)
         .then(response => {
             barbecueForm.reset();
@@ -102,14 +102,14 @@ const submitBarbecueForm = () => {
         })
 };
 
-const showModal = ref(false);
+const showModalImages = ref(false);
 
-function openModal() {
-    showModal.value = true;
+function openModalImages() {
+    showModalImages.value = true;
 }
 
-function closeModal() {
-    showModal.value = false;
+function closeModalImages() {
+    showModalImages.value = false;
 }
 
 const imagesForm = useForm({
@@ -128,6 +128,52 @@ const handleFileChange = (event) => {
 
     console.log("Selected images:", imagesForm.image);
 
+};
+
+function cancelImages() {
+    imagesForm.image = [];
+    const imagesNamesElement = document.getElementById('imagesNames');
+    imagesNamesElement.innerHTML = '';
+
+    closeModalImages();
+}
+
+const showModalCalendar = ref(false);
+
+function openModalCalendar() {
+    showModalCalendar.value = true;
+}
+
+function closeModalCalendar() {
+    const stringDate = `Dia ${dateForm.day}/${dateForm.month}/${dateForm.year} a les ${dateForm.hour}:${dateForm.minute}h`;
+    barbecueForm.date = stringDate;
+
+    showModalCalendar.value = false;
+}
+
+const currentYear = new Date().getFullYear();
+const numberOfYears = 2;
+const years = [];
+for (let i = 0; i < numberOfYears; i++) {
+    years.push(currentYear + i);
+}
+
+const dateForm = useForm({
+    day: '',
+    month: '',
+    year: '',
+    hour: '',
+    minute: '',
+});
+
+function cancelDate() {
+    dateForm.day = '';
+    dateForm.month = '';
+    dateForm.year = '';
+    dateForm.hour = '';
+    dateForm.minute = '';
+
+    closeModalCalendar();
 };
 
 </script>
@@ -149,22 +195,27 @@ const handleFileChange = (event) => {
         <div class="content " :style="{ height: isOpen ? 'auto' : '0' }">
 
             <section class="mt-3 ">
-
                 <QuillEditor theme="snow" class="rounded-b-lg min-h-24" ref="quillContent"></QuillEditor>
-
             </section>
 
             <div class="flex items-center">
                 <img 
                     src="/assets/svg/addphoto.svg" 
-                    alt="Imatge de editar" 
+                    alt="Imatge insertar foto/s" 
                     class="add-info cursor-pointer" 
-                    @click="openModal"
+                    @click="openModalImages"
+                >
+
+                <img 
+                    src="/assets/svg/addcalendar.svg" 
+                    alt="Imatge insertar data" 
+                    class="add-info cursor-pointer ml-[2px] -mr-[2px]"
+                    @click="openModalCalendar"
                 >
 
                 <img 
                     src="/assets/svg/addlocation.svg" 
-                    alt="Imatge de editar" 
+                    alt="Imatge insertar ubicació" 
                     class="add-info cursor-pointer"
                 >
 
@@ -178,15 +229,15 @@ const handleFileChange = (event) => {
             </div>
         </div>
 
-        <dialog id="my_modal_3" class="modal cursor-auto" :open="showModal" @click.self="closeModal">
+        <dialog id="my_modal_3" class="modal cursor-auto" :open="showModalImages" @click.self="closeModalImages">
             <div class="modal-box w-auto min-w-[30%] max-w-5xl">
                 <form 
-                    @submit.prevent="closeModal"
+                    @submit.prevent="closeModalImages"
                     class="flex flex-col items-center gap-4"
                 >
                     <button 
                         class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-                        @click="closeModal"
+                        @click="cancelImages"
                     >
                         ✕
                     </button>
@@ -232,7 +283,136 @@ const handleFileChange = (event) => {
 
                     <div class="flex justify-center mt-4 space-x-4">
                         <button class="btn" type="submit">Guardar</button>
-                        <button class="btn ">Cancelar</button>
+                        <button class="btn" @click="cancelImages">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </dialog>
+
+        <dialog id="my_modal_3" class="modal cursor-auto" :open="showModalCalendar" @click.self="closeModalCalendar">
+            <div class="modal-box w-auto min-w-[30%] max-w-5xl">
+                <form 
+                    @submit.prevent="closeModalCalendar"
+                    class="flex flex-col gap-4"
+                >
+                    <button 
+                        class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                        @click="cancelDate"
+                    >
+                        ✕
+                    </button>
+                
+                    <h3 class="flex justify-center font-bold text-lg mb-2">Programa la barbacoa</h3>
+
+                    <div>
+                        <h2>Data</h2>
+                    
+                        <div class="flex gap-2 w-full">
+                            <select name="day" id="day" class="border border-black rounded-lg p-3 flex-1" v-model="dateForm.day">
+                                <option value="" disabled selected hidden>Dia</option>
+                                <option value="01">1</option>
+                                <option value="02">2</option>
+                                <option value="03">3</option>
+                                <option value="04">4</option>
+                                <option value="05">5</option>
+                                <option value="06">6</option>
+                                <option value="07">7</option>
+                                <option value="08">8</option>
+                                <option value="09">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                                <option value="19">19</option>
+                                <option value="20">20</option>
+                                <option value="21">21</option>
+                                <option value="22">22</option>
+                                <option value="23">23</option>
+                                <option value="24">24</option>
+                                <option value="25">25</option>
+                                <option value="26">26</option>
+                                <option value="27">27</option>
+                                <option value="28">28</option>
+                                <option value="29">29</option>
+                                <option value="30">30</option>
+                                <option value="31">31</option>
+                            </select>
+
+                            <select name="month" id="month" class="border border-black rounded-lg p-3 flex-1" v-model="dateForm.month">
+                                <option value="" disabled selected hidden>Mes</option>
+                                <option value="01">Gener</option>
+                                <option value="02">Febrer</option>
+                                <option value="03">Març</option>
+                                <option value="04">Abril</option>
+                                <option value="05">Maig</option>
+                                <option value="06">Juny</option>
+                                <option value="07">Juliol</option>
+                                <option value="08">Agost</option>
+                                <option value="09">Setembre</option>
+                                <option value="10">Octubre</option>
+                                <option value="11">Novembre</option>
+                                <option value="12">Desembre</option>
+                            </select>
+
+                            <select name="year" id="year" class="border border-black rounded-lg p-3 flex-1" v-model="dateForm.year">
+                                <option value="" disabled selected hidden>Any</option>
+                                <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+
+                    <div>
+                        <h2>Hora</h2>
+
+                        <div class="flex gap-2 w-full">
+                            <select name="hour" id="hour" class="border border-black rounded-lg p-3" v-model="dateForm.hour">
+                                <option value="" disabled selected hidden>Hora</option>
+                                <option value="00">00</option>
+                                <option value="01">01</option>
+                                <option value="02">02</option>
+                                <option value="03">03</option>
+                                <option value="04">04</option>
+                                <option value="05">05</option>
+                                <option value="06">06</option>
+                                <option value="07">07</option>
+                                <option value="08">08</option>
+                                <option value="09">09</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                                <option value="19">19</option>
+                                <option value="20">20</option>
+                                <option value="21">21</option>
+                                <option value="22">22</option>
+                                <option value="23">23</option>
+                            </select>
+
+                            <select name="minute" id="minute" class="border border-black rounded-lg p-3"  v-model="dateForm.minute">
+                                <option value="" disabled selected hidden>Minut</option>
+                                <option value="00">00</option>
+                                <option value="15">15</option>
+                                <option value="30">30</option>
+                                <option value="45">45</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="flex justify-center mt-4 space-x-4">
+                        <button class="btn" type="submit">Guardar</button>
+                        <button class="btn" @click="cancelDate">Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -330,11 +510,17 @@ const handleFileChange = (event) => {
 
 .input-container input:focus {
     border-bottom-color: gray;
-    /* Color de la línea cuando el input está enfocado */
 }
 
 .imgprofile {
     object-fit: cover;
+}
+
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .modal {
