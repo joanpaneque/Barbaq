@@ -21,12 +21,13 @@ const props = defineProps({
 </script>
 
 <template>
+   
     <div class="barbecue-container" v-if="barbecue">
         <div class="barbecue-header">
             <div class="barbecue-left-section">
                 <div class="barbecue-profile-image">
                     <Link :href="route('profile.show', barbecue.user.id)">
-                        <img :src="barbecue.user.image" alt="Profile image">
+                    <img :src="barbecue.user.image" alt="Profile image">
                     </Link>
                 </div>
                 <div class="barbecue-left-texts">
@@ -42,7 +43,7 @@ const props = defineProps({
             </div>
         </div>
         <div class="barbecue-content-wrapper">
-            <span class="barbecue-title">{{ barbecue.title }}</span>
+            <Link :href="'/barbecues/' + barbecue.id " class="barbecue-title">{{ barbecue.title }}</Link>
             <div class="barbecue-content" v-html="barbecue.content"></div>
         </div>
         <div class="barbecue-gallery" v-if="barbecue.images">
@@ -53,7 +54,6 @@ const props = defineProps({
 </template>
 
 <style scoped>
-
 .barbecue-container {
     width: 100%;
     height: fit-content;
