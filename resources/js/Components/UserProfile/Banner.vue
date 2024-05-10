@@ -210,7 +210,7 @@ function rgbToHex(r, g, b) {
                     <div class="flex">
                         <div v-if="profileStore.user.vegetarian" class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md bg-gray-50">
                             <img src="/assets/img/intolerance/vegetarian.png" class="h-7" alt="">
-                            <p class="font-semibold text-green-700">Vegà</p>
+                            <p class="font-semibold text-green-700">Vegetarià</p>
                         </div>
                         <div v-if="profileStore.user.lactose" class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md tooltip bg-gray-50" data-tip="Intolerant a la lactosa">
                             <img src="/assets/img/intolerance/lactose.png" class="h-7" alt="">
