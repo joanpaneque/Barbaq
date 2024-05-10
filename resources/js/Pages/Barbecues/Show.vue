@@ -21,14 +21,13 @@ const props = defineProps({
 
 const barbecueStore = useBarbecueStore();
 barbecueStore.setBarbecue(props.barbecue);
-console.log(barbecueStore.barbecue);
-console.log(props.friends);
+
 </script>
 
 <template>
     <MainLayout :title="barbecue.title">
         <template #main-content>
-            <Chat />
+            <Chat v-if="authStore.user"/>
         </template>
         <template #right-aside>
             <div class="aside-menu">

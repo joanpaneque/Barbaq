@@ -42,7 +42,7 @@ export const useBarbecueStore = defineStore('barbecue', {
             .then(response => {
                 this.barbecues.push(...response.data);
             });
-        }
+        },
     },
     getters: {
 

@@ -186,4 +186,9 @@ class User extends Authenticatable
     public function friendsCount() {
         return $this->friends()->count();
     }
+
+    public function barbecuesFriendships()
+    {
+        return $this->hasMany(BarbecueFriendship::class, 'user_id');
+    }
 }
