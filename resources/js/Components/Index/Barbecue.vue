@@ -1,6 +1,5 @@
 <script setup>
-
-import { ref, defineProps } from 'vue';
+import { defineProps } from 'vue';
 import UserLink from "@/Components/User/UserLink.vue"
 import { Link } from '@inertiajs/vue3';
 import Timestamp from "@/Components/Time/Timestamp.vue";
@@ -16,7 +15,6 @@ const props = defineProps({
         required: true
     }
 });
-
 </script>
 
 <template>
