@@ -208,23 +208,23 @@ function rgbToHex(r, g, b) {
                     </h1>
 
                     <div class="flex">
-                        <div v-if="profileStore.user.vegetarian" class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md">
+                        <div v-if="profileStore.user.vegetarian" class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md bg-gray-50">
                             <img src="/assets/img/intolerance/vegetarian.png" class="h-7" alt="">
                             <p class="font-semibold text-green-700">Vegà</p>
                         </div>
-                        <div v-if="profileStore.user.lactose" class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md tooltip" data-tip="hello">
+                        <div v-if="profileStore.user.lactose" class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md tooltip bg-gray-50" data-tip="Intolerant a la lactosa">
                             <img src="/assets/img/intolerance/lactose.png" class="h-7" alt="">
-                            <p class="font-semibold text-black">Lactosa</p>
+                            <p class="font-semibold text-blue-400">Lactosa</p>
                         </div>
-                        <div v-if="profileStore.user.gluten" class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md">
+                        <div v-if="profileStore.user.gluten" class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md tooltip bg-gray-50" data-tip="Intolerant al gluten">
                             <img src="/assets/img/intolerance/gluten.png" class="h-7" alt="">
                             <p class="font-semibold text-yellow-600">Gluten</p>
                         </div>
-                        <div v-if="profileStore.user.spicy" class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md">
+                        <div v-if="profileStore.user.spicy" class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md tooltip bg-gray-50" data-tip="Intolerant al picant">
                             <img src="/assets/img/intolerance/spicy.png" class="h-7" alt="">
                             <p class="font-semibold text-red-700">Picant</p>
                         </div>
-                        <div v-if="profileStore.user.halal" class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md">
+                        <div v-if="profileStore.user.halal" class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md bg-gray-50">
                             <img src="/assets/img/intolerance/halal.png" class="h-7" alt="">
                             <p class="font-semibold text-black">Halal</p>
                         </div>
