@@ -27,5 +27,9 @@ class BarbecueFriendship extends Model
         return $this->belongsTo(Barbecue::class);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
 }

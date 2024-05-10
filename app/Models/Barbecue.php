@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Image;
 use App\Models\Comment;
+use App\Models\BarbecueFriendship;
 
 class Barbecue extends Model
 {
@@ -86,5 +87,10 @@ class Barbecue extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class)->with('user', 'replies')->orderBy('created_at', 'desc');
+    }
+
+    public function friendships()
+    {
+        return $this->hasMany(BarbecueFriendship::class);
     }
 }

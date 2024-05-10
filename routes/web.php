@@ -54,6 +54,7 @@ Route::post('/api/discordbot', [DiscordBotController::class, 'broadcast']);
 
 Route::post('/sendinvitation/{id}', [BarbecuesController::class, 'sendInvitation'])->name('sendinvitation');
 Route::delete('/destroyfriendship/{id}', [BarbecuesController::class, 'destroyFriendship'])->name('destroyfriendship');
+Route::post('/sendbarbecuejoinrequest/{id}', [BarbecuesController::class, 'sendBarbecueJoinRequest'])->name('sendbarbecuejoinrequest');
 
 Route::post('/toggleprivate', [UserController::class, 'togglePrivate'])->name('toggleprivate');
 
