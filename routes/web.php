@@ -48,6 +48,7 @@ Route::post('/updateuserphoto/{id}', [UserController::class, 'update'])->name('u
 
 Route::resource('barbecues', BarbecuesController::class);
 Route::resource('/barbecues/{barbecueId}/images', ImagesController::class);
+Route::resource('/barbecues/{barbecueId}/edit', BarbecuesController::class);
 Route::get('/api/barbecues', [BarbecuesController::class, 'apiIndex']);
 
 Route::post('/api/discordbot', [DiscordBotController::class, 'broadcast']);
