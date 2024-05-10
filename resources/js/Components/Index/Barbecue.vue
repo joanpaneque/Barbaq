@@ -1,13 +1,11 @@
 <script setup>
-
-import { ref, defineProps } from 'vue';
+import { defineProps } from 'vue';
 import UserLink from "@/Components/User/UserLink.vue"
 import { Link } from '@inertiajs/vue3';
 import Timestamp from "@/Components/Time/Timestamp.vue";
 import Gallery from '@/Components/Galleries/Gallery.vue';
 import CommentSystem from "@/Components/Comments/CommentSystem.vue"
 import { useAuthStore } from '@/stores/auth';
-import axios from 'axios';
 
 const auth = useAuthStore();
 
@@ -17,7 +15,6 @@ const props = defineProps({
         required: true
     }
 });
-
 </script>
 
 <template>

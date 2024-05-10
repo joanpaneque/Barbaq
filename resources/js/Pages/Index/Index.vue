@@ -5,7 +5,7 @@ import CreateBarbaqInput from "@/Components/CreateBarbaqInput/CreateBarbaqInput.
 import { useAuthStore } from "@/stores/auth";
 import { useBarbecueStore } from "@/stores/barbecue";
 import IndexRightAside from "@/Components/Asides/IndexRightAside.vue";
-import { onMounted, onUnmounted } from "vue";
+import { onMounted } from "vue";
 
 const authStore = useAuthStore();
 authStore.updateUserData();
