@@ -102,33 +102,34 @@ onMounted(() => {
 });
 
 async function analyzeImageColors(imageUrl) {
-  const colorThief = new ColorThief();
-  const img = new Image();
-  img.crossOrigin = 'Anonymous';
-  img.src = imageUrl;
-  
-  img.onload = () => {
-    const [color1, color2, color3] = colorThief.getPalette(img, 3);
-    bgcolor1.value = rgbToHex(color1[0], color1[1], color1[2]);
-    bgcolor2.value = rgbToHex(color2[0], color2[1], color2[2]);
-    bgcolor3.value = rgbToHex(color3[0], color3[1], color3[2]);
-  };
+    const colorThief = new ColorThief();
+    const img = new Image();
+
+    img.src = imageUrl;
+
+    img.onload = () => {
+        const [color1, color2, color3] = colorThief.getPalette(img, 3);
+        bgcolor1.value = rgbToHex(color1[0], color1[1], color1[2]);
+        bgcolor2.value = rgbToHex(color2[0], color2[1], color2[2]);
+        bgcolor3.value = rgbToHex(color3[0], color3[1], color3[2]);
+    };
 }
 
 function rgbToHex(r, g, b) {
-  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 }
 </script>
 
 <template>
     <div v-if="profileStore.user && authStore.user">
 
-        <div class="background w-full h-[150px] bg-cover bg-no-repeat bg-center rounded-t-[20px]" :style="{ backgroundImage: `linear-gradient(to right, ${bgcolor1}, ${bgcolor2}, ${bgcolor3})` }"></div>
+        <div class="background w-full h-[150px] bg-cover bg-no-repeat bg-center rounded-t-[20px]"
+            :style="{ backgroundImage: `linear-gradient(to right, ${bgcolor1}, ${bgcolor2}, ${bgcolor3})` }"></div>
 
 
 
         <div class="relative flex flex-1 w-full bg-white rounded-b-[20px] p-4">
-            
+
             <div style="margin-top: -6rem;">
 
                 <div v-if="profileStore.user.id == authStore.user.id">
@@ -201,9 +202,36 @@ function rgbToHex(r, g, b) {
 
             </div>
             <div class="flex flex-col text-left">
-                <h1 class="text-2xl font-bold text-gray-800">
-                    {{ profileStore.user.name }} {{ profileStore.user.surnames }}
-                </h1>
+                <div class="flex">
+                    <h1 class="text-2xl font-bold text-gray-800 ">
+                        {{ profileStore.user.name }} {{ profileStore.user.surnames }}
+                    </h1>
+
+                    <div class="flex">
+                        <div v-if="profileStore.user.vegetarian" class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md">
+                            <img src="/assets/img/intolerance/vegetarian.png" class="h-7" alt="">
+                            <p class="font-semibold text-green-700">Vegà</p>
+                        </div>
+                        <div v-if="profileStore.user.lactose" class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md tooltip" data-tip="hello">
+                            <img src="/assets/img/intolerance/lactose.png" class="h-7" alt="">
+                            <p class="font-semibold text-black">Lactosa</p>
+                        </div>
+                        <div v-if="profileStore.user.gluten" class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md">
+                            <img src="/assets/img/intolerance/gluten.png" class="h-7" alt="">
+                            <p class="font-semibold text-yellow-600">Gluten</p>
+                        </div>
+                        <div v-if="profileStore.user.spicy" class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md">
+                            <img src="/assets/img/intolerance/spicy.png" class="h-7" alt="">
+                            <p class="font-semibold text-red-700">Picant</p>
+                        </div>
+                        <div v-if="profileStore.user.halal" class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md">
+                            <img src="/assets/img/intolerance/halal.png" class="h-7" alt="">
+                            <p class="font-semibold text-black">Halal</p>
+                        </div>
+
+                    </div>
+
+                </div>
 
                 <div class="flex items-center content-center">
                     <img src="/assets/svg/marcador.svg" alt="Marcador" class="w-3 mr-1">
