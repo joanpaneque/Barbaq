@@ -20,7 +20,6 @@ const props = defineProps({
 </script>
 
 <template>
-   
     <div class="barbecue-container" v-if="barbecue">
         <div class="barbecue-header">
             <div class="barbecue-left-section">
@@ -42,7 +41,8 @@ const props = defineProps({
             </div>
         </div>
         <div class="barbecue-content-wrapper">
-            <Link :href="'/barbecues/' + barbecue.id " class="barbecue-title">{{ barbecue.title }}</Link>
+            <Link :href="'/barbecues/' + barbecue.id " class="barbecue-title hover:text-orange-500 transition-colors">
+                {{ barbecue.title }}</Link>
             <span class="barbecue-date">{{ barbecue.date }}</span>
             <div class="barbecue-content" v-html="barbecue.content"></div>
         </div>
