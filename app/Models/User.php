@@ -33,6 +33,11 @@ class User extends Authenticatable
         'password',
         'surnames',
         'image',
+        'vegetarian',
+        'lactose',
+        'gluten',
+        'spicy',
+        'halal',
     ];
 
     /**

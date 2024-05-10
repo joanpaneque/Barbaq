@@ -42,6 +42,7 @@ function resetHighlight() {
 
 const barbecueStore = useBarbecueStore();
 const barbecue = barbecueStore.barbecue;
+console.log('Barbecue', barbecue);
 
 const form = useForm({
     user_id: null,
@@ -82,7 +83,7 @@ const deleteMember = (memberId) => {
                 </div>
             </div>
             <div v-if="highlightedArea === 'baskets'">
-                <div class="grid-baskets" v-if="barbecue.basket.basket_product.length > 0">
+                <div class="grid-baskets" v-if="barbecue && barbecue.basket && barbecue.basket.basket_product && barbecue.basket.basket_product.length > 0">
                     <div class="title-grid-baskets">
                         <p class="product">Productes</p>
                         <p class="quantity">Quantitat</p>
@@ -106,12 +107,12 @@ const deleteMember = (memberId) => {
                     </div>
                 </div>
 
-                <div class="grid-baskets" v-else>
-                    <h1>No hi ha productes a la cistella</h1>
+                <div class="grid-baskets !align-left"
+                v-else>
+                    <h1 class="!pl-0">
+                        No hi ha productes a la cistella</h1>
                 </div>
-
-
-                <div class="total">
+                <div class="total" v-if="barbecue && barbecue.basket && barbecue.basket.basket_product">
                     <p>Total: </p>
 
                     <h1>
