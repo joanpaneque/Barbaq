@@ -53,7 +53,96 @@ class DatabaseSeeder extends Seeder
             'name' => 'Marcos',
             'surnames' => 'Muñoz',
             'email' => 'mmunoz@cendrassos.net',
-            'password' => bcrypt('123456')
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/aniol.jpg'
+        ]);
+
+        User::create([
+            'name' => 'Jordi ',
+            'surnames' => 'Rodríguez',
+            'email' => 'jrodriquez@cendrassos.net',
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/jrodriquez.jpg'
+        ]);
+
+        User::create([
+            'name' => 'Marcelo',
+            'surnames' => 'Hernàndez',
+            'email' => 'mhernandez@cendrassos.net',
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/mhernandez.jpg'
+        ]);
+
+        User::create([
+            'name' => 'Adrià',
+            'surnames' => 'Moya',
+            'email' => 'amoya@cendrassos.net',
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/amoya.jpg'
+        ]);
+
+        User::create([
+            'name' => 'Alejandro',
+            'surnames' => 'Espinoza',
+            'email' => 'aespinoza@cendrassos.net',
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/aespinoza.jpg'
+        ]);
+
+        User::create([
+            'name' => 'Adrià',
+            'surnames' => 'Poncelas',
+            'email' => 'aponcelas@cendrassos.net',
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/aponcelas.jpg'
+        ]);
+
+        User::create([
+            'name' => 'Adrià',
+            'surnames' => 'Jofre',
+            'email' => 'ajofre@cendrassos.net',
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/ajofre.jpg'
+        ]);
+
+        User::create([
+            'name' => 'Xavier',
+            'surnames' => 'Vallejo',
+            'email' => 'xvallejo@cendrassos.net',
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/xvallejo.jpg'
+        ]);
+
+        User::create([
+            'name' => 'Alex',
+            'surnames' => 'Escribano',
+            'email' => 'aescribano@cendrassos.net',
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/aescribano.jpg'
+        ]);
+
+        User::create([
+            'name' => 'Anton',
+            'surnames' => 'Stamov',
+            'email' => 'astamov@cendrassos.net',
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/astamov.jpg'
+        ]);
+
+        User::create([
+            'name' => 'Adrià',
+            'surnames' => 'Garcia',
+            'email' => 'agarcia@cendrassos.net',
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/agarcia.jpg'
+        ]);
+
+        User::create([
+            'name' => 'Albert',
+            'surnames' => 'Rocas',
+            'email' => 'arocas@cendrassos.net',
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/arocas.jpg'
         ]);
 
         $user_roman->sendFriendRequest($user_emma);
