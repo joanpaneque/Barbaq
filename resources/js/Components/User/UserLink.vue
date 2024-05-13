@@ -5,7 +5,8 @@
     const props = defineProps({
         userId: {
             type: Number,
-            required: true
+            required: true,
+            default: 0
         },
         name: {
             type: String,

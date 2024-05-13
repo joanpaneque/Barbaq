@@ -114,6 +114,7 @@ class BarbecuesController extends Controller
         ->with('basket.basketProduct')
         ->with('basket.basketProduct.product')
         ->with('members')
+        ->with('friendships')
         ->find($id);
        
         $members = $barbecue->members()->get();
@@ -167,6 +168,19 @@ class BarbecuesController extends Controller
         return redirect()->route('barbecues.show', ['barbecue' => $id]);
     }
 
+
+    /**
+     * Send barbecue join request.
+     */
+    public function sendBarbecueJoinRequest(Request $request, string $id)
+    {
+        $user = auth()->user();
+        $barbecue = Barbecue::findOrFail($id);
+        $user->sendBarbecueJoinRequest($barbecue);
+
+        return redirect()->route('barbecues.show', ['barbecue' => $id]);
+    }
+
     /**
      * Destroy frienship by user id and barbecue id.
      */
@@ -180,4 +194,11 @@ class BarbecuesController extends Controller
         return redirect()->route('barbecues.show', ['barbecue' => $id]);
     }
 
+    public function acceptBarbecueJoinRequest(Request $request, string $barbecueId, string $userId)
+    {
+        $barbecue = Barbecue::findOrFail($barbecueId);
+        $user = User::findOrFail($userId);
+        $barbecue->acceptJoinRequest($user);
+        return response()->json([$barbecueId, $userId]);
+    }
 }

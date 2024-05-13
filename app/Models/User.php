@@ -12,7 +12,6 @@ use App\Models\Product;
 use App\Models\Barbecue;
 use App\Models\BarbecueFriendship;
 use App\Models\ChatMessage;
-use App\Models\Notification;
 use App\Models\BasketProduct;
 use App\Models\Basket;
 
@@ -33,6 +32,11 @@ class User extends Authenticatable
         'password',
         'surnames',
         'image',
+        'vegetarian',
+        'lactose',
+        'gluten',
+        'spicy',
+        'halal',
     ];
 
     /**
@@ -120,17 +124,7 @@ class User extends Authenticatable
             return;
         }
 
-        Notification::create([
-            'user_id' => $user->id,
-            'message' => "{$this->name} {$this->surnames} t'ha enviat una sol·licitud d'amistat",
-            'primary_link' => route('sendfriendrequest', ['id' => $this->id]),
-            'secondary_link' => route('friends.destroy', ['id' => $this->id]),
-            'primary_link_text' => 'Aceptar',
-            'secondary_link_text' => 'Denegar',
-            'secondary_link_method' => 'delete'
-        ]);
-
-        $this->sentFriendRequests()->attach($user->id, ['accepted' => false]);
+        $this->sentFriendRequests()->attach($user->id, ['accepted' => false, 'created_at' => now()]);
     }
 
     public function acceptFriendRequest(User $user)
@@ -172,7 +166,39 @@ class User extends Authenticatable
 
     public function notifications()
     {
-        return $this->hasMany(Notification::class);
+        // this method will return list of notifications
+        // friend_requests, barbecue_invitations, barbecue_join_requests 
+
+        // all notifications will be ordered by created_at desc, da igual cual es, estaran desordenadas
+        $notifications = [];
+
+        $friendRequests = $this->pendingFriendsRequests()->get();
+
+        $barbecuesJoinRequests = $this->barbecuesJoinRequests();
+
+        foreach ($friendRequests as $friendRequest) {
+            $notifications[] = [
+                'type' => 'friend_request',
+                'friend' => $friendRequest,
+                'created_at' => $friendRequest->created_at,
+            ];
+        }
+
+        foreach ($barbecuesJoinRequests as $barbecueJoinRequest) {
+            $barbecueJoinRequest['type'] = 'barbecue_join_request';
+            $notifications[] = [
+                'type' => 'barbecue_join_request',
+                'barbecue' => $barbecueJoinRequest['barbecue'],
+                'user' => $barbecueJoinRequest['user'],
+                'created_at' => $barbecueJoinRequest['created_at'],
+            ];
+        }
+
+        usort($notifications, function ($a, $b) {
+            return $a['created_at'] <=> $b['created_at'];
+        });
+
+        return $notifications;
     }
 
     public function products()
@@ -186,5 +212,44 @@ class User extends Authenticatable
     }
     public function friendsCount() {
         return $this->friends()->count();
+    }
+
+    public function barbecuesFriendships()
+    {
+        return $this->hasMany(BarbecueFriendship::class, 'user_id');
+    }
+
+    public function barbecueInvitations()
+    {
+        return $this->barbecuesFriendships()->where('accepted', false);
+    }
+
+    public function barbecuesJoinRequests()
+    {
+        $barbecuesCollection = $this->barbecues();
+
+        $barbecues = $barbecuesCollection->get()->toArray();
+
+        $reqs = [];
+
+        foreach ($barbecues as $barbecue) {
+            // $barbecue->members = $barbecue->members()->get();
+            $bbq = Barbecue::where('id', $barbecue['id'])->first();
+            // dd only the first one bbq
+            $bbqReqs = $bbq->requests()->get()->toArray();
+
+
+            $bbqReqs = array_filter($bbqReqs, function ($req) {
+                return $req['pivot']['accepted'] == 0;
+            });
+            
+            foreach ($bbqReqs as $req) {
+                $req['user'] = $req;
+                $req['barbecue'] = $bbq->attributes;
+                $reqs[] = $req;
+            }
+        }
+        return $reqs;
+
     }
 }

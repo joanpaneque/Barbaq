@@ -1,6 +1,5 @@
 <script setup>
-
-import { ref, defineProps } from 'vue';
+import { defineProps } from 'vue';
 import UserLink from "@/Components/User/UserLink.vue"
 import { Link } from '@inertiajs/vue3';
 import Timestamp from "@/Components/Time/Timestamp.vue";
@@ -16,11 +15,9 @@ const props = defineProps({
         required: true
     }
 });
-
 </script>
 
 <template>
-   
     <div class="barbecue-container" v-if="barbecue">
         <div class="barbecue-header">
             <div class="barbecue-left-section">
@@ -42,7 +39,8 @@ const props = defineProps({
             </div>
         </div>
         <div class="barbecue-content-wrapper">
-            <Link :href="'/barbecues/' + barbecue.id " class="barbecue-title">{{ barbecue.title }}</Link>
+            <Link :href="'/barbecues/' + barbecue.id " class="barbecue-title hover:text-orange-500 transition-colors">
+                {{ barbecue.title }}</Link>
             <span class="barbecue-date">{{ barbecue.date }}</span>
             <div class="barbecue-content" v-html="barbecue.content"></div>
         </div>

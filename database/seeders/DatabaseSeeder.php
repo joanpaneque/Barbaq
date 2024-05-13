@@ -53,45 +53,139 @@ class DatabaseSeeder extends Seeder
             'name' => 'Marcos',
             'surnames' => 'Muñoz',
             'email' => 'mmunoz@cendrassos.net',
-            'password' => bcrypt('123456')
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/aniol.jpg'
         ]);
 
-        $user_roman->sendFriendRequest($user_emma);
-        $user_joan->sendFriendRequest($user_emma);
+        User::create([
+            'name' => 'Jordi ',
+            'surnames' => 'Rodríguez',
+            'email' => 'jrodriquez@cendrassos.net',
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/jrodriquez.jpg'
+        ]);
 
-        // joan
-        $user_joan->sendFriendRequest($user_roman);
-        $user_roman->acceptFriendRequest($user_joan);
+        User::create([
+            'name' => 'Marcelo',
+            'surnames' => 'Hernàndez',
+            'email' => 'mhernandez@cendrassos.net',
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/mhernandez.jpg'
+        ]);
 
-        $user_joan->sendFriendRequest($user_emma);
-        $user_emma->acceptFriendRequest($user_joan);
+        User::create([
+            'name' => 'Adrià',
+            'surnames' => 'Moya',
+            'email' => 'amoya@cendrassos.net',
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/amoya.jpg'
+        ]);
 
-        $user_joan->sendFriendRequest($user_aniol);
-        $user_aniol->acceptFriendRequest($user_joan);
+        User::create([
+            'name' => 'Alejandro',
+            'surnames' => 'Espinoza',
+            'email' => 'aespinoza@cendrassos.net',
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/aespinoza.jpg'
+        ]);
 
-        $user_joan->sendFriendRequest($user_marcos);
-        $user_marcos->acceptFriendRequest($user_joan);
+        User::create([
+            'name' => 'Adrià',
+            'surnames' => 'Poncelas',
+            'email' => 'aponcelas@cendrassos.net',
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/aponcelas.jpg'
+        ]);
 
-        // roman
-        $user_roman->sendFriendRequest($user_emma);
-        $user_emma->acceptFriendRequest($user_roman);
+        User::create([
+            'name' => 'Adrià',
+            'surnames' => 'Jofre',
+            'email' => 'ajofre@cendrassos.net',
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/ajofre.jpg'
+        ]);
 
-        $user_roman->sendFriendRequest($user_aniol);
-        $user_aniol->acceptFriendRequest($user_roman);
+        User::create([
+            'name' => 'Xavier',
+            'surnames' => 'Vallejo',
+            'email' => 'xvallejo@cendrassos.net',
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/xvallejo.jpg'
+        ]);
 
-        $user_roman->sendFriendRequest($user_marcos);
-        $user_marcos->acceptFriendRequest($user_roman);
+        User::create([
+            'name' => 'Alex',
+            'surnames' => 'Escribano',
+            'email' => 'aescribano@cendrassos.net',
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/aescribano.jpg'
+        ]);
 
-        // emma
-        $user_emma->sendFriendRequest($user_aniol);
-        $user_aniol->acceptFriendRequest($user_emma);
+        User::create([
+            'name' => 'Anton',
+            'surnames' => 'Stamov',
+            'email' => 'astamov@cendrassos.net',
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/astamov.jpg'
+        ]);
 
-        $user_emma->sendFriendRequest($user_marcos);
-        $user_marcos->acceptFriendRequest($user_emma);
+        User::create([
+            'name' => 'Adrià',
+            'surnames' => 'Garcia',
+            'email' => 'agarcia@cendrassos.net',
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/agarcia.jpg'
+        ]);
 
-        // aniol
-        $user_aniol->sendFriendRequest($user_marcos);
-        $user_marcos->acceptFriendRequest($user_aniol);
+        User::create([
+            'name' => 'Albert',
+            'surnames' => 'Rocas',
+            'email' => 'arocas@cendrassos.net',
+            'password' => bcrypt('123456'),
+            'image' => '/assets/img/arocas.jpg'
+        ]);
+
+        // $user_roman->sendFriendRequest($user_emma);
+        // $user_joan->sendFriendRequest($user_emma);
+
+        // // joan
+        // $user_joan->sendFriendRequest($user_roman);
+        // $user_roman->acceptFriendRequest($user_joan);
+
+        // $user_joan->sendFriendRequest($user_emma);
+        // $user_emma->acceptFriendRequest($user_joan);
+
+        // $user_joan->sendFriendRequest($user_aniol);
+        // $user_aniol->acceptFriendRequest($user_joan);
+
+        // $user_joan->sendFriendRequest($user_marcos);
+        // $user_marcos->acceptFriendRequest($user_joan);
+
+        // // roman
+        // $user_roman->sendFriendRequest($user_emma);
+        // $user_emma->acceptFriendRequest($user_roman);
+
+        // $user_roman->sendFriendRequest($user_aniol);
+        // $user_aniol->acceptFriendRequest($user_roman);
+
+        // $user_roman->sendFriendRequest($user_marcos);
+        // $user_marcos->acceptFriendRequest($user_roman);
+
+        // // emma
+        // $user_emma->sendFriendRequest($user_aniol);
+        // $user_aniol->acceptFriendRequest($user_emma);
+
+        // $user_emma->sendFriendRequest($user_marcos);
+        // $user_marcos->acceptFriendRequest($user_emma);
+
+        // // aniol
+        // $user_aniol->sendFriendRequest($user_marcos);
+        // $user_marcos->acceptFriendRequest($user_aniol);
+
+        // $user_emma->sendFriendRequest($user_joan);
+        // $user_roman->sendFriendRequest($user_joan);
+        // $user_aniol->sendFriendRequest($user_joan);
+        // $user_marcos->sendFriendRequest($user_joan);
 
         function random_float($min, $max): float
         {

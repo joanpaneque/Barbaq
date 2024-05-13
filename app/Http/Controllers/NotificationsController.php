@@ -21,7 +21,6 @@ class NotificationsController extends Controller
             // 'notifications' => $notifications,
         ]);
     }
-
     /**
      * Show the form for creating a new resource.
      */

@@ -111,10 +111,10 @@ const deletefriend = (id) => {
                     </button>
                 </div>
             </div>
-            <div class="grid grid-friends">
+            <div class="grid grid-friends mt-[20px] mb-[20px]">
                 <div v-for="(friend, index) in friends" :key="friend.id"
                     :class="['friend-card', { 'hidden': index >= friendsPerPage }]"
-                    class="friend-card w-40 bg-white border border-gray-200 rounded-2xl dark:bg-gray-800 dark:border-gray-700">
+                    class="friend-card w-40 bg-white border border-gray-200 rounded-2xl dark:bg-gray-800 dark:border-gray-700 mt-4">
                     <div class="flex justify-end px-2 pt-3">
                     </div>
                     <div class="flex flex-col items-center pb-5">
@@ -147,7 +147,7 @@ const deletefriend = (id) => {
                     </div>
                 </div>
             </div>
-            <div class="join flex items-center justify-center" v-if="!searching">
+            <div class="join flex items-center justify-center" v-if="!searching && totalPages > 1">
                 <button v-for="page in totalPages" :key="page" @click="goToPage(page)"
                     class="pagination-button join-item btn btn-sm"
                     :class="{ 'active-button': isPageActive(page), 'inactive': !isPageActive(page) }">

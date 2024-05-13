@@ -19,7 +19,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="main-layout-container">
+    <div class="main-layout-container overflow-auto">
         <div class="main-layout-header">
             <div class="main-layout-application-logo">
                 <ApplicationLogo />
