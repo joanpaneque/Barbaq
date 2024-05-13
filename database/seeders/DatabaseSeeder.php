@@ -286,7 +286,7 @@ class DatabaseSeeder extends Seeder
             'address' => 'Figueres, Girona',
             'title' => 'Barbacoa a Figueres, Girona',
             'content' => '<h1>Barbacoa a Figueres, Girona</h1><p>Benvinguts a la barbacoa a figueres, en aquet lloc podreu gaudir de la millor barbacoa de la ciutat. Us esperem a tots!</p>',
-            'date' => 'Dia 31/02/2025 a les 12:45h'
+            'date' => 'Dia 02/02/2025 a les 12:45h'
         ]);
 
         Barbecue::create([

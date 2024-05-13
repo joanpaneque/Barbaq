@@ -45,7 +45,11 @@ class GoogleController extends Controller
                 'surnames' => $googleUser->user['family_name'],
                 'email' => $googleUser->email,
                 'password' => Str::random(16),
+                'google_access_token' => $googleUser->token,
             ]);
+        } else {
+            $user->google_access_token = $googleUser->token;
+            $user->save();
         }
 
         Auth::login($user);
