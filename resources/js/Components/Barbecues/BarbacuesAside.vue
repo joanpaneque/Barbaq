@@ -1,10 +1,12 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useBarbecueStore } from "@/stores/barbecue";
 import { defineProps } from 'vue';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import BarbaqUserProfile from '../UserProfile/BarbaqUserProfile.vue';
 import axios from 'axios';
+import MapOnSteroids from '../Steroids/MapOnSteroids.vue';
+
 
 const props = defineProps({
     friends: {
@@ -12,6 +14,20 @@ const props = defineProps({
         required: true,
     },
 });
+
+
+onMounted(() => {
+    const mapSelector = document.querySelector(".map-on-steroids-opener");
+    mapSelector.style.visibility = "hidden";
+    mapSelector.style.position = "fixed";
+});
+
+onUnmounted(() => {
+    const mapSelector = document.querySelector(".map-on-steroids-opener");
+    mapSelector.style.visibility = "visible";
+    mapSelector.style.position = "relative";
+
+})
 
 let highlightedArea = ref(null);
 
@@ -44,6 +60,8 @@ function resetHighlight() {
 const barbecueStore = useBarbecueStore();
 const barbecue = barbecueStore.barbecue;
 console.log('Barbecue', barbecue);
+
+const coordinates = ref([barbecue.latitude, barbecue.longitude]);
 
 const form = useForm({
     user_id: null,
@@ -102,6 +120,13 @@ function formatDate(date) {
     return `${date.getUTCFullYear()}${pad(date.getUTCMonth() + 1)}${pad(date.getUTCDate())}T${pad(date.getUTCHours())}${pad(date.getUTCMinutes())}${pad(date.getUTCSeconds())}Z`;
 }
 
+
+const handleMapClick = () => {
+    console.log('Map clicked');
+    const opener = document.querySelector('.map-on-steroids-opener');
+
+    opener.click();
+}
 
 
 </script>
@@ -171,21 +196,18 @@ function formatDate(date) {
             </div>
         </div>
 
-        <div
-            class="dates" 
-            :class="{
-                'notSelected': highlightedArea !== 'dates' && highlightedArea !== null
-            }"
-            @click="addEvent"
-        >
+        <div class="dates" :class="{
+            'notSelected': highlightedArea !== 'dates' && highlightedArea !== null
+        }" @click="addEvent">
             <h1 class="cursor-pointer">{{ barbecue.date }}</h1>
         </div>
 
-        <div class="maps" @click="highlightArea('maps')" :class="{
+        <div class="maps" :class="{
             'selected': highlightedArea === 'maps',
             'notSelected': highlightedArea !== 'maps' && highlightedArea !== null
         }">
-            <img src="/assets/img/map.png" alt="Mapa" class="img-fluid">
+            <img src="/assets/img/map.png" alt="Mapa" class="img-fluid" @click="handleMapClick">
+            <MapOnSteroids v-model="coordinates" :offsetX="-245" :offsetY="300" />
         </div>
 
         <div class="costs" :class="{
@@ -220,7 +242,7 @@ function formatDate(date) {
                             (total, item) => total + parseFloat(item.product.price),
                             0
                         ) / $page.props.members.length).toFixed(2)
-                        }}<span>€</span></h1>
+                    }}<span>€</span></h1>
                     <h1 v-else>0 €</h1>
 
                 </div>
@@ -594,3 +616,4 @@ function formatDate(date) {
     display: none;
 }
 </style>
+
