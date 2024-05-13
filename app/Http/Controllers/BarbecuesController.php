@@ -194,4 +194,11 @@ class BarbecuesController extends Controller
         return redirect()->route('barbecues.show', ['barbecue' => $id]);
     }
 
+    public function acceptBarbecueJoinRequest(Request $request, string $barbecueId, string $userId)
+    {
+        $barbecue = Barbecue::findOrFail($barbecueId);
+        $user = User::findOrFail($userId);
+        $barbecue->acceptJoinRequest($user);
+        return response()->json([$barbecueId, $userId]);
+    }
 }
