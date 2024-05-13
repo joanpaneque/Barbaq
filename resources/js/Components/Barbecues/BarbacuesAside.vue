@@ -187,7 +187,7 @@ const handleMapClick = () => {
                     <h1>
                         {{
                             barbecue.basket.basket_product.reduce(
-                                (total, item) => total + parseFloat(item.product.price),
+                                (total, item) => total + parseFloat(item.product.price) * item.quantity,
                                 0
                             ).toFixed(2)
                         }}
