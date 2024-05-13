@@ -7,6 +7,9 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
+use Google_Client;
+use Google_Service_Calendar;
+use Google_Service_Calendar_Event;
 
 use App\Models\User;
 
@@ -45,7 +48,11 @@ class GoogleController extends Controller
                 'surnames' => $googleUser->user['family_name'],
                 'email' => $googleUser->email,
                 'password' => Str::random(16),
+                'google_access_token' => $googleUser->token,
             ]);
+        } else {
+            $user->google_access_token = $googleUser->token;
+            $user->save();
         }
 
         Auth::login($user);
@@ -84,4 +91,44 @@ class GoogleController extends Controller
     {
         //
     }
+
+    // public function addEventToCalendar(Request $request) {
+
+    //     // $barbecueDate = $request->input('date');
+
+    //     $client = new Google_Client();
+    //     $client->setClientId(env('GOOGLE_CLIENT_ID'));
+    //     $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
+    //     $client->setRedirectUri(env('GOOGLE_REDIRECT_URI'));
+    //     $client->setScopes([
+    //         Google_Service_Calendar::CALENDAR,
+    //         'https://www.googleapis.com/auth/calendar.events'
+    //     ]);
+
+    //     $accessToken = Auth::user()->google_access_token;
+    //     $client->setAccessToken($accessToken);
+
+    //     // if ($client->isAccessTokenExpired()) {
+    //     //     $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
+    //     //     $request->session()->put('google_access_token', $client->getAccessToken());
+    //     // }
+
+    //     $service = new Google_Service_Calendar($client);
+
+    //     $event = new Google_Service_Calendar_Event([
+    //         'summary' => 'Barbecue',
+    //         'location' => '123 Main St, City, Country',
+    //         'description' => 'Barbecue with friends',
+    //         'start' => [
+    //             'dateTime' => '2024-05-15T18:00:00',
+    //             'timeZone' => 'Europe/Madrid',
+    //         ],
+    //     ]);
+
+    //     $calendarId = 'primary';
+        
+    //     $event = $service->events->insert($calendarId, $event);
+
+    //     return redirect('/');
+    // }
 }

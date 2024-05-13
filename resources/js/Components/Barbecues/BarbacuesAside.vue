@@ -4,6 +4,7 @@ import { useBarbecueStore } from "@/stores/barbecue";
 import { defineProps } from 'vue';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import BarbaqUserProfile from '../UserProfile/BarbaqUserProfile.vue';
+import axios from 'axios';
 
 const props = defineProps({
     friends: {
@@ -58,6 +59,50 @@ const deleteMember = (memberId) => {
     console.log('Delete member', memberId);
 }
 
+function addEvent() {
+    var eventTitle = barbecue.title;
+    var eventDescription = barbecue.content;
+    var dateString = barbecue.date;
+    var date = parseDateFromString(dateString);
+    var longitude = barbecue.longitude;
+    var latitude = barbecue.latitude;
+
+    const startDate = date;
+    const endDate = new Date(date.getTime() + (2 * 60 * 60 * 1000)); // add 2h to the start date
+    const summary = `${eventTitle}`;
+    const description = eventDescription;
+    const location = `${latitude},${longitude}`;
+
+    const encodedSummary = encodeURIComponent(summary);
+    const encodedDescription = encodeURIComponent(description);
+    const encodedLocation = encodeURIComponent(location);
+
+    const googleCalendarURL = `https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${formatDate(startDate)}/${formatDate(endDate)}&text=${encodedSummary}&details=${encodedDescription}&location=${encodedLocation}`;
+
+    window.open(googleCalendarURL);
+}
+
+function parseDateFromString(dateString) {
+    var parts = dateString.split(' ');
+
+    var day = parseInt(parts[1].split('/')[0], 10);
+    var month = parseInt(parts[1].split('/')[1], 10) - 1;
+    var year = parseInt(parts[1].split('/')[2], 10);
+    var hour = parseInt(parts[4].split(':')[0], 10);
+    var minute = parseInt(parts[4].split(':')[1], 10);
+
+    var date = new Date(year, month, day, hour, minute);
+
+    return date;
+}
+
+function formatDate(date) {
+    const pad = (num) => (num < 10 ? '0' : '') + num;
+    return `${date.getUTCFullYear()}${pad(date.getUTCMonth() + 1)}${pad(date.getUTCDate())}T${pad(date.getUTCHours())}${pad(date.getUTCMinutes())}${pad(date.getUTCSeconds())}Z`;
+}
+
+
+
 </script>
 
 <template>
@@ -76,6 +121,7 @@ const deleteMember = (memberId) => {
                     </button>
                 </div>
             </div>
+
             <div v-if="highlightedArea !== 'baskets'">
                 <div class="img">
                     <img src="/assets/img/foodbaskets.png" alt="Cistella" class="img-fluid">
@@ -88,9 +134,6 @@ const deleteMember = (memberId) => {
                         <p class="quantity">Quantitat</p>
                         <p class="price">Preu</p>
                     </div>
-
-
-
 
                     <div class="grid-info">
                         <div class="producte1"
@@ -127,29 +170,22 @@ const deleteMember = (memberId) => {
             </div>
         </div>
 
-
-
-
-
-        <div class="dates" :class="{
-
-            'notSelected': highlightedArea !== 'dates' && highlightedArea !== null
-        }">
-
-            <h1>24 d'abril de
-                <br>
-                2021
-            </h1>
-            <h2>
-                12:00h
-            </h2>
+        <div
+            class="dates" 
+            :class="{
+                'notSelected': highlightedArea !== 'dates' && highlightedArea !== null
+            }"
+        >
+            <h1 class="cursor-pointer" @click="addEvent">{{ barbecue.date }}</h1>
         </div>
+
         <div class="maps" @click="highlightArea('maps')" :class="{
             'selected': highlightedArea === 'maps',
             'notSelected': highlightedArea !== 'maps' && highlightedArea !== null
         }">
             <img src="/assets/img/map.png" alt="Mapa" class="img-fluid">
         </div>
+
         <div class="costs" :class="{
 
             'notSelected': highlightedArea !== 'costs' && highlightedArea !== null
@@ -174,6 +210,7 @@ const deleteMember = (memberId) => {
                 </div>
             </div>
         </div>
+
         <div class="users" :class="{
             'selected': highlightedArea === 'users' || highlightedArea === 'usersinvite',
             'notSelected': highlightedArea !== 'users' && highlightedArea !== null && highlightedArea !== 'usersinvite' && highlightedArea !== null
@@ -368,6 +405,7 @@ const deleteMember = (memberId) => {
     background: linear-gradient(140deg, rgb(223, 248, 255) 0%, rgb(44, 181, 215) 100%);
     padding: 15px;
     width: 100%;
+    max-width: 180px;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -523,8 +561,6 @@ const deleteMember = (memberId) => {
     }
 }
 
-
-
 .grid-aside {
     display: grid;
     grid-template-areas:
@@ -537,9 +573,6 @@ const deleteMember = (memberId) => {
     width: 100%;
     height: 100%;
 }
-
-/* selected is true */
-.baskets.selected {}
 
 .notSelected {
     display: none;

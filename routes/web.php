@@ -32,6 +32,7 @@ Route::get('/messages', [MessagesController::class, 'index'])->name('messages.in
 
 Route::get('/auth/google', [GoogleController::class, 'index']);
 Route::get('/auth/google/callback', [GoogleController::class, 'store']);
+Route::post('/add-event', [GoogleController::class, 'addEventToCalendar'])->name('add-event-calendar');
 
 Route::middleware('auth')->group(function () {
     Route::resource('profile', ProfileController::class);
