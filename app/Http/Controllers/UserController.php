@@ -43,8 +43,10 @@ class UserController extends Controller
 
     public function apiShowLogged()
     {
-        $user = User::with('notifications','friends', 'barbecuesFriendships')->where('id', auth()->id())->first();
-            return response()->json($user);
+        $user = User::with('friends', 'barbecuesFriendships')->where('id', auth()->id())->first();
+        
+        $user['notifications'] = $user->notifications();
+        return response()->json($user);
     }
 
     /**
