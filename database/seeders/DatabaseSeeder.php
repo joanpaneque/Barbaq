@@ -145,8 +145,38 @@ class DatabaseSeeder extends Seeder
             'image' => '/assets/img/arocas.jpg'
         ]);
 
-        // $user_roman->sendFriendRequest($user_emma);
-        // $user_joan->sendFriendRequest($user_emma);
+
+        Product::create([
+            'user_id' => 2,
+            'name' => 'Coca-Cola',
+            'price' => 2,
+            'is_deleted' => false
+        ]);
+
+        Product::create([
+            'user_id' => 2,
+            'name' => 'Barbarechos',
+            'price' => 5,
+            'is_deleted' => false
+        ]);
+
+        Product::create([
+            'user_id' => 1,
+            'name' => 'Fanta',
+            'price' => 1,
+            'is_deleted' => false
+        ]);
+
+        Product::create([
+            'user_id' => 3,
+            'name' => 'Pan',
+            'price' => 3,
+            'is_deleted' => false
+        ]);
+
+        $user_roman->sendFriendRequest($user_emma);
+        $user_joan->sendFriendRequest($user_emma);
+
 
         // // joan
         // $user_joan->sendFriendRequest($user_roman);
@@ -316,6 +346,44 @@ class DatabaseSeeder extends Seeder
             'is_admin' => false,
             'accepted' => true
         ]);
+
+        Basket::create([
+            'id' => 1,
+            'barbecue_id' => 32,
+        ]);
+
+        BasketProduct::create([
+            'basket_id' => 1,
+            'product_id' => 1,
+            'user_id' => 2,
+            'quantity' => 2,
+            'price' => 2
+        ]);
+
+        BasketProduct::create([
+            'basket_id' => 1,
+            'product_id' => 2,
+            'user_id' => 2,
+            'quantity' => 3,
+            'price' => 5
+        ]);
+
+        BasketProduct::create([
+            'basket_id' => 1,
+            'product_id' => 3,
+            'user_id' => 2,
+            'quantity' => 1,
+            'price' => 1
+        ]);
+
+        BasketProduct::create([
+            'basket_id' => 1,
+            'product_id' => 4,
+            'user_id' => 2,
+            'quantity' => 3,
+            'price' => 3
+        ]);
+
         
     }
 
