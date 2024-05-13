@@ -83,7 +83,8 @@ const deleteMember = (memberId) => {
                 </div>
             </div>
             <div v-if="highlightedArea === 'baskets'">
-                <div class="grid-baskets" v-if="barbecue && barbecue.basket && barbecue.basket.basket_product && barbecue.basket.basket_product.length > 0">
+                <div class="grid-baskets"
+                    v-if="barbecue && barbecue.basket && barbecue.basket.basket_product && barbecue.basket.basket_product.length > 0">
                     <div class="title-grid-baskets">
                         <p class="product">Productes</p>
                         <p class="quantity">Quantitat</p>
@@ -107,8 +108,7 @@ const deleteMember = (memberId) => {
                     </div>
                 </div>
 
-                <div class="grid-baskets !align-left"
-                v-else>
+                <div class="grid-baskets !align-left" v-else>
                     <h1 class="!pl-0">
                         No hi ha productes a la cistella</h1>
                 </div>
@@ -160,7 +160,13 @@ const deleteMember = (memberId) => {
 
                 <div class="total">
                     <p>Total</p>
-                    <h1>25 <span>€</span></h1>
+                    <h1 v-if="barbecue.basket?.basket_product">{{
+                        barbecue.basket.basket_product.reduce(
+                            (total, item) => total + parseFloat(item.product.price),
+                            0
+                        ).toFixed(2)
+                    }}<span>€</span></h1>
+                    <h1 v-else>0 €</h1>
                 </div>
             </div>
 
@@ -169,9 +175,17 @@ const deleteMember = (memberId) => {
                 <img src="/assets/img/money.png" alt="Targeta de crèdit" class="img-fluid">
 
                 <div class="pay">
+
                     <p>A pagar</p>
-                    <h1>25 <span>€</span>
-                    </h1>
+
+                    <h1 v-if="barbecue.basket?.basket_product">{{
+                        (barbecue.basket.basket_product.reduce(
+                            (total, item) => total + parseFloat(item.product.price),
+                            0
+                        ) / $page.props.members.length).toFixed(2)
+                        }}<span>€</span></h1>
+                    <h1 v-else>0 €</h1>
+
                 </div>
             </div>
         </div>
