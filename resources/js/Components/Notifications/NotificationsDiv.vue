@@ -12,6 +12,18 @@ function executeNotification(primary, notification) {
   axios.delete('/notifications/' + notification.id);
   authStore.updateUserData();
 }
+
+
+// make a function that returns this:
+// {{ notification.created_at.split('T')[0].split('-')[2] }}/{{
+//               notification.created_at.split('T')[0].split('-')[1] }}/{{
+//               notification.created_at.split('T')[0].split('-')[0] }}
+//             a les {{ notification.created_at.split('T')[1].split(':')[0] }}:{{
+//               notification.created_at.split('T')[1].split(':')[1] }}
+
+function formatDate(date) {
+  return `${date.split('T')[0].split('-')[2]}/${date.split('T')[0].split('-')[1]}/${date.split('T')[0].split('-')[0]} a les ${date.split('T')[1].split(':')[0]}:${date.split('T')[1].split(':')[1]}`;
+}
 </script>
 
 <template>

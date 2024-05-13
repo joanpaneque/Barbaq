@@ -3,7 +3,7 @@
     import { Link } from '@inertiajs/vue3';
 
     const props = defineProps({
-        userId: {
+        barbecueId: {
             type: Number,
             required: true,
             default: 0
@@ -17,7 +17,7 @@
 </script>
 
 <template>
-    <Link :href="route('profile.show', props.userId)">
+    <Link :href="route('barbecues.show', props.barbecueId)">
         <span>{{ props.name }}</span>
     </Link>
 </template>
