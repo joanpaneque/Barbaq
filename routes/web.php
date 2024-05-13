@@ -37,10 +37,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('profile', ProfileController::class);
 });
 
-Route::delete('friends/{id}', [FriendsController::class, 'destroy'])->name('friends.destroy');
+Route::delete('/friends/{id}', [FriendsController::class, 'destroy'])->name('friends.destroy');
 
 Route::post('/sendfriendrequest/{id}', [FriendsController::class, 'store'])->name('sendfriendrequest');
-
 
 Route::get('/api/user', [UserController::class, 'apiShowLogged']);
 
@@ -55,6 +54,8 @@ Route::post('/api/discordbot', [DiscordBotController::class, 'broadcast']);
 Route::post('/sendinvitation/{id}', [BarbecuesController::class, 'sendInvitation'])->name('sendinvitation');
 Route::delete('/destroyfriendship/{id}', [BarbecuesController::class, 'destroyFriendship'])->name('destroyfriendship');
 Route::post('/sendbarbecuejoinrequest/{id}', [BarbecuesController::class, 'sendBarbecueJoinRequest'])->name('sendbarbecuejoinrequest');
+
+Route::post('/acceptbarbecuejoinrequest/{barbecueId}/{userId}', [BarbecuesController::class, 'acceptBarbecueJoinRequest'])->name('acceptbarbecuejoinrequest');
 
 Route::post('/toggleprivate', [UserController::class, 'togglePrivate'])->name('toggleprivate');
 

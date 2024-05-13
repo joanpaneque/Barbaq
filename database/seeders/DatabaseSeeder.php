@@ -145,42 +145,47 @@ class DatabaseSeeder extends Seeder
             'image' => '/assets/img/arocas.jpg'
         ]);
 
-        $user_roman->sendFriendRequest($user_emma);
-        $user_joan->sendFriendRequest($user_emma);
+        // $user_roman->sendFriendRequest($user_emma);
+        // $user_joan->sendFriendRequest($user_emma);
 
-        // joan
-        $user_joan->sendFriendRequest($user_roman);
-        $user_roman->acceptFriendRequest($user_joan);
+        // // joan
+        // $user_joan->sendFriendRequest($user_roman);
+        // $user_roman->acceptFriendRequest($user_joan);
 
-        $user_joan->sendFriendRequest($user_emma);
-        $user_emma->acceptFriendRequest($user_joan);
+        // $user_joan->sendFriendRequest($user_emma);
+        // $user_emma->acceptFriendRequest($user_joan);
 
-        $user_joan->sendFriendRequest($user_aniol);
-        $user_aniol->acceptFriendRequest($user_joan);
+        // $user_joan->sendFriendRequest($user_aniol);
+        // $user_aniol->acceptFriendRequest($user_joan);
 
-        $user_joan->sendFriendRequest($user_marcos);
-        $user_marcos->acceptFriendRequest($user_joan);
+        // $user_joan->sendFriendRequest($user_marcos);
+        // $user_marcos->acceptFriendRequest($user_joan);
 
-        // roman
-        $user_roman->sendFriendRequest($user_emma);
-        $user_emma->acceptFriendRequest($user_roman);
+        // // roman
+        // $user_roman->sendFriendRequest($user_emma);
+        // $user_emma->acceptFriendRequest($user_roman);
 
-        $user_roman->sendFriendRequest($user_aniol);
-        $user_aniol->acceptFriendRequest($user_roman);
+        // $user_roman->sendFriendRequest($user_aniol);
+        // $user_aniol->acceptFriendRequest($user_roman);
 
-        $user_roman->sendFriendRequest($user_marcos);
-        $user_marcos->acceptFriendRequest($user_roman);
+        // $user_roman->sendFriendRequest($user_marcos);
+        // $user_marcos->acceptFriendRequest($user_roman);
 
-        // emma
-        $user_emma->sendFriendRequest($user_aniol);
-        $user_aniol->acceptFriendRequest($user_emma);
+        // // emma
+        // $user_emma->sendFriendRequest($user_aniol);
+        // $user_aniol->acceptFriendRequest($user_emma);
 
-        $user_emma->sendFriendRequest($user_marcos);
-        $user_marcos->acceptFriendRequest($user_emma);
+        // $user_emma->sendFriendRequest($user_marcos);
+        // $user_marcos->acceptFriendRequest($user_emma);
 
-        // aniol
-        $user_aniol->sendFriendRequest($user_marcos);
-        $user_marcos->acceptFriendRequest($user_aniol);
+        // // aniol
+        // $user_aniol->sendFriendRequest($user_marcos);
+        // $user_marcos->acceptFriendRequest($user_aniol);
+
+        // $user_emma->sendFriendRequest($user_joan);
+        // $user_roman->sendFriendRequest($user_joan);
+        // $user_aniol->sendFriendRequest($user_joan);
+        // $user_marcos->sendFriendRequest($user_joan);
 
         function random_float($min, $max): float
         {
