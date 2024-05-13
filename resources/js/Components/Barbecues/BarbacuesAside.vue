@@ -176,8 +176,9 @@ function formatDate(date) {
             :class="{
                 'notSelected': highlightedArea !== 'dates' && highlightedArea !== null
             }"
+            @click="addEvent"
         >
-            <h1 class="cursor-pointer" @click="addEvent">{{ barbecue.date }}</h1>
+            <h1 class="cursor-pointer">{{ barbecue.date }}</h1>
         </div>
 
         <div class="maps" @click="highlightArea('maps')" :class="{
