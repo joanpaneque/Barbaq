@@ -4,6 +4,7 @@ import { useBarbecueStore } from "@/stores/barbecue";
 import { defineProps } from 'vue';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import BarbaqUserProfile from '../UserProfile/BarbaqUserProfile.vue';
+import AddProductModal from '../Barbecues/AddProductModal.vue';
 
 const props = defineProps({
     friends: {
@@ -71,10 +72,11 @@ const deleteMember = (memberId) => {
             <div class="flex justify-between items-center">
                 <h1>
                     CISTELLA</h1>
-                <div v-if="highlightedArea === 'baskets'">
-                    <button class="p-4" @click="resetHighlight">
+                <div v-if="highlightedArea === 'baskets'" class="flex items-center mr-2">
+                    <button class="p-2  hover:bg-orange-500 rounded-full" @click="resetHighlight">
                         <img src="/assets/svg/deshacer.svg" alt="Desfer" class="img-fluid" style="width: 20px;">
                     </button>
+                    <AddProductModal @click="highlightArea('baskets')" />
                 </div>
             </div>
             <div v-if="highlightedArea !== 'baskets'">
@@ -99,8 +101,7 @@ const deleteMember = (memberId) => {
                             :key="item.product.id">
                             <p class="w-2/5">
                                 {{ item.product.name }}</p>
-                            <p> {{ barbecue.basket.basket_product.filter(basket => basket.product.id ===
-                                item.product.id).length }} </p>
+                            <p> {{ item.quantity }} </p>
                             <p class="w-1/3 text-right">
                                 {{ item.product.price }} €</p>
                         </div>
