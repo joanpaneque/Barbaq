@@ -31,7 +31,7 @@ barbecueStore.setBarbecue(props.barbecue);
         </template>
         <template #right-aside>
             <div class="aside-menu">
-                <BarbacuesAside :friends="friends" />
+                <BarbacuesAside :friends="friends" :barbecue="barbecue"/>
             </div>
         </template>
     </MainLayout>

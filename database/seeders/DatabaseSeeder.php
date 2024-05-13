@@ -296,6 +296,12 @@ class DatabaseSeeder extends Seeder
             $barbecue->update([
                 'created_at' => now()->subDays(rand(0, 30))
             ]);
+
+            $product = Product::create([
+                'user_id' => $random_user->id,
+                'name' => 'Producte nº' . $i,
+                'price' => random_float(1, 10),
+            ]);
         }
         
 
