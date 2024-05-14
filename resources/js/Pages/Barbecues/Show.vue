@@ -40,8 +40,8 @@ barbecueStore.setBarbecue(props.barbecue);
 <style scoped>
 .aside-menu {
     width: 100%;
-    height: 400px;
-    background: white;
+    height: max-content;
+    background: white   ;
     border-radius: 20px;
 }
 </style>
