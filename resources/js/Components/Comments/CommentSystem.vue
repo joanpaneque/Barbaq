@@ -235,7 +235,6 @@ function sendComment() {
 }
 
 .barbecue-comment-input-wrapper {
-    padding: 10px;
     display: grid;
     gap: 5px;
 }

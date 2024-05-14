@@ -18,6 +18,9 @@ const authStore = useAuthStore();
         <div class="left mt-5">
 
             <div v-if="authStore.user && profileStore.user">
+                <div v-if="authStore.user.id == profileStore.user.id">
+                    <CreateBarbaqInput class="mb-5" />
+                </div>
 
                 <PrivateUserProfile v-if="authStore.user.id != profileStore.user.id
                     && profileStore.user.public == 0
@@ -31,16 +34,10 @@ const authStore = useAuthStore();
                 </div>
             </div>
 
-            <div v-if="authStore.user && profileStore.user">
-                <div v-if="authStore.user.id == profileStore.user.id">
-                    <CreateBarbaqInput class="" />
-                </div>
-            </div>
-
             <Barbecue />
 
         </div>
-        <div class="rigth mt-5 p-5">
+        <div class="rigth my-5 p-5">
             <FindFriendsRightAside />
         </div>
     </div>

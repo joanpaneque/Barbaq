@@ -179,7 +179,8 @@ const handleMapClick = () => {
                     </div>
                 </div>
 
-                <div class="grid-baskets !align-left" v-else>
+                <div class="grid-baskets !align-left"
+                v-else>
                     <h1 class="!pl-0">
                         No hi ha productes a la cistella</h1>
                 </div>
@@ -199,10 +200,15 @@ const handleMapClick = () => {
             </div>
         </div>
 
-        <div class="dates" :class="{
-            'notSelected': highlightedArea !== 'dates' && highlightedArea !== null
-        }" @click="addEvent">
-            <h1 class="cursor-pointer">{{ barbecue.date }}</h1>
+        <div
+            class="dates" 
+            :class="{
+                'notSelected': highlightedArea !== 'dates' && highlightedArea !== null
+            }"
+            @click="addEvent"
+        >
+            <h1 v-if="barbecue.date">{{ barbecue.date }}</h1>
+            <h2 class="" v-else="barbecue.date">No hi ha cap data programada!!</h2>
         </div>
 
         <div class="maps" :class="{
@@ -222,13 +228,7 @@ const handleMapClick = () => {
 
                 <div class="total">
                     <p>Total</p>
-                    <h1 v-if="barbecue.basket?.basket_product">{{
-                        barbecue.basket.basket_product.reduce(
-                            (total, item) => total + parseFloat(item.product.price),
-                            0
-                        ).toFixed(2)
-                    }}<span>€</span></h1>
-                    <h1 v-else>0 €</h1>
+                    <h1>25 <span>€</span></h1>
                 </div>
             </div>
 
@@ -237,7 +237,6 @@ const handleMapClick = () => {
                 <img src="/assets/img/money.png" alt="Targeta de crèdit" class="img-fluid">
 
                 <div class="pay">
-
                     <p>A pagar</p>
 
                     <h1 v-if="barbecue.basket?.basket_product">{{
