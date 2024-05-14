@@ -235,7 +235,13 @@ const handleMapClick = () => {
 
                 <div class="total">
                     <p>Total</p>
-                    <h1>25 <span>€</span></h1>
+                    <h1 v-if="barbecue.basket?.basket_product">{{
+                        barbecue.basket.basket_product.reduce(
+                            (total, item) => total + parseFloat(item.product.price),
+                            0
+                        ).toFixed(2)
+                    }}<span>€</span></h1>
+                    <h1 v-else>0 €</h1>
                 </div>
             </div>
 
