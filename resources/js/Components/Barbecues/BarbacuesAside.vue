@@ -1,10 +1,14 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useBarbecueStore } from "@/stores/barbecue";
+import { useAuthStore } from '@/stores/auth';
 import { defineProps } from 'vue';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import BarbaqUserProfile from '../UserProfile/BarbaqUserProfile.vue';
 import axios from 'axios';
+import MapOnSteroids from '../Steroids/MapOnSteroids.vue';
+
+import AddProductModal from '../Barbecues/AddProductModal.vue';
 
 const props = defineProps({
     friends: {
@@ -12,6 +16,20 @@ const props = defineProps({
         required: true,
     },
 });
+
+
+onMounted(() => {
+    const mapSelector = document.querySelector(".map-on-steroids-opener");
+    mapSelector.style.visibility = "hidden";
+    mapSelector.style.position = "fixed";
+});
+
+onUnmounted(() => {
+    const mapSelector = document.querySelector(".map-on-steroids-opener");
+    mapSelector.style.visibility = "visible";
+    mapSelector.style.position = "relative";
+
+})
 
 let highlightedArea = ref(null);
 
@@ -42,8 +60,11 @@ function resetHighlight() {
 }
 
 const barbecueStore = useBarbecueStore();
+const authStore = useAuthStore();
 const barbecue = barbecueStore.barbecue;
 console.log('Barbecue', barbecue);
+
+const coordinates = ref([barbecue.latitude, barbecue.longitude]);
 
 const form = useForm({
     user_id: null,
@@ -103,6 +124,13 @@ function formatDate(date) {
 }
 
 
+const handleMapClick = () => {
+    console.log('Map clicked');
+    const opener = document.querySelector('.map-on-steroids-opener');
+
+    opener.click();
+}
+
 
 </script>
 
@@ -116,10 +144,11 @@ function formatDate(date) {
             <div class="flex justify-between items-center">
                 <h1>
                     CISTELLA</h1>
-                <div v-if="highlightedArea === 'baskets'">
-                    <button class="p-4" @click="resetHighlight">
+                <div v-if="highlightedArea === 'baskets'" class="flex items-center mr-2">
+                    <button class="p-2  hover:bg-orange-500 rounded-full" @click="resetHighlight">
                         <img src="/assets/svg/deshacer.svg" alt="Desfer" class="img-fluid" style="width: 20px;">
                     </button>
+                    <AddProductModal @click="highlightArea('baskets')" />
                 </div>
             </div>
 
@@ -128,8 +157,9 @@ function formatDate(date) {
                     <img src="/assets/img/foodbaskets.png" alt="Cistella" class="img-fluid">
                 </div>
             </div>
-            <div v-if="highlightedArea === 'baskets'">
-                <div class="grid-baskets" v-if="barbecue && barbecue.basket && barbecue.basket.basket_product && barbecue.basket.basket_product.length > 0">
+            <div v-if="highlightedArea === 'baskets'" class="overflow-y-auto">
+                <div class="grid-baskets"
+                    v-if="barbecue && barbecue.basket && barbecue.basket.basket_product && barbecue.basket.basket_product.length > 0">
                     <div class="title-grid-baskets">
                         <p class="product">Productes</p>
                         <p class="quantity">Quantitat</p>
@@ -142,8 +172,7 @@ function formatDate(date) {
                             :key="item.product.id">
                             <p class="w-2/5">
                                 {{ item.product.name }}</p>
-                            <p> {{ barbecue.basket.basket_product.filter(basket => basket.product.id ===
-                                item.product.id).length }} </p>
+                            <p> {{ item.quantity }} </p>
                             <p class="w-1/3 text-right">
                                 {{ item.product.price }} €</p>
                         </div>
@@ -161,7 +190,7 @@ function formatDate(date) {
                     <h1>
                         {{
                             barbecue.basket.basket_product.reduce(
-                                (total, item) => total + parseFloat(item.product.price),
+                                (total, item) => total + parseFloat(item.product.price) * item.quantity,
                                 0
                             ).toFixed(2)
                         }}
@@ -182,11 +211,12 @@ function formatDate(date) {
             <h2 class="" v-else="barbecue.date">No hi ha cap data programada!!</h2>
         </div>
 
-        <div class="maps" @click="highlightArea('maps')" :class="{
+        <div class="maps" :class="{
             'selected': highlightedArea === 'maps',
             'notSelected': highlightedArea !== 'maps' && highlightedArea !== null
         }">
-            <img src="/assets/img/map.png" alt="Mapa" class="img-fluid">
+            <img src="/assets/img/map.png" alt="Mapa" class="img-fluid" @click="handleMapClick">
+            <MapOnSteroids v-model="coordinates" :offsetX="-245" :offsetY="300" />
         </div>
 
         <div class="costs" :class="{
@@ -208,8 +238,15 @@ function formatDate(date) {
 
                 <div class="pay">
                     <p>A pagar</p>
-                    <h1>25 <span>€</span>
-                    </h1>
+
+                    <h1 v-if="barbecue.basket?.basket_product">{{
+                        (barbecue.basket.basket_product.reduce(
+                            (total, item) => total + parseFloat(item.product.price),
+                            0
+                        ) / $page.props.members.length).toFixed(2)
+                    }}<span>€</span></h1>
+                    <h1 v-else>0 €</h1>
+
                 </div>
             </div>
         </div>
@@ -234,18 +271,19 @@ function formatDate(date) {
 
                 <div v-if="highlightedArea === 'users'" v-for="member in $page.props.members" :key="member.id">
                     <div class="flex items-center gap-2 bg-white p-1 rounded-xl mb-2 w-full mt-2">
+                        <Link :href="route('profile.show', member.id)"
+                            class="flex items-center bg-white gap-2 rounded-xl  w-full cursor-pointer">
 
                         <img :src="member.image" alt="" class="fit-content h-10 w-10 rounded-full object-cover">
                         <div class="flex flex-row items-center gap-1 w-full">
                             <p>
                                 {{ member.name }}
                             </p>
-                            <p>
-                                {{ member.surnames }}
-                            </p>
-                        </div>
 
-                        <div class="flex justify-end" v-if="member.id !== barbecue.user_id">
+                        </div>
+                        </Link>
+                        <div class="flex justify-end w-1/2"
+                            v-if="member.id !== barbecue.user_id && barbecue.friendships.find(friendship => friendship.user_id === member.id && friendship.is_admin === 0)">
                             <Link @click="deleteMember(member.id)" class="flex items-center pr-1">
                             <button title="Add New" class="group cursor-pointer outline-none hover:rotate-[135deg]
                                 duration-300 rotate-45">
@@ -261,7 +299,8 @@ function formatDate(date) {
                             </Link>
                         </div>
 
-                        <div v-if="member.id === barbecue.user_id" class="flex justify-end w-full">
+                        <div v-if="member.id === barbecue.user_id || barbecue.friendships.find(friendship => friendship.user_id === member.id && friendship.is_admin === 1)"
+                            class="flex justify-end w-full">
 
                             <div class="badge badge-outline border-transparent text-pink-400 ">
                                 Admin</div>
@@ -272,20 +311,28 @@ function formatDate(date) {
                 </div>
             </div>
 
-            <div class="inviteusers" @click="highlightArea('usersinvite')" :class="{
-                'selected': highlightedArea === 'usersinvite',
-                'notSelected': highlightedArea !== 'usersinvite' && highlightedArea !== null
-            }">
-                <div class="usersdiv">
+            <!-- only if  authstore.user.id is_admin in barbecue.frienships where user_id = authstore.user.id -->
+            <div class="inviteusers"
+                v-if="authStore.user.id === barbecue.user_id || barbecue.friendships.find(friendship => friendship.user_id === authStore.user.id && friendship.is_admin === 1)"
+                @click="highlightArea('usersinvite')" :class="{
+                    'selected': highlightedArea === 'usersinvite',
+                    'notSelected': highlightedArea !== 'usersinvite' && highlightedArea !== null
+                }">
+                <div class="usersdiv mb-2">
                     <p>
                         Invitar als teus amics
                     </p>
                     <img src="/assets/svg/arrow-right.svg" alt="Fletxa dreta" class="img-fluid">
                 </div>
-                <div v-for="friend in friends" :key="friend.id" v-if="highlightedArea === 'usersinvite'">
-                    <div class="flex items-center gap-2 bg-white p-1 rounded-xl mb-2 w-full">
+                <div v-for="friend in friends" :key="friend.id" v-if="highlightedArea === 'usersinvite'"
+                    class="overflow-y-auto cursor-default">
+                    <div class="flex items-center gap-2 bg-white p-1 rounded-xl mb-2 w-full ">
+
+                        <Link :href="route('profile.show', friend.id)"
+                            class="flex items-center bg-white gap-2 rounded-xl  w-full cursor-pointer">
                         <img :src="friend.image" alt="" class="fit-content h-10 w-10 rounded-full object-cover">
                         <p>{{ friend.name }} </p>
+                        </Link>
 
                         <div class="flex justify-end w-full">
                             <Link @click="inviteUser(friend.id)" class="flex items-center pr-1">

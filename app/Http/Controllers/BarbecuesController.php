@@ -153,7 +153,11 @@ class BarbecuesController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+            
+        $barbecue = Barbecue::findOrFail($id);
+        $barbecue->delete();
+        return response()->json($barbecue);
+        
     }
 
     /**
@@ -201,4 +205,44 @@ class BarbecuesController extends Controller
         $barbecue->acceptJoinRequest($user);
         return response()->json([$barbecueId, $userId]);
     }
+
+    /**
+     * Add new product to product list, basket_product and basket.
+     */
+    public function addProduct(Request $request, string $id)
+    {
+        $request = $request->all();
+        $user = auth()->user();
+        $barbecue = Barbecue::findOrFail($id);
+        
+        $product = Product::firstOrCreate([
+            'user_id' => $user->id,
+            'name' => $request['product_name'],
+            'price' => $request['product_price'],
+            'is_deleted' => false
+        ]);
+        
+        $basket = Basket::firstOrCreate(['barbecue_id' => $barbecue->id]);
+        
+        $existingBasketProduct = BasketProduct::where('basket_id', $basket->id)
+                                            ->where('product_id', $product->id)
+                                            ->first();
+        
+        if ($existingBasketProduct) {
+            $existingBasketProduct->quantity += 1;
+            $existingBasketProduct->save();
+            $basketProduct = $existingBasketProduct;
+        } else {
+            $basketProduct = BasketProduct::create([
+                'user_id' => $user->id,
+                'basket_id' => $basket->id,
+                'product_id' => $product->id,
+                'price' => $request['product_price'],
+                'quantity' => 1
+            ]);
+        }
+        
+        return redirect()->route('barbecues.show', ['barbecue' => $id]);
+    }
+
 }

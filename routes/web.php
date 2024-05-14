@@ -49,6 +49,8 @@ Route::resource('barbecues', BarbecuesController::class);
 Route::resource('/barbecues/{barbecueId}/images', ImagesController::class);
 Route::get('/api/barbecues', [BarbecuesController::class, 'apiIndex']);
 
+
+
 Route::post('/api/discordbot', [DiscordBotController::class, 'broadcast']);
 
 Route::post('/sendinvitation/{id}', [BarbecuesController::class, 'sendInvitation'])->name('sendinvitation');
@@ -58,6 +60,8 @@ Route::post('/sendbarbecuejoinrequest/{id}', [BarbecuesController::class, 'sendB
 Route::post('/acceptbarbecuejoinrequest/{barbecueId}/{userId}', [BarbecuesController::class, 'acceptBarbecueJoinRequest'])->name('acceptbarbecuejoinrequest');
 
 Route::post('/toggleprivate', [UserController::class, 'togglePrivate'])->name('toggleprivate');
+
+Route::post('/addproduct/{id}', [BarbecuesController::class, 'addProduct'])->name('addproduct');
 
 
 Route::resource('notifications', NotificationsController::class);
