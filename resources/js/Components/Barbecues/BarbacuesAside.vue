@@ -140,10 +140,14 @@ const handleMapClick = () => {
             'selected': highlightedArea === 'baskets',
             'notSelected': highlightedArea !== 'baskets' && highlightedArea !== null
         }">
-
             <div class="flex justify-between items-center">
-                <h1>
-                    CISTELLA</h1>
+                <div class="flex flex-col">
+                    <h1>
+                        CISTELLA</h1>
+                    <p class="relative ">
+                        Descobreix tots els productes
+                    </p>
+                </div>
                 <div v-if="highlightedArea === 'baskets'" class="flex items-center mr-2">
                     <button class="p-2  hover:bg-orange-500 rounded-full" @click="resetHighlight">
                         <img src="/assets/svg/deshacer.svg" alt="Desfer" class="img-fluid" style="width: 20px;">
@@ -154,7 +158,7 @@ const handleMapClick = () => {
 
             <div v-if="highlightedArea !== 'baskets'">
                 <div class="img">
-                    <img src="/assets/img/foodbaskets.png" alt="Cistella" class="img-fluid">
+                    <img src="/assets/img/foodbaskets.png" alt="Hamburguesa" class="img-fluid">
                 </div>
             </div>
             <div v-if="highlightedArea === 'baskets'" class="overflow-y-auto">
@@ -207,8 +211,11 @@ const handleMapClick = () => {
             }"
             @click="addEvent"
         >
-            <h1 v-if="barbecue.date">{{ barbecue.date }}</h1>
+        <!-- get the date 1/01/2024 in 1/01/2024 18:00h on barbacue.date -->
+            <h2 v-if="barbecue.date">{{ barbecue.date.split(' ')[0] }}</h2>
+            <h1 v-if="barbecue.date">{{ barbecue.date.split(' ')[1] }}</h1>
             <h2 class="" v-else="barbecue.date">No hi ha cap data programada!!</h2>
+  
         </div>
 
         <div class="maps" :class="{
@@ -266,7 +273,7 @@ const handleMapClick = () => {
                     <p>
                         Veure tots els usuaris inscrits
                     </p>
-                    <img src="/assets/svg/arrow-right.svg" alt="Fletxa dreta" class="img-fluid">
+                    <img src="/assets/svg/arrow-right.svg" alt="Fletxa dreta" class="img-fluid bounce-left">
                 </div>
 
                 <div v-if="highlightedArea === 'users'" v-for="member in $page.props.members" :key="member.id">
@@ -302,7 +309,7 @@ const handleMapClick = () => {
                         <div v-if="member.id === barbecue.user_id || barbecue.friendships.find(friendship => friendship.user_id === member.id && friendship.is_admin === 1)"
                             class="flex justify-end w-full">
 
-                            <div class="badge badge-outline border-transparent text-pink-400 ">
+                            <div class="badge badge-outline border-transparent text-[#ff5e00] ">
                                 Admin</div>
 
                         </div>
@@ -322,7 +329,7 @@ const handleMapClick = () => {
                     <p>
                         Invitar als teus amics
                     </p>
-                    <img src="/assets/svg/arrow-right.svg" alt="Fletxa dreta" class="img-fluid">
+                    <img src="/assets/svg/arrow-right.svg" alt="Fletxa dreta" class="img-fluid bounce-left">
                 </div>
                 <div v-for="friend in friends" :key="friend.id" v-if="highlightedArea === 'usersinvite'"
                     class="overflow-y-auto cursor-default">
@@ -358,25 +365,38 @@ const handleMapClick = () => {
 </template>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+
 .baskets {
     grid-area: baskets;
     width: 100%;
-    background: rgb(255, 189, 148);
-    background: linear-gradient(140deg, rgba(255, 189, 148, 1) 0%, rgba(255, 97, 0, 1) 100%);
+    background: #f2f2f2;
     border-radius: 10px;
     cursor: pointer;
 
     h1 {
         font-size: 1.5rem;
-        color: #9B3B00;
-        font-weight: bold;
+        color: #ff5e00;
         margin-left: 5px;
         padding-left: 15px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
         padding-top: 10px;
     }
 
+    p {
+        font-size: 0.7rem;
+        color: #ff5e00;
+        font-weight: 500;
+        padding-left: 20px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
     img {
-        width: 250px;
+        object-fit: cover;
+        width: 240px;
     }
 
     .img {
@@ -384,6 +404,7 @@ const handleMapClick = () => {
         justify-content: flex-end;
         padding-right: 10px;
         padding-bottom: 10px;
+        height: 110px;
     }
 
     .grid-baskets {
@@ -397,7 +418,7 @@ const handleMapClick = () => {
     .title-grid-baskets {
 
         color: #9B3B00;
-        font-weight: bold;
+        font-weight: 600;
         display: flex;
         justify-content: space-between;
         padding: 10px;
@@ -446,15 +467,20 @@ const handleMapClick = () => {
         padding: 0;
     }
 
+    .product,
+    .quantity,
+    .price {
+        font-size: 0.9rem;
+        font-weight: 600;
+        padding: 0;
+    }
 }
-
 
 .dates {
     grid-area: dates;
-    background: rgb(255, 255, 255);
-    background: linear-gradient(140deg, rgb(223, 248, 255) 0%, rgb(44, 181, 215) 100%);
+    background: #f2f2f2;
     padding: 15px;
-    width: 100%;
+    width: 184.01px;
     max-width: 180px;
     border-radius: 10px;
     display: flex;
@@ -462,17 +488,21 @@ const handleMapClick = () => {
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    height: 100%;
 
     h1 {
-        font-size: 1.6rem;
-        color: #073e48;
-        font-weight: bold;
+        font-size: 2rem;
+        color: #020202;
+        font-weight: 600;
         text-align: center;
+        font-family: 'Montserrat', sans-serif;
     }
 
     h2 {
-        font-size: 1.2rem;
-        color: #000000;
+        display: flex;
+        line-height: 0.1rem;
+        font-size: 0.9rem;
+        color: #ff5e00;
         font-weight: bold;
     }
 
@@ -489,12 +519,12 @@ const handleMapClick = () => {
 
 .costs {
     grid-area: costs;
-    background: rgb(57, 255, 0);
-    background: linear-gradient(140deg, rgba(57, 255, 0, 1) 0%, rgba(255, 235, 0, 1) 100%);
+    background: #f2f2f2;
     padding: 10px;
     width: 100%;
     border-radius: 10px;
     cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
 
     .top {
         display: flex;
@@ -505,8 +535,8 @@ const handleMapClick = () => {
 
         h1 {
             font-size: 1.5rem;
-            color: #0D5C00;
-            font-weight: bolder;
+            color: #ff5e00;
+            font-weight: 600;
         }
 
         .total {
@@ -517,12 +547,12 @@ const handleMapClick = () => {
             p {
                 font-size: 0.9rem;
                 color: #ff5e00;
-                font-weight: bolder;
+                font-weight: 600;
             }
 
             h1 {
                 font-size: 1rem;
-                color: #0D5C00;
+                color: #000000;
                 font-weight: bolder;
             }
         }
@@ -548,13 +578,13 @@ const handleMapClick = () => {
             p {
                 font-size: 1rem;
                 color: #ff5e00;
-                font-weight: bolder;
+                font-weight: 600;
                 padding-right: 35px;
             }
 
             h1 {
                 font-size: 3rem;
-                color: #0D5C00;
+                color: #000000;
                 font-weight: bolder;
             }
 
@@ -571,8 +601,8 @@ const handleMapClick = () => {
 
 .users {
     grid-area: users;
-    background: rgb(192, 0, 255);
-    background: linear-gradient(140deg, rgb(173, 129, 188) 0%, rgb(206, 84, 204) 100%);
+    font-family: 'Montserrat', sans-serif;
+    background: #f2f2f2;
     padding: 10px;
     width: 100%;
     border-radius: 10px;
@@ -580,23 +610,23 @@ const handleMapClick = () => {
 
     h1 {
         font-size: 1.5rem;
-        color: #4e003d;
-        font-weight: bold;
+        color: #ff5e00;
+        font-weight: 600;
         text-align: start;
-        padding-left: 15px;
+        padding-left: 10px;
     }
 
     .usersdiv {
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        padding: 10px;
+        padding: 10px 0px 10px 10px;
         gap: 10px;
 
         p {
             font-size: 1rem;
-            color: #340029;
-            font-weight: bold;
+            color: #000000;
+            font-weight: 500;
         }
 
         img {
@@ -607,9 +637,10 @@ const handleMapClick = () => {
     .usersdiv:hover {
         background-color: rgba(255, 255, 255, 0.5);
         border-radius: 10px;
-
     }
 }
+
+
 
 .grid-aside {
     display: grid;
@@ -621,7 +652,7 @@ const handleMapClick = () => {
     grid-gap: 10px;
     padding: 10px;
     width: 100%;
-    height: 100%;
+    height: max-content;
 }
 
 .notSelected {
