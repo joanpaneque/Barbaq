@@ -6,6 +6,7 @@ import Timestamp from "@/Components/Time/Timestamp.vue";
 import Gallery from '@/Components/Galleries/Gallery.vue';
 import CommentSystem from "@/Components/Comments/CommentSystem.vue"
 import { useAuthStore } from '@/stores/auth';
+import axios from 'axios';
 
 const auth = useAuthStore();
 
@@ -15,16 +16,28 @@ const props = defineProps({
         required: true
     }
 });
+
+const deleteBbq = (id) => {
+    console.log("Eliminar barbacoa con ID:", id);
+    axios.delete(route('barbecues.destroy', id));
+
+    window.location.reload();
+};
+
 </script>
 
 <template>
     <div class="barbecue-container" v-if="barbecue">
+
         <div class="barbecue-header">
             <div class="barbecue-left-section">
                 <div class="barbecue-profile-image">
                     <Link :href="route('profile.show', barbecue.user.id)">
+
                     <img :src="barbecue.user.image" alt="Profile image">
                     </Link>
+
+
                 </div>
                 <div class="barbecue-left-texts">
                     <UserLink :userId="barbecue.user.id" :name="barbecue.user.name + ' ' + barbecue.user.surnames" />
@@ -34,13 +47,33 @@ const props = defineProps({
                     </div>
                 </div>
             </div>
+
             <div class="barbecue-creation">
+                <div v-if="barbecue.user.id == auth.user.id" class="flex gap-2 mr-2">
+
+                    <div class="dropdown dropdown-left dropdown-hover">
+                        <div tabindex="0" role="button" class=""> <img class="h-6 mx-1 my-2"
+                                src="/assets/svg/editbbq.svg" alt="Location" /></div>
+
+                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                            <li><a class=" font-bold"><img class="h-4" src="/assets/svg/editbbq2.svg" alt="Edit" />Editar</a></li>
+
+                            <li><a @click="deleteBbq(barbecue.id)" class="text-red-500 font-bold"><img class="h-4" src="/assets/svg/deletebbq.svg" alt="Delete" />Eliminar</a></li>
+                        </ul>
+                    </div>
+                </div>
                 <Timestamp :datetime="barbecue.created_at" />
             </div>
         </div>
         <div class="barbecue-content-wrapper">
-            <Link :href="'/barbecues/' + barbecue.id " class="barbecue-title hover:text-orange-500 transition-colors">
+            <div class="flex">
+                <Link :href="'/barbecues/' + barbecue.id"
+                    class="barbecue-title hover:text-orange-500 transition-colors">
                 {{ barbecue.title }}</Link>
+
+
+
+            </div>
             <span class="barbecue-date">{{ barbecue.date }}</span>
             <div class="barbecue-content" v-html="barbecue.content"></div>
         </div>
@@ -154,7 +187,7 @@ const props = defineProps({
     padding: 10px;
     display: grid;
     gap: 5px;
-} 
+}
 
 .barbecue-container {
     width: 100%;
