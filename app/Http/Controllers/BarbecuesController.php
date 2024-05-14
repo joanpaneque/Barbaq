@@ -153,7 +153,11 @@ class BarbecuesController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+            
+        $barbecue = Barbecue::findOrFail($id);
+        $barbecue->delete();
+        return response()->json($barbecue);
+        
     }
 
     /**
