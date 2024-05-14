@@ -40,7 +40,7 @@ const updateCheckbox = (event) => {
             <h2 class="text-lg font-medium text-gray-900">Informació del perfil</h2>
         </header>
 
-        <form @submit.prevent="form.patch(route('profile.update', user.id))" class="mt-6 space-y-6">
+        <form @submit.prevent="form.patch(route('profile.update', user.id))" class="my-6 space-y-6">
             <div class="flex flex-row justify-between gap-4">
                 <div class="w-1/2">
                     <InputLabel for="name" value="Nom" />

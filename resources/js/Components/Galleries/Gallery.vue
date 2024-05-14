@@ -112,7 +112,6 @@ function openModal(image) {
     .gallery-modal-carousel {
         height: 100%;
         width: 100%;
-        background: #000;
         position: relative;
     }
 
