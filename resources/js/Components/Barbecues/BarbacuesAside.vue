@@ -144,7 +144,7 @@ const handleMapClick = () => {
                 <div class="flex flex-col">
                     <h1>
                         CISTELLA</h1>
-                    <p class="relative ">
+                    <p class="relative text">
                         Descobreix tots els productes
                     </p>
                 </div>
@@ -189,7 +189,8 @@ const handleMapClick = () => {
                         No hi ha productes a la cistella</h1>
                 </div>
                 <div class="total" v-if="barbecue && barbecue.basket && barbecue.basket.basket_product">
-                    <p>Total: </p>
+                    <p class="!text-lg">
+                        Total: </p>
 
                     <h1>
                         {{
@@ -392,7 +393,7 @@ const handleMapClick = () => {
         padding-top: 10px;
     }
 
-    p {
+    .text {
         font-size: 0.7rem;
         color: #ff5e00;
         font-weight: 500;
@@ -479,6 +480,7 @@ const handleMapClick = () => {
         font-size: 0.9rem;
         font-weight: 600;
         padding: 0;
+        color: #9B3B00;
     }
 }
 
