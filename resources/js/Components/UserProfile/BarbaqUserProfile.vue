@@ -37,11 +37,9 @@ const authStore = useAuthStore();
                     </div>
                 </div>
             </div>
-
-            <!-- <Barbecue /> -->
-
         </div>
-        <div class="rigth my-5 p-5">
+        
+        <div class="right my-5 p-5">
             <FindFriendsRightAside />
         </div>
     </div>
@@ -59,7 +57,7 @@ const authStore = useAuthStore();
     gap: 20px;
 }
 
-.rigth {
+.right {
     background-color: white;
     border-radius: 20px;
     height: min-content;

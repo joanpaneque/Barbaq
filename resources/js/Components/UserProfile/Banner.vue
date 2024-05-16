@@ -52,32 +52,53 @@ function closeModal() {
     showModal.value = false;
 }
 
+function cancelChangeImage() {
+    form.image = [];
+    const imagesNamesElement = document.getElementById('logoImage');
+    imagesNamesElement.innerHTML = '';
+
+    closeModal();
+}
+
 const handleFileChange = (event) => {
     const file = event.target.files[0];
     form.image = file;
+
+    const fileName = file.name;
+
+    const logoImageDiv = document.getElementById('logoImage');
+
+    const fileNameParagraph = document.createElement('p');
+
+    fileNameParagraph.textContent = fileName;
+
+    logoImageDiv.appendChild(fileNameParagraph);
 };
 
+
 const updateUserPhoto = () => {
-    // showModal.value = false;
-    // let id = profileStore.user.id;
-    // let formData = new FormData();
-    // formData.append('image', form.image); 
-
-    // form.post(route('updateuserphoto', id), formData); 
-
     let id = profileStore.user.id;
     let formData = new FormData();
+
     formData.append('image', form.image);
     profileStore.user.image = URL.createObjectURL(form.image);
     showModal.value = false;
-    form.post(route('updateuserphoto', id), {
-        ...formData,
-        onSuccess: () => {
+
+    axios.post(route('updateuserphoto', id), formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+        .then(response => {
+            const imagesNamesElement = document.getElementById('logoImage');
+            imagesNamesElement.innerHTML = '';
+
             authStore.updateUserData();
             analyzeImageColors(profileStore.user.image);
-        }
-    });
-
+        })
+        .catch(error => {
+            console.log(error);
+        });
 };
 
 const togglePrivateOrPublic = () => {
@@ -90,8 +111,6 @@ const togglePrivateOrPublic = () => {
             console.log(error);
         });
 }
-
-
 
 const bgcolor1 = ref('');
 const bgcolor2 = ref('');
@@ -151,7 +170,7 @@ function rgbToHex(r, g, b) {
                     <dialog id="my_modal_3" class="modal" :open="showModal" @click.self="closeModal">
                         <div class="modal-box">
                             <form @submit.prevent="closeModal" method="dialog">
-                                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="cancelChangeImage">
                                     ✕
                                 </button>
                             </form>
@@ -177,6 +196,9 @@ function rgbToHex(r, g, b) {
                                     <div class="text">
                                         <span>Click per seleccionar una imatge</span>
                                     </div>
+                                    
+                                    <div class="text" id="logoImage">
+                                    </div>
 
                                     <input type="file" id="file" name="image" @change="handleFileChange" accept="image/*">
 
@@ -184,7 +206,7 @@ function rgbToHex(r, g, b) {
 
                                 <div class="flex justify-center mt-4 space-x-4">
                                     <button class="btn" type="submit">Guardar</button>
-                                    <button class="btn " @click="closeModal">Cancelar</button>
+                                    <button class="btn" @click="cancelChangeImage">Cancelar</button>
                                 </div>
 
                             </form>
