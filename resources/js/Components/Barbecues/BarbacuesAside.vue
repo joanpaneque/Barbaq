@@ -73,6 +73,7 @@ const form = useForm({
 const inviteUser = (friendId) => {
     form.user_id = friendId;
     form.post('/sendinvitation/' + barbecue.id);
+    highlightArea('usersinvite');
 }
 
 const deleteMember = (memberId) => {
@@ -131,6 +132,23 @@ const handleMapClick = () => {
     opener.click();
 }
 
+const formProduct = useForm({
+    member_id: null,
+    product_id: null,
+    basket_product_id: null,
+});
+
+const assignProduct = (productId, memberId, basketProductId) => {
+    formProduct.product_id = productId;
+    formProduct.member_id = memberId;
+    formProduct.basket_product_id = basketProductId;
+    formProduct.post('/assignproduct/' + barbecue.id);
+    formProduct.reset();
+    highlightArea('null');
+
+}
+
+
 
 </script>
 
@@ -161,13 +179,14 @@ const handleMapClick = () => {
                     <img src="/assets/img/foodbaskets.png" alt="Hamburguesa" class="img-fluid">
                 </div>
             </div>
-            <div v-if="highlightedArea === 'baskets'" class="overflow-y-auto">
+            <div v-if="highlightedArea === 'baskets'">
                 <div class="grid-baskets"
                     v-if="barbecue && barbecue.basket && barbecue.basket.basket_product && barbecue.basket.basket_product.length > 0">
                     <div class="title-grid-baskets">
                         <p class="product">Productes</p>
                         <p class="quantity">Quantitat</p>
                         <p class="price">Preu</p>
+                        <p class="price"></p>
                     </div>
 
                     <div class="grid-info">
@@ -179,12 +198,58 @@ const handleMapClick = () => {
                             <p> {{ item.quantity }} </p>
                             <p class="w-1/3 text-right">
                                 {{ item.product.price }} €</p>
+
+                            <div class="dropdown dropdown-end">
+                                <div tabindex="0" role="button" class="" @click.stop>
+                                    <img :src="item.user.image" alt="Usuari" class="img-fluid rounded-full "
+                                        style="width: 25px; height: 25px;">
+                                </div>
+                                <div tabindex="0"
+                                    class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-[300px]">
+                                    <p class="title text-center color-[#ff5e00] mt-1">
+                                        Asigna el producte a un membre del grup</p>
+
+                                    <div class="flex items-center gap-2 bg-white p-1 mb-2 mt-2 w-full ">
+
+                                        <Link
+                                            class="flex items-center bg-white gap-2 rounded-full w-full cursor-pointer">
+                                        <img :src="item.user.image" alt=""
+                                            class="fit-content !h-10 !w-10 rounded-full object-cover">
+                                        <p>{{ item.user.name }} </p>
+
+
+
+                                        </Link>
+
+
+                                        <div class="flex justify-end w-full">
+                                            <div
+                                                class="badge badge-outline border-transparent text-[#ff5e00] justify-end">
+                                                Asignat
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="members" v-for="member in $page.props.members" :key="member.id" >  
+                                        <form @click="assignProduct(item.product.id, member.id, item.id)">
+                                            <div
+                                                class="flex items-center gap-2 bg-white p-1 rounded-full mb-2 w-full members-asignar">
+                                                <div
+                                                    class="flex items-center bg-white gap-2 rounded-full  w-full cursor-pointer hover-members">
+                                                    <img :src="member.image" alt=""
+                                                        class="fit-content !h-10 !w-10 rounded-full object-cover">
+                                                    <p>{{ member.name }} </p>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="grid-baskets !align-left"
-                v-else>
+                <div class="grid-baskets !align-left" v-else>
                     <h1 class="!pl-0">
                         No hi ha productes a la cistella</h1>
                 </div>
@@ -205,18 +270,14 @@ const handleMapClick = () => {
             </div>
         </div>
 
-        <div
-            class="dates" 
-            :class="{
-                'notSelected': highlightedArea !== 'dates' && highlightedArea !== null
-            }"
-            @click="addEvent"
-        >
-        <!-- get the date 1/01/2024 in 1/01/2024 18:00h on barbacue.date -->
+        <div class="dates" :class="{
+            'notSelected': highlightedArea !== 'dates' && highlightedArea !== null
+        }" @click="addEvent">
+            <!-- get the date 1/01/2024 in 1/01/2024 18:00h on barbacue.date -->
             <h2 v-if="barbecue.date">{{ barbecue.date.split(' ')[0] }}</h2>
             <h1 v-if="barbecue.date">{{ barbecue.date.split(' ')[1] }}</h1>
             <h2 class="" v-else="barbecue.date">No hi ha cap data programada!!</h2>
-  
+
         </div>
 
         <div class="maps" :class="{
@@ -324,8 +385,6 @@ const handleMapClick = () => {
                     </div>
                 </div>
             </div>
-
-            <!-- only if  authstore.user.id is_admin in barbecue.frienships where user_id = authstore.user.id -->
             <div class="inviteusers"
                 v-if="authStore.user.id === barbecue.user_id || barbecue.friendships.find(friendship => friendship.user_id === authStore.user.id && friendship.is_admin === 1)"
                 @click="highlightArea('usersinvite')" :class="{
@@ -342,7 +401,7 @@ const handleMapClick = () => {
                     class="overflow-y-auto cursor-default">
                     <div class="flex items-center gap-2 bg-white p-1 rounded-xl mb-2 w-full ">
 
-                        <Link :href="route('profile.show', friend.id)"
+                        <Link :href="route('profile.show', friend.id)" @click="highlightArea('usersinvite')"
                             class="flex items-center bg-white gap-2 rounded-xl  w-full cursor-pointer">
                         <img :src="friend.image" alt="" class="fit-content h-10 w-10 rounded-full object-cover">
                         <p>{{ friend.name }} </p>
@@ -438,13 +497,12 @@ const handleMapClick = () => {
         flex-direction: column;
         justify-content: center;
         align-items: center;
-
         width: 100%;
     }
 
-    .producte1,
-    .producte2,
-    .producte3 {
+
+
+    .producte1 {
         background-color: rgba(255, 255, 255, 0.5);
         border-radius: 10px;
         display: flex;
@@ -453,8 +511,16 @@ const handleMapClick = () => {
         width: 100%;
         padding: 5px;
         margin-bottom: 10px;
+        align-items: center;
+
+        p {
+            align-items: center !important;
+        }
     }
 
+    .producte1:hover {
+        background-color: #ffffff;
+    }
 
     .total {
         display: flex;
@@ -665,5 +731,14 @@ const handleMapClick = () => {
 
 .notSelected {
     display: none;
+}
+
+.members-asignar:hover {
+    background-color: #f0f0f0;
+
+    .hover-members {
+        background-color: #f0f0f0;
+
+    }
 }
 </style>
