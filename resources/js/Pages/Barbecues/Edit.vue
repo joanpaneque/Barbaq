@@ -2,7 +2,7 @@
 import MainLayout from "@/Layouts/MainLayout.vue";
 import Chat from "@/Components/Barbecues/Chat.vue";
 import BarbacuesAside from "@/Components/Barbecues/BarbacuesAside.vue";
-import { defineProps } from "vue";
+import { defineProps, ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { useBarbecueStore } from "@/stores/barbecue";
 import { useForm } from '@inertiajs/inertia-vue3';
@@ -35,11 +35,50 @@ const form = useForm({
     content: barbecue.content,
     address: barbecue.address,
     date: barbecue.date,
+    dateFormatted: ref('')
 });
 
 const submitForm = () => {
-    form.patch(route('barbecues.update', { id: barbecue.id }));
+    const formattedData = {
+        ...form,
+        date: form.dateFormatted // Enviar la fecha formateada en lugar de la fecha sin procesar
+    };
+
+    // Envía los datos formateados al backend utilizando Inertia.js
+    form.patch(route('barbecues.update', { id: barbecue.id }), formattedData);
 };
+const updateContent = (event) => {
+    form.content = event.target.innerHTML;
+};
+const formatDateToSend = (date) => {
+    if (!date) {
+        return ''; // Devolvemos una cadena vacía si date es NULL
+    }
+
+    // Convertimos la cadena de fecha a un objeto Date si es necesario
+    const formattedDate = new Date(date);
+
+    // Obtenemos las partes de la fecha
+    const day = formattedDate.getDate().toString().padStart(2, '0');
+    const month = (formattedDate.getMonth() + 1).toString().padStart(2, '0'); // Los meses son base 0 (enero es 0)
+    const year = formattedDate.getFullYear();
+    const hour = formattedDate.getHours().toString().padStart(2, '0');
+    const minute = formattedDate.getMinutes().toString().padStart(2, '0');
+
+    // Formateamos la fecha según el formato deseado
+    return `Dia ${day}/${month}/${year} a les ${hour}:${minute}h`;
+};
+
+const updateDate = (date) => {
+    if (date) {
+        form.dateFormatted = formatDateToSend(date);
+        console.log("Fecha formateada:", form.dateFormatted); // Imprimimos la fecha formateada en la consola
+    } else {
+        form.dateFormatted = ''; // Si la fecha es NULL, establecemos dateFormatted como una cadena vacía
+    }
+};
+
+updateDate(barbecue.date);
 </script>
 
 <template>
@@ -58,11 +97,12 @@ const submitForm = () => {
                             </div>
                             <div class="mb-6">
                                 <InputLabel for="content" value="Descripció" />
-                                <textarea id="content" contenteditable
+                                <div id="content" contenteditable
                                     class="editable-content mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                 v-model="form.content" required></textarea>
+                                    @input="updateContent" v-html="form.content" required></div>
                                 <InputError class="mt-2" :message="form.errors.content" />
                             </div>
+
                             <div class="mb-6">
                                 <InputLabel for="address" value="Adreça" />
                                 <TextInput id="address" type="text"
@@ -77,6 +117,7 @@ const submitForm = () => {
                                     v-model="form.date" required />
                                 <InputError class="mt-2" :message="form.errors.date" />
                             </div>
+
                         </div>
 
                         <div class="flex items-center justify-end">
@@ -110,7 +151,8 @@ const submitForm = () => {
     background: white;
     border-radius: 20px;
 }
-.form-barbecues{
+
+.form-barbecues {
     margin-top: -87px;
 }
 </style>
