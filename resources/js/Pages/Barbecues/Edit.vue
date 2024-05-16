@@ -41,40 +41,35 @@ const form = useForm({
 const submitForm = () => {
     const formattedData = {
         ...form,
-        date: form.dateFormatted // Enviar la fecha formateada en lugar de la fecha sin procesar
+        date: form.dateFormatted 
     };
 
-    // Envía los datos formateados al backend utilizando Inertia.js
-    form.patch(route('barbecues.update', { id: barbecue.id }), formattedData);
+    form.content = document.getElementById("content").innerHTML;
+    form.patch(route('barbecues.update', { id: barbecue.id }), form.dateFormatted);
 };
-const updateContent = (event) => {
-    form.content = event.target.innerHTML;
-};
+
 const formatDateToSend = (date) => {
     if (!date) {
-        return ''; // Devolvemos una cadena vacía si date es NULL
+        return '';
     }
 
-    // Convertimos la cadena de fecha a un objeto Date si es necesario
     const formattedDate = new Date(date);
 
-    // Obtenemos las partes de la fecha
     const day = formattedDate.getDate().toString().padStart(2, '0');
-    const month = (formattedDate.getMonth() + 1).toString().padStart(2, '0'); // Los meses son base 0 (enero es 0)
+    const month = (formattedDate.getMonth() + 1).toString().padStart(2, '0'); 
     const year = formattedDate.getFullYear();
     const hour = formattedDate.getHours().toString().padStart(2, '0');
     const minute = formattedDate.getMinutes().toString().padStart(2, '0');
 
-    // Formateamos la fecha según el formato deseado
     return `Dia ${day}/${month}/${year} a les ${hour}:${minute}h`;
 };
 
 const updateDate = (date) => {
     if (date) {
         form.dateFormatted = formatDateToSend(date);
-        console.log("Fecha formateada:", form.dateFormatted); // Imprimimos la fecha formateada en la consola
+        console.log("Fecha formateada:", form.dateFormatted);
     } else {
-        form.dateFormatted = ''; // Si la fecha es NULL, establecemos dateFormatted como una cadena vacía
+        form.dateFormatted = '';
     }
 };
 
@@ -99,7 +94,7 @@ updateDate(barbecue.date);
                                 <InputLabel for="content" value="Descripció" />
                                 <div id="content" contenteditable
                                     class="editable-content mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                    @input="updateContent" v-html="form.content" required></div>
+                                    v-html="form.content" required></div>
                                 <InputError class="mt-2" :message="form.errors.content" />
                             </div>
 
@@ -153,6 +148,6 @@ updateDate(barbecue.date);
 }
 
 .form-barbecues {
-    margin-top: -87px;
+    margin-top: -97px;
 }
 </style>
