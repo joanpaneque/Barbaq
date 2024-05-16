@@ -649,7 +649,6 @@ function formatDate(date) {
 }
 
 
-
 .grid-aside {
     display: grid;
     grid-template-areas:
