@@ -84,6 +84,16 @@ class UserController extends Controller
         
     }
 
+
+    public function updateDescription(Request $request, string $id)
+    {
+        $user = User::findOrFail($id);
+        $user->description = $request->description;
+        $user->save();
+
+        return redirect()->back();
+    }
+
     public function togglePrivate()
     {
         $user = User::find(auth()->id());

@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useAuthStore } from "@/stores/auth";
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import { useProfileStore } from "@/stores/profile";
@@ -142,6 +142,46 @@ function rgbToHex(r, g, b) {
 
 
 
+
+//
+
+const isSaving = ref(false);
+let timeoutId = null;
+
+function saveDescription() {
+    console.log('saveDescription');
+    isSaving.value = true;
+
+    if (timeoutId !== null) {
+        clearTimeout(timeoutId);
+    }
+
+    timeoutId = setTimeout(() => {
+
+        isSaving.value = false;
+        console.log('Guardat!');
+        console.log(profileStore.user.description);
+
+        let id = authStore.user.id;
+        axios.post(route('updateuserdescription', id), {
+            description: profileStore.user.description
+        })
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+    }, 1500);
+}
+
+watch(() => profileStore.user.description, (newValue) => {
+    if (newValue.length > 100) {
+        profileStore.user.description = newValue.slice(0, 100);
+    }
+});
+
 </script>
 
 <template>
@@ -149,8 +189,6 @@ function rgbToHex(r, g, b) {
 
         <div class="background w-full h-[150px] bg-cover bg-no-repeat bg-center rounded-t-[20px]"
             :style="{ backgroundImage: `linear-gradient(to right, ${bgcolor1}, ${bgcolor2}, ${bgcolor3})` }"></div>
-
-
 
         <div class="relative flex flex-1 w-full bg-white pb-2 pr-4 pl-4 pt-4">
 
@@ -175,7 +213,8 @@ function rgbToHex(r, g, b) {
                     <dialog id="my_modal_3" class="modal" :open="showModal" @click.self="closeModal">
                         <div class="modal-box">
                             <form @submit.prevent="closeModal" method="dialog">
-                                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="cancelChangeImage">
+                                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                                    @click="cancelChangeImage">
                                     ✕
                                 </button>
                             </form>
@@ -201,11 +240,12 @@ function rgbToHex(r, g, b) {
                                     <div class="text">
                                         <span>Click per seleccionar una imatge</span>
                                     </div>
-                                    
+
                                     <div class="text" id="logoImage">
                                     </div>
 
-                                    <input type="file" id="file" name="image" @change="handleFileChange" accept="image/*">
+                                    <input type="file" id="file" name="image" @change="handleFileChange"
+                                        accept="image/*">
 
                                 </label>
 
@@ -376,17 +416,23 @@ function rgbToHex(r, g, b) {
         <div class="userdescription bg-white rounded-b-[20px] ">
             <div class="" v-if="profileStore.user.description && profileStore.user.id != authStore.user.id">
                 <p class="">{{ profileStore.user.description }}</p>
-                <hr class="w-full border-gray-300">
             </div>
-            <div class="" v-if="profileStore.user.id == authStore.user.id">
-                <form action="">
-                    <div class="input-container flex">
-                        <input type="text" id="animated-input"
-                            class="outline-none bg-transparent border-none w-full underlineinput" v-model="profileStore.user.description"
+            <div v-if="profileStore.user.id == authStore.user.id">
+                <div class="input-container flex ">
+                    <div class="underlineinput flex w-full">
+                        <input type="text" id="animated-input" class="outline-none bg-transparent border-none w-full "
+                            v-model="profileStore.user.description" @input="saveDescription"
                             placeholder="Escriu la teva descripció..." />
-                        <span class="char-count">{{ profileStore.user.description.length }}/140</span>
+                        <span v-if="isSaving" class="loading loading-spinner loading-xs"></span>
+                    
+                            <span v-if="profileStore.user.description" :class="{ 'text-red-500 font-bold': profileStore.user.description.length === 100 }"
+                            class="char-count">
+                            {{ profileStore.user.description.length }}/100
+                        </span>
+                        
                     </div>
-                </form>
+                </div>
+
             </div>
 
 
@@ -416,9 +462,7 @@ function rgbToHex(r, g, b) {
 }
 
 
-.char-count {
-    
-}
+.char-count {}
 
 
 .avatar .image-container {

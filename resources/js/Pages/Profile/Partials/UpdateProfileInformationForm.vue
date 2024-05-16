@@ -5,6 +5,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
 
+
 defineProps({
     mustVerifyEmail: {
         type: Boolean,
@@ -31,6 +32,8 @@ const updateCheckbox = (event) => {
     form[event.target.name] = event.target.checked;
     console.log(form);
 };
+
+
 
 </script>
 
