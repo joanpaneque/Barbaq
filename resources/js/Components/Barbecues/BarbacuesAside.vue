@@ -124,12 +124,7 @@ function formatDate(date) {
 }
 
 
-const handleMapClick = () => {
-    console.log('Map clicked');
-    const opener = document.querySelector('.map-on-steroids-opener');
 
-    opener.click();
-}
 
 
 </script>
@@ -223,8 +218,14 @@ const handleMapClick = () => {
             'selected': highlightedArea === 'maps',
             'notSelected': highlightedArea !== 'maps' && highlightedArea !== null
         }">
-            <img src="/assets/img/map.png" alt="Mapa" class="img-fluid" @click="handleMapClick">
+            <img src="/assets/img/map.png" alt="Mapa" class="img-fluid hidden" @click="handleMapClick">
             <MapOnSteroids v-model="coordinates" :offsetX="-245" :offsetY="300" />
+
+            <iframe class="w-full h-50 mapagoogle"
+                :src="'https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d877.7659237744726!2d' + barbecue.longitude + '!3d' + barbecue.latitude + '!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses!2ses!4v1715779032596!5m2!1ses!2ses'"
+                width="" height="200" style="border:0;" allowfullscreen="" loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
         </div>
 
         <div class="costs" :class="{
@@ -487,9 +488,8 @@ const handleMapClick = () => {
 .dates {
     grid-area: dates;
     background: #f2f2f2;
-    padding: 15px;
-    width: 184.01px;
-    max-width: 180px;
+    padding: 10px;
+    width: auto;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -499,7 +499,7 @@ const handleMapClick = () => {
     height: 100%;
 
     h1 {
-        font-size: 2rem;
+        font-size: 1.4rem;
         color: #020202;
         font-weight: 600;
         text-align: center;
@@ -508,7 +508,7 @@ const handleMapClick = () => {
 
     h2 {
         display: flex;
-        line-height: 0.1rem;
+        
         font-size: 0.9rem;
         color: #ff5e00;
         font-weight: bold;
@@ -654,7 +654,8 @@ const handleMapClick = () => {
     display: grid;
     grid-template-areas:
         'baskets baskets'
-        'dates maps'
+        'dates dates'
+        'maps maps'
         'costs costs'
         'users users';
     grid-gap: 10px;
@@ -665,5 +666,8 @@ const handleMapClick = () => {
 
 .notSelected {
     display: none;
+}
+.mapagoogle{
+    border-radius: 10px;
 }
 </style>
