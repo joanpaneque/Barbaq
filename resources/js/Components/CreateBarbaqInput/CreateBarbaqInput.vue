@@ -15,6 +15,10 @@ const app = createApp()
 app.component('QuillEditor', QuillEditor)
 
 const isOpen = ref(false);
+const showModalLocation = ref(false);
+const showModalCalendar = ref(false);
+const showModalImages = ref(false);
+
 const quillContent = ref(null);
 
 const barbecueForm = useForm({
@@ -37,6 +41,59 @@ const closeDropdown = () => {
         isOpen.value = false;
     }
 };
+
+function cancelDate() {
+    dateForm.day = '';
+    dateForm.month = '';
+    dateForm.year = '';
+    dateForm.hour = '';
+    dateForm.minute = '';
+
+    closeModalCalendar();
+};
+
+function openModalLocation() {
+    showModalLocation.value = true;
+}
+
+function closeModalLocation() {
+    showModalLocation.value = false;
+}
+
+function cancelLocation() {
+    barbecueForm.latitude = '';
+    barbecueForm.longitude = '';
+    barbecueForm.address = '';
+
+    closeModalLocation();
+};
+
+function openModalCalendar() {
+    showModalCalendar.value = true;
+}
+
+function closeModalCalendar() {
+    const stringDate = `${dateForm.day}/${dateForm.month}/${dateForm.year} ${dateForm.hour}:${dateForm.minute}h`;
+    barbecueForm.date = stringDate;
+
+    showModalCalendar.value = false;
+}
+
+function openModalImages() {
+    showModalImages.value = true;
+}
+
+function closeModalImages() {
+    showModalImages.value = false;
+}
+
+function cancelImages() {
+    imagesForm.image = [];
+    const imagesNamesElement = document.getElementById('imagesNames');
+    imagesNamesElement.innerHTML = '';
+
+    closeModalImages();
+}
 
 const submitBarbecueForm = () => {
     barbecueForm.content = quillContent.value.getHTML();
@@ -108,21 +165,11 @@ const submitBarbecueForm = () => {
         })
 };
 
-const showModalImages = ref(false);
-
-function openModalImages() {
-    showModalImages.value = true;
-}
-
-function closeModalImages() {
-    showModalImages.value = false;
-}
-
 const imagesForm = useForm({
     image: [],
 });
 
-const handleFileChange = (event) => {
+const handleImagesChange = (event) => {
     imagesForm.image = event.target.files;
 
     const fileList = Array.from(imagesForm.image);
@@ -134,27 +181,6 @@ const handleFileChange = (event) => {
 
     console.log("Selected images:", imagesForm.image);
 };
-
-function cancelImages() {
-    imagesForm.image = [];
-    const imagesNamesElement = document.getElementById('imagesNames');
-    imagesNamesElement.innerHTML = '';
-
-    closeModalImages();
-}
-
-const showModalCalendar = ref(false);
-
-function openModalCalendar() {
-    showModalCalendar.value = true;
-}
-
-function closeModalCalendar() {
-    const stringDate = `${dateForm.day}/${dateForm.month}/${dateForm.year} ${dateForm.hour}:${dateForm.minute}h`;
-    barbecueForm.date = stringDate;
-
-    showModalCalendar.value = false;
-}
 
 const currentYear = new Date().getFullYear();
 const numberOfYears = 2;
@@ -170,34 +196,6 @@ const dateForm = useForm({
     hour: '',
     minute: '',
 });
-
-function cancelDate() {
-    dateForm.day = '';
-    dateForm.month = '';
-    dateForm.year = '';
-    dateForm.hour = '';
-    dateForm.minute = '';
-
-    closeModalCalendar();
-};
-
-const showModalLocation = ref(false);
-
-function openModalLocation() {
-    showModalLocation.value = true;
-}
-
-function closeModalLocation() {
-    showModalLocation.value = false;
-}
-
-function cancelLocation() {
-    barbecueForm.latitude = '';
-    barbecueForm.longitude = '';
-    barbecueForm.address = '';
-
-    closeModalLocation();
-};
 
 const locations = ref([]);
 const ul = ref(null);
@@ -368,7 +366,7 @@ function showNoSearch() {
                 
                     <h3 class="font-bold text-lg mb-2">Selecciona la imatge/s</h3>
 
-                    <label class="custum-file-upload" for="file">
+                    <label class="custum-file-upload" for="images">
                         <div class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="" viewBox="0 0 24 24">
                                 <g stroke-width="0" id="SVGRepo_bgCarrier"></g>
@@ -397,11 +395,11 @@ function showNoSearch() {
                         
                         <input 
                             type="file" 
-                            id="file" 
+                            id="images" 
                             name="image" 
-                            multiple 
+                            multiple
                             accept="image/*" 
-                            @change="handleFileChange"
+                            @change="handleImagesChange"
                         />
                     </label>
 
@@ -543,7 +541,7 @@ function showNoSearch() {
         </dialog>
 
         <dialog id="my_modal_3" class="modal cursor-auto" :open="showModalLocation" @click.self="closeModalLocation">
-            <div class="modal-box w-auto min-w-[30%] max-w-5xl">
+            <div class="modal-box w-1/2">
                 <form 
                     @submit.prevent="closeModalLocation"
                     class="flex flex-col gap-4"
@@ -557,11 +555,11 @@ function showNoSearch() {
                 
                     <h3 class="flex justify-center font-bold text-lg mb-2">Selecciona l'ubicació de la barbacoa</h3>
 
-                    <div class="search-input">
+                    <div class="search-input max-h-52 overflow-auto">
                         <input 
                             type="text" 
                             placeholder="Buscar ubicació..." 
-                            class="input input-bordered w-96 max-h-40"
+                            class="input input-bordered w-full max-h-40 sticky top-0 z-10"
                             id="address"
                             title="address"
                             v-model="barbecueForm.address"
@@ -571,17 +569,17 @@ function showNoSearch() {
                             autocomplete="off"
                         />
                         
-                        <div class="options-location w-96">
+                        <div class="options-location w-full">
                             <ul
                                 ref="ul"
                             >
                                 <li
-                                    v-for="(location, index) in locations.slice(0, 4)"
-                                    @click="selectAddress"
+                                    v-for="(location) in locations"
                                     :key="location.formatted"
                                     :lat="location.annotations.DMS.lat"
                                     :lng="location.annotations.DMS.lng"
-                                    class="result-location w-96"
+                                    @click="selectAddress"
+                                    class="result-location w-full overflow-auto"
                                 >
                                     {{ location.formatted }}
                                 </li>

@@ -18,26 +18,28 @@ const authStore = useAuthStore();
         <div class="left mt-5">
 
             <div v-if="authStore.user && profileStore.user">
-                <div v-if="authStore.user.id == profileStore.user.id">
+                <div v-if="authStore.user.id">
                     <CreateBarbaqInput class="mb-5" />
                 </div>
 
-                <PrivateUserProfile v-if="authStore.user.id != profileStore.user.id
+                <PrivateUserProfile 
+                    v-if="authStore.user.id != profileStore.user.id
                     && profileStore.user.public == 0
-                    && profileStore.friendStatus != 'friend'" />
+                    && profileStore.friendStatus != 'friend'" 
+                />
 
-                <div v-if="profileStore.user.public == 1
-                    || profileStore.friendStatus == 'friend'">
+                <div 
+                    v-if="profileStore.user.public == 1
+                    || profileStore.friendStatus == 'friend'"
+                >
                     <div v-for="barbecue in profileStore.user.barbecues" :key="barbecue.id">
                         <Barbecue :barbecue="barbecue" class="mb-5" />
                     </div>
                 </div>
             </div>
-
-            <Barbecue />
-
         </div>
-        <div class="rigth my-5 p-5">
+        
+        <div class="right my-5 p-5">
             <FindFriendsRightAside />
         </div>
     </div>
@@ -55,9 +57,9 @@ const authStore = useAuthStore();
     gap: 20px;
 }
 
-.rigth {
+.right {
     background-color: white;
     border-radius: 20px;
-    height: auto;
+    height: min-content;
 }
 </style>
