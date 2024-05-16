@@ -62,6 +62,6 @@ const authStore = useAuthStore();
 .rigth {
     background-color: white;
     border-radius: 20px;
-    height: auto;
+    height: min-content;
 }
 </style>
