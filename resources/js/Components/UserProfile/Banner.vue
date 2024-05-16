@@ -91,11 +91,9 @@ const togglePrivateOrPublic = () => {
         });
 }
 
-
-
-const bgcolor1 = ref('');
-const bgcolor2 = ref('');
-const bgcolor3 = ref('');
+const bgcolor1 = ref('#f8f9fa');
+const bgcolor2 = ref('#e9ecef');
+const bgcolor3 = ref('#dee2e6');
 
 onMounted(() => {
     analyzeImageColors(profileStore.user.image);
@@ -118,6 +116,9 @@ async function analyzeImageColors(imageUrl) {
 function rgbToHex(r, g, b) {
     return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 }
+
+
+
 </script>
 
 <template>
@@ -128,7 +129,7 @@ function rgbToHex(r, g, b) {
 
 
 
-        <div class="relative flex flex-1 w-full bg-white rounded-b-[20px] p-4">
+        <div class="relative flex flex-1 w-full bg-white pb-2 pr-4 pl-4 pt-4">
 
             <div style="margin-top: -6rem;">
 
@@ -208,23 +209,31 @@ function rgbToHex(r, g, b) {
                     </h1>
 
                     <div class="flex">
-                        <div v-if="profileStore.user.vegetarian" class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md bg-gray-50">
+                        <div v-if="profileStore.user.vegetarian"
+                            class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md bg-gray-50">
                             <img src="/assets/img/intolerance/vegetarian.png" class="h-7" alt="">
                             <p class="font-semibold text-green-700">Vegetarià</p>
                         </div>
-                        <div v-if="profileStore.user.lactose" class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md tooltip bg-gray-50" data-tip="Intolerant a la lactosa">
+                        <div v-if="profileStore.user.lactose"
+                            class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md tooltip bg-gray-50"
+                            data-tip="Intolerant a la lactosa">
                             <img src="/assets/img/intolerance/lactose.png" class="h-7" alt="">
                             <p class="font-semibold text-blue-400">Lactosa</p>
                         </div>
-                        <div v-if="profileStore.user.gluten" class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md tooltip bg-gray-50" data-tip="Intolerant al gluten">
+                        <div v-if="profileStore.user.gluten"
+                            class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md tooltip bg-gray-50"
+                            data-tip="Intolerant al gluten">
                             <img src="/assets/img/intolerance/gluten.png" class="h-7" alt="">
                             <p class="font-semibold text-yellow-600">Gluten</p>
                         </div>
-                        <div v-if="profileStore.user.spicy" class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md tooltip bg-gray-50" data-tip="Intolerant al picant">
+                        <div v-if="profileStore.user.spicy"
+                            class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md tooltip bg-gray-50"
+                            data-tip="Intolerant al picant">
                             <img src="/assets/img/intolerance/spicy.png" class="h-7" alt="">
                             <p class="font-semibold text-red-700">Picant</p>
                         </div>
-                        <div v-if="profileStore.user.halal" class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md bg-gray-50">
+                        <div v-if="profileStore.user.halal"
+                            class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md bg-gray-50">
                             <img src="/assets/img/intolerance/halal.png" class="h-7" alt="">
                             <p class="font-semibold text-black">Halal</p>
                         </div>
@@ -331,13 +340,61 @@ function rgbToHex(r, g, b) {
 
                         </div>
                     </div>
+
                 </div>
+
             </div>
+
+
         </div>
+        <div class="userdescription bg-white rounded-b-[20px] ">
+            <div class="" v-if="profileStore.user.description && profileStore.user.id != authStore.user.id">
+                <p class="">{{ profileStore.user.description }}</p>
+                <hr class="w-full border-gray-300">
+            </div>
+            <div class="" v-if="profileStore.user.id == authStore.user.id">
+                <form action="">
+                    <div class="input-container flex">
+                        <input type="text" id="animated-input"
+                            class="outline-none bg-transparent border-none w-full underlineinput" v-model="profileStore.user.description"
+                            placeholder="Escriu la teva descripció..." />
+                        <span class="char-count">{{ profileStore.user.description.length }}/140</span>
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+
     </div>
 </template>
 
 <style scoped>
+@keyframes slideIn {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+.underlineinput {
+    border-bottom: 0.5px solid rgb(197, 197, 197);
+    font-style: italic;
+}
+
+#animated-input {
+    animation: slideIn 0.5s forwards;
+}
+
+
+.char-count {
+    
+}
+
+
 .avatar .image-container {
     position: relative;
     overflow: hidden;
@@ -367,7 +424,7 @@ function rgbToHex(r, g, b) {
     cursor: pointer;
 }
 
-.background {}
+
 
 .modal {
     background-color: rgba(0, 0, 0, 0.5);
@@ -422,5 +479,12 @@ function rgbToHex(r, g, b) {
 .custum-file-upload:hover svg {
     transform: scale(1.2);
     filter: brightness(0%);
+}
+
+.userdescription {
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 15px;
+    font-style: italic;
 }
 </style>
