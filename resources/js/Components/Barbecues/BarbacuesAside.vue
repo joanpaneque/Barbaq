@@ -74,6 +74,7 @@ const form = useForm({
 const inviteUser = (friendId) => {
     form.user_id = friendId;
     form.post('/sendinvitation/' + barbecue.id);
+    highlightArea('usersinvite');
 }
 
 const deleteMember = (memberId) => {
@@ -129,12 +130,24 @@ function changeFormatDate(date) {
 }
 
 
-const handleMapClick = () => {
-    console.log('Map clicked');
-    const opener = document.querySelector('.map-on-steroids-opener');
 
-    opener.click();
+
+const formProduct = useForm({
+    member_id: null,
+    product_id: null,
+    basket_product_id: null,
+});
+
+const assignProduct = (productId, memberId, basketProductId) => {
+    formProduct.product_id = productId;
+    formProduct.member_id = memberId;
+    formProduct.basket_product_id = basketProductId;
+    formProduct.post('/assignproduct/' + barbecue.id);
+    formProduct.reset();
+    highlightArea('null');
+
 }
+
 
 
 </script>
@@ -149,7 +162,7 @@ const handleMapClick = () => {
                 <div class="flex flex-col">
                     <h1>
                         CISTELLA</h1>
-                    <p class="relative ">
+                    <p class="relative text">
                         Descobreix tots els productes
                     </p>
                 </div>
@@ -166,13 +179,14 @@ const handleMapClick = () => {
                     <img src="/assets/img/foodbaskets.png" alt="Hamburguesa" class="img-fluid">
                 </div>
             </div>
-            <div v-if="highlightedArea === 'baskets'" class="overflow-y-auto">
+            <div v-if="highlightedArea === 'baskets'">
                 <div class="grid-baskets"
                     v-if="barbecue && barbecue.basket && barbecue.basket.basket_product && barbecue.basket.basket_product.length > 0">
                     <div class="title-grid-baskets">
                         <p class="product">Productes</p>
                         <p class="quantity">Quantitat</p>
                         <p class="price">Preu</p>
+                        <p class="price"></p>
                     </div>
 
                     <div class="grid-info">
@@ -184,17 +198,64 @@ const handleMapClick = () => {
                             <p> {{ item.quantity }} </p>
                             <p class="w-1/3 text-right">
                                 {{ item.product.price }} €</p>
+
+                            <div class="dropdown dropdown-end">
+                                <div tabindex="0" role="button" class="" @click.stop>
+                                    <img :src="item.user.image" alt="Usuari" class="img-fluid rounded-full "
+                                        style="width: 25px; height: 25px;">
+                                </div>
+                                <div tabindex="0"
+                                    class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-[300px]">
+                                    <p class="title text-center color-[#ff5e00] mt-1">
+                                        Asigna el producte a un membre del grup</p>
+
+                                    <div class="flex items-center gap-2 bg-white p-1 mb-2 mt-2 w-full ">
+
+                                        <Link
+                                            class="flex items-center bg-white gap-2 rounded-full w-full cursor-pointer">
+                                        <img :src="item.user.image" alt=""
+                                            class="fit-content !h-10 !w-10 rounded-full object-cover">
+                                        <p>{{ item.user.name }} </p>
+
+
+
+                                        </Link>
+
+
+                                        <div class="flex justify-end w-full">
+                                            <div
+                                                class="badge badge-outline border-transparent text-[#ff5e00] justify-end">
+                                                Asignat
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="members" v-for="member in $page.props.members" :key="member.id" >  
+                                        <form @click="assignProduct(item.product.id, member.id, item.id)">
+                                            <div
+                                                class="flex items-center gap-2 bg-white p-1 rounded-full mb-2 w-full members-asignar">
+                                                <div
+                                                    class="flex items-center bg-white gap-2 rounded-full  w-full cursor-pointer hover-members">
+                                                    <img :src="member.image" alt=""
+                                                        class="fit-content !h-10 !w-10 rounded-full object-cover">
+                                                    <p>{{ member.name }} </p>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="grid-baskets !align-left"
-                v-else>
+                <div class="grid-baskets !align-left" v-else>
                     <h1 class="!pl-0">
                         No hi ha productes a la cistella</h1>
                 </div>
                 <div class="total" v-if="barbecue && barbecue.basket && barbecue.basket.basket_product">
-                    <p>Total: </p>
+                    <p class="!text-lg">
+                        Total: </p>
 
                     <h1>
                         {{
@@ -209,26 +270,28 @@ const handleMapClick = () => {
             </div>
         </div>
 
-        <div
-            class="dates" 
-            :class="{
-                'notSelected': highlightedArea !== 'dates' && highlightedArea !== null
-            }"
-            @click="addEvent"
-        >
-        <!-- get the date 1/01/2024 in 1/01/2024 18:00h on barbacue.date -->
+        <div class="dates" :class="{
+            'notSelected': highlightedArea !== 'dates' && highlightedArea !== null
+        }" @click="addEvent">
+            <!-- get the date 1/01/2024 in 1/01/2024 18:00h on barbacue.date -->
             <h2 v-if="barbecue.date">{{ barbecue.date.split(' ')[0] }}</h2>
             <h1 v-if="barbecue.date">{{ barbecue.date.split(' ')[1] }}</h1>
             <h2 class="" v-else="barbecue.date">No hi ha cap data programada!!</h2>
-  
+
         </div>
 
         <div class="maps" :class="{
             'selected': highlightedArea === 'maps',
             'notSelected': highlightedArea !== 'maps' && highlightedArea !== null
         }">
-            <img src="/assets/img/map.png" alt="Mapa" class="img-fluid" @click="handleMapClick">
+            <img src="/assets/img/map.png" alt="Mapa" class="img-fluid hidden" @click="handleMapClick">
             <MapOnSteroids v-model="coordinates" :offsetX="-245" :offsetY="300" />
+
+            <iframe class="w-full h-50 mapagoogle"
+                :src="'https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d877.7659237744726!2d' + barbecue.longitude + '!3d' + barbecue.latitude + '!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses!2ses!4v1715779032596!5m2!1ses!2ses'"
+                width="" height="200" style="border:0;" allowfullscreen="" loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
         </div>
 
         <div class="costs" :class="{
@@ -328,8 +391,6 @@ const handleMapClick = () => {
                     </div>
                 </div>
             </div>
-
-            <!-- only if  authstore.user.id is_admin in barbecue.frienships where user_id = authstore.user.id -->
             <div class="inviteusers"
                 v-if="authStore.user.id === barbecue.user_id || barbecue.friendships.find(friendship => friendship.user_id === authStore.user.id && friendship.is_admin === 1)"
                 @click="highlightArea('usersinvite')" :class="{
@@ -346,7 +407,7 @@ const handleMapClick = () => {
                     class="overflow-y-auto cursor-default">
                     <div class="flex items-center gap-2 bg-white p-1 rounded-xl mb-2 w-full ">
 
-                        <Link :href="route('profile.show', friend.id)"
+                        <Link :href="route('profile.show', friend.id)" @click="highlightArea('usersinvite')"
                             class="flex items-center bg-white gap-2 rounded-xl  w-full cursor-pointer">
                         <img :src="friend.image" alt="" class="fit-content h-10 w-10 rounded-full object-cover">
                         <p>{{ friend.name }} </p>
@@ -397,7 +458,7 @@ const handleMapClick = () => {
         padding-top: 10px;
     }
 
-    p {
+    .text {
         font-size: 0.7rem;
         color: #ff5e00;
         font-weight: 500;
@@ -442,13 +503,12 @@ const handleMapClick = () => {
         flex-direction: column;
         justify-content: center;
         align-items: center;
-
         width: 100%;
     }
 
-    .producte1,
-    .producte2,
-    .producte3 {
+
+
+    .producte1 {
         background-color: rgba(255, 255, 255, 0.5);
         border-radius: 10px;
         display: flex;
@@ -457,8 +517,16 @@ const handleMapClick = () => {
         width: 100%;
         padding: 5px;
         margin-bottom: 10px;
+        align-items: center;
+
+        p {
+            align-items: center !important;
+        }
     }
 
+    .producte1:hover {
+        background-color: #ffffff;
+    }
 
     .total {
         display: flex;
@@ -484,15 +552,15 @@ const handleMapClick = () => {
         font-size: 0.9rem;
         font-weight: 600;
         padding: 0;
+        color: #9B3B00;
     }
 }
 
 .dates {
     grid-area: dates;
     background: #f2f2f2;
-    padding: 15px;
-    width: 184.01px;
-    max-width: 180px;
+    padding: 10px;
+    width: auto;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -502,7 +570,7 @@ const handleMapClick = () => {
     height: 100%;
 
     h1 {
-        font-size: 2rem;
+        font-size: 1.4rem;
         color: #020202;
         font-weight: 600;
         text-align: center;
@@ -511,7 +579,7 @@ const handleMapClick = () => {
 
     h2 {
         display: flex;
-        line-height: 0.1rem;
+        
         font-size: 0.9rem;
         color: #ff5e00;
         font-weight: bold;
@@ -652,12 +720,12 @@ const handleMapClick = () => {
 }
 
 
-
 .grid-aside {
     display: grid;
     grid-template-areas:
         'baskets baskets'
-        'dates maps'
+        'dates dates'
+        'maps maps'
         'costs costs'
         'users users';
     grid-gap: 10px;
@@ -668,5 +736,16 @@ const handleMapClick = () => {
 
 .notSelected {
     display: none;
+}
+.mapagoogle{
+    border-radius: 10px;
+}
+.members-asignar:hover {
+    background-color: #f0f0f0;
+
+    .hover-members {
+        background-color: #f0f0f0;
+
+    }
 }
 </style>

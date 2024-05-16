@@ -112,6 +112,7 @@ class BarbecuesController extends Controller
         $barbecue = Barbecue::findOrFail($id);
         $barbecue = Barbecue::with('basket')
         ->with('basket.basketProduct')
+        ->with('basket.basketProduct.user')
         ->with('basket.basketProduct.product')
         ->with('members')
         ->with('friendships')
@@ -242,6 +243,25 @@ class BarbecuesController extends Controller
             ]);
         }
         
+        return redirect()->route('barbecues.show', ['barbecue' => $id]);
+    }
+
+    /**
+     * Assign product to user.
+     */
+
+    public function assignProduct(Request $request, string $id)
+    {
+        $request = $request->all();
+        $memberId = $request['member_id'];
+        $barbecue = Barbecue::findOrFail($id);
+        $product = Product::findOrFail($request['product_id']);
+        $basket = Basket::firstOrCreate(['barbecue_id' => $barbecue->id]);
+        $basketProduct = BasketProduct::where('basket_id', $basket->id)
+                                        ->where('product_id', $product->id)
+                                        ->first();
+        $basketProduct->user_id = $memberId;
+        $basketProduct->save();
         return redirect()->route('barbecues.show', ['barbecue' => $id]);
     }
 
