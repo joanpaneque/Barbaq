@@ -42,7 +42,7 @@ class ImagesController extends Controller
             $path = $image->storeAs('public/assets/img/barbecues/' . $barbecueId . '/' , $imageName);
 
             $imageModal->barbecue_id = $barbecueId;
-            $imageModal->path = 'storage/assets/img/barbecues/' . $barbecueId . '/' . $imageName;
+            $imageModal->path = '/storage/assets/img/barbecues/' . $barbecueId . '/' . $imageName;
 
             $imageModal->save();
         }

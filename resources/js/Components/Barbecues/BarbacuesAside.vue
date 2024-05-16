@@ -9,6 +9,7 @@ import axios from 'axios';
 import MapOnSteroids from '../Steroids/MapOnSteroids.vue';
 
 import AddProductModal from '../Barbecues/AddProductModal.vue';
+import { parse } from 'vue/compiler-sfc';
 
 const props = defineProps({
     friends: {
@@ -85,12 +86,13 @@ function addEvent() {
     var eventTitle = barbecue.title;
     var eventDescription = barbecue.content;
     var dateString = barbecue.date;
-    var date = parseDateFromString(dateString);
+    var date = parseFormatDateFromString(dateString);
     var longitude = barbecue.longitude;
     var latitude = barbecue.latitude;
 
     const startDate = date;
-    const endDate = new Date(date.getTime() + (2 * 60 * 60 * 1000)); // add 2h to the start date
+    const endDate = new Date(date);
+    endDate.setHours(endDate.getHours() + 2);
     const summary = `${eventTitle}`;
     const description = eventDescription;
     const location = `${latitude},${longitude}`;
@@ -99,28 +101,31 @@ function addEvent() {
     const encodedDescription = encodeURIComponent(description);
     const encodedLocation = encodeURIComponent(location);
 
-    const googleCalendarURL = `https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${formatDate(startDate)}/${formatDate(endDate)}&text=${encodedSummary}&details=${encodedDescription}&location=${encodedLocation}`;
+    const googleCalendarURL = `https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${changeFormatDate(startDate)}/${changeFormatDate(endDate)}&text=${encodedSummary}&details=${encodedDescription}&location=${encodedLocation}`;
 
     window.open(googleCalendarURL);
 }
 
-function parseDateFromString(dateString) {
-    var parts = dateString.split(' ');
+function parseFormatDateFromString(dateString) {
+    const [datePart, timePart] = dateString.split(' ');
+    const [day, month, year] = datePart.split('/');
+    const [hours, minutes] = timePart.slice(0, -1).split(':');
 
-    var day = parseInt(parts[1].split('/')[0], 10);
-    var month = parseInt(parts[1].split('/')[1], 10) - 1;
-    var year = parseInt(parts[1].split('/')[2], 10);
-    var hour = parseInt(parts[4].split(':')[0], 10);
-    var minute = parseInt(parts[4].split(':')[1], 10);
+    const date = new Date(year, month - 1, day, hours, minutes);
 
-    var date = new Date(year, month, day, hour, minute);
+    const dateFormatted = date.toISOString();
 
-    return date;
+    const fullDate = dateFormatted.split('T')[0] + 'T' + hours + ':' + minutes + ':00Z';
+
+    return fullDate;
 }
 
-function formatDate(date) {
-    const pad = (num) => (num < 10 ? '0' : '') + num;
-    return `${date.getUTCFullYear()}${pad(date.getUTCMonth() + 1)}${pad(date.getUTCDate())}T${pad(date.getUTCHours())}${pad(date.getUTCMinutes())}${pad(date.getUTCSeconds())}Z`;
+function changeFormatDate(date) {
+    const dateObject = new Date(date);
+    const dateWithoutSeconds = dateObject.toISOString().slice(0, -5);
+    const addedZ = dateWithoutSeconds + 'CET';
+
+    return addedZ.replace(/[-:.]/g, '');
 }
 
 

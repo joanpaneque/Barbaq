@@ -178,7 +178,7 @@ function rgbToHex(r, g, b) {
                                         <span>Click per seleccionar una imatge</span>
                                     </div>
 
-                                    <input type="file" id="file" name="image" @change="handleFileChange">
+                                    <input type="file" id="file" name="image" @change="handleFileChange" accept="image/*">
 
                                 </label>
 
