@@ -9,6 +9,7 @@ import { useForm } from '@inertiajs/inertia-vue3';
 import TextInput from '@/Components/TextInput.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
+import htmlButtonHasType from "eslint-plugin-vue/lib/rules/html-button-has-type";
 const authStore = useAuthStore();
 authStore.updateUserData();
 
@@ -44,7 +45,7 @@ const submitForm = () => {
 <template>
     <MainLayout :title="barbecue.title">
         <template #main-content>
-            <div class="flex justify-center items-center h-screen">
+            <div class="form-barbecues flex justify-center items-center h-screen">
                 <div class="bg-white rounded-lg p-8 w-full md:max-w-xl">
                     <form @submit.prevent="submitForm" class="mt-6 space-y-6">
                         <div class="flex flex-col">
@@ -57,9 +58,9 @@ const submitForm = () => {
                             </div>
                             <div class="mb-6">
                                 <InputLabel for="content" value="Descripció" />
-                                <div id="content" type="text"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                    v-html="form.content" required></div>
+                                <textarea id="content" contenteditable
+                                    class="editable-content mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                 v-model="form.content" required></textarea>
                                 <InputError class="mt-2" :message="form.errors.content" />
                             </div>
                             <div class="mb-6">
@@ -109,5 +110,7 @@ const submitForm = () => {
     background: white;
     border-radius: 20px;
 }
-
+.form-barbecues{
+    margin-top: -87px;
+}
 </style>
