@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Joan',
             'surnames' => 'Paneque Domingo',
             'email' => 'jpaneque@cendrassos.net',
-            'description' => 'Sóc un noi de 22 anys que m\'agrada molt la cuina i fer barbacoes amb els amics. M\'agrada molt la música i la natura',
+            'description' => 'Sóc un noi de 22 anys que m\'agrada molt la cuina i fer barbacoes amb els amics. ',
             'password' => bcrypt('123456')
         ]);
 
@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Roman',
             'surnames' => 'Mysyura',
             'email' => 'rmysyura@cendrassos.net',
-            'description' => 'Sóc un noi de 53 anys que m\'agrada molt la cuina i fer barbacoes amb els amics. M\'agrada molt la música i la natura',
+            'description' => 'Sóc un noi de 53 anys que m\'agrada molt la cuina i fer barbacoes amb els amics. ',
             'password' => bcrypt('123456'),
             'image' => '/assets/img/roman.jpg'
         ]);
@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Emma',
             'surnames' => 'Cardosa',
             'email' => 'ecardosa@cendrassos.net',
-            'description' => 'Sóc una noia de 22 anys que m\'agrada molt la cuina i fer barbacoes amb els amics. M\'agrada molt la música',
+            'description' => 'Sóc una noia de 22 anys que m\'agrada molt la cuina i fer barbacoes amb els amics. ',
             'password' => bcrypt('123456'),
             'image' => '/assets/img/emma.jpg'
         ]);
@@ -48,7 +48,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Aniol',
             'surnames' => 'Moreno',
             'email' => 'amoreno@cendrassos.net',
-            'description' => 'Sóc un noi de 22 anys que m\'agrada molt la cuina i fer barbacoes amb els amics. M\'agrada molt la música i la natura',
+            'description' => 'Sóc un noi de 22 anys que m\'agrada molt la cuina i fer barbacoes amb els amics. ',
             'password' => bcrypt('123456'),
             'image' => '/assets/img/aniol.jpg'
         ]);

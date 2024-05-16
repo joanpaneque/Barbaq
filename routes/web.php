@@ -53,6 +53,8 @@ Route::get('/api/barbecues', [BarbecuesController::class, 'apiIndex']);
 
 Route::post('/api/discordbot', [DiscordBotController::class, 'broadcast']);
 
+Route::post('/updateuserdescription/{id}', [UserController::class, 'updateDescription'])->name('updateuserdescription');
+
 Route::post('/sendinvitation/{id}', [BarbecuesController::class, 'sendInvitation'])->name('sendinvitation');
 Route::delete('/destroyfriendship/{id}', [BarbecuesController::class, 'destroyFriendship'])->name('destroyfriendship');
 Route::post('/sendbarbecuejoinrequest/{id}', [BarbecuesController::class, 'sendBarbecueJoinRequest'])->name('sendbarbecuejoinrequest');
