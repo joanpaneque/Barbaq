@@ -79,9 +79,9 @@ updateDate(barbecue.date);
 <template>
     <MainLayout :title="barbecue.title">
         <template #main-content>
-            <div class="form-barbecues flex justify-center items-center h-screen">
+            <div class="form-barbecues flex justify-center">
                 <div class="bg-white rounded-lg p-8 w-full md:max-w-xl">
-                    <form @submit.prevent="submitForm" class="mt-6 space-y-6">
+                    <form @submit.prevent="submitForm" class="space-y-6">
                         <div class="flex flex-col">
                             <div class="mb-6">
                                 <InputLabel for="title" value="Titol" />
@@ -133,7 +133,7 @@ updateDate(barbecue.date);
         </template>
         <template #right-aside>
             <div class="aside-menu">
-                <BarbacuesAside />
+                <BarbacuesAside/>
             </div>
         </template>
     </MainLayout>
@@ -146,8 +146,7 @@ updateDate(barbecue.date);
     background: white;
     border-radius: 20px;
 }
-
 .form-barbecues {
-    
+    background: none; /* Remove background color from the outer container */
 }
 </style>
