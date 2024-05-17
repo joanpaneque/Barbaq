@@ -1,9 +1,15 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useBarbecueStore } from "@/stores/barbecue";
+import { useAuthStore } from '@/stores/auth';
 import { defineProps } from 'vue';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import BarbaqUserProfile from '../UserProfile/BarbaqUserProfile.vue';
+import axios from 'axios';
+import MapOnSteroids from '../Steroids/MapOnSteroids.vue';
+
+import AddProductModal from '../Barbecues/AddProductModal.vue';
+import { parse } from 'vue/compiler-sfc';
 
 const props = defineProps({
     friends: {
@@ -11,6 +17,20 @@ const props = defineProps({
         required: true,
     },
 });
+
+
+onMounted(() => {
+    const mapSelector = document.querySelector(".map-on-steroids-opener");
+    mapSelector.style.visibility = "hidden";
+    mapSelector.style.position = "fixed";
+});
+
+onUnmounted(() => {
+    const mapSelector = document.querySelector(".map-on-steroids-opener");
+    mapSelector.style.visibility = "visible";
+    mapSelector.style.position = "relative";
+
+})
 
 let highlightedArea = ref(null);
 
@@ -41,7 +61,11 @@ function resetHighlight() {
 }
 
 const barbecueStore = useBarbecueStore();
+const authStore = useAuthStore();
 const barbecue = barbecueStore.barbecue;
+console.log('Barbecue', barbecue);
+
+const coordinates = ref([barbecue.latitude, barbecue.longitude]);
 
 const form = useForm({
     user_id: null,
@@ -50,6 +74,7 @@ const form = useForm({
 const inviteUser = (friendId) => {
     form.user_id = friendId;
     form.post('/sendinvitation/' + barbecue.id);
+    highlightArea('usersinvite');
 }
 
 const deleteMember = (memberId) => {
@@ -57,6 +82,73 @@ const deleteMember = (memberId) => {
     form.delete('/destroyfriendship/' + barbecue.id);
     console.log('Delete member', memberId);
 }
+
+function addEvent() {
+    var eventTitle = barbecue.title;
+    var eventDescription = barbecue.content;
+    var dateString = barbecue.date;
+    var date = parseFormatDateFromString(dateString);
+    var longitude = barbecue.longitude;
+    var latitude = barbecue.latitude;
+
+    const startDate = date;
+    const endDate = new Date(date);
+    endDate.setHours(endDate.getHours() + 2);
+    const summary = `${eventTitle}`;
+    const description = eventDescription;
+    const location = `${latitude},${longitude}`;
+
+    const encodedSummary = encodeURIComponent(summary);
+    const encodedDescription = encodeURIComponent(description);
+    const encodedLocation = encodeURIComponent(location);
+
+    const googleCalendarURL = `https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${changeFormatDate(startDate)}/${changeFormatDate(endDate)}&text=${encodedSummary}&details=${encodedDescription}&location=${encodedLocation}`;
+
+    window.open(googleCalendarURL);
+}
+
+function parseFormatDateFromString(dateString) {
+    const [datePart, timePart] = dateString.split(' ');
+    const [day, month, year] = datePart.split('/');
+    const [hours, minutes] = timePart.slice(0, -1).split(':');
+
+    const date = new Date(year, month - 1, day, hours, minutes);
+
+    const dateFormatted = date.toISOString();
+
+    const fullDate = dateFormatted.split('T')[0] + 'T' + hours + ':' + minutes + ':00Z';
+
+    return fullDate;
+}
+
+function changeFormatDate(date) {
+    const dateObject = new Date(date);
+    const dateWithoutSeconds = dateObject.toISOString().slice(0, -5);
+    const addedZ = dateWithoutSeconds + 'CET';
+
+    return addedZ.replace(/[-:.]/g, '');
+}
+
+
+
+
+const formProduct = useForm({
+    member_id: null,
+    product_id: null,
+    basket_product_id: null,
+});
+
+const assignProduct = (productId, memberId, basketProductId) => {
+    formProduct.product_id = productId;
+    formProduct.member_id = memberId;
+    formProduct.basket_product_id = basketProductId;
+    formProduct.post('/assignproduct/' + barbecue.id);
+    formProduct.reset();
+    highlightArea('null');
+
+}
+
+
 
 </script>
 
@@ -66,31 +158,36 @@ const deleteMember = (memberId) => {
             'selected': highlightedArea === 'baskets',
             'notSelected': highlightedArea !== 'baskets' && highlightedArea !== null
         }">
-
             <div class="flex justify-between items-center">
-                <h1>
-                    CISTELLA</h1>
-                <div v-if="highlightedArea === 'baskets'">
-                    <button class="p-4" @click="resetHighlight">
+                <div class="flex flex-col">
+                    <h1>
+                        CISTELLA</h1>
+                    <p class="relative text">
+                        Descobreix tots els productes
+                    </p>
+                </div>
+                <div v-if="highlightedArea === 'baskets'" class="flex items-center mr-2">
+                    <button class="p-2  hover:bg-orange-500 rounded-full" @click="resetHighlight">
                         <img src="/assets/svg/deshacer.svg" alt="Desfer" class="img-fluid" style="width: 20px;">
                     </button>
+                    <AddProductModal @click="highlightArea('baskets')" />
                 </div>
             </div>
+
             <div v-if="highlightedArea !== 'baskets'">
                 <div class="img">
-                    <img src="/assets/img/foodbaskets.png" alt="Cistella" class="img-fluid">
+                    <img src="/assets/img/foodbaskets.png" alt="Hamburguesa" class="img-fluid">
                 </div>
             </div>
             <div v-if="highlightedArea === 'baskets'">
-                <div class="grid-baskets" v-if="barbecue.basket.basket_product.length > 0">
+                <div class="grid-baskets"
+                    v-if="barbecue && barbecue.basket && barbecue.basket.basket_product && barbecue.basket.basket_product.length > 0">
                     <div class="title-grid-baskets">
                         <p class="product">Productes</p>
                         <p class="quantity">Quantitat</p>
                         <p class="price">Preu</p>
+                        <p class="price"></p>
                     </div>
-
-
-
 
                     <div class="grid-info">
                         <div class="producte1"
@@ -98,26 +195,72 @@ const deleteMember = (memberId) => {
                             :key="item.product.id">
                             <p class="w-2/5">
                                 {{ item.product.name }}</p>
-                            <p> {{ barbecue.basket.basket_product.filter(basket => basket.product.id ===
-                                item.product.id).length }} </p>
+                            <p> {{ item.quantity }} </p>
                             <p class="w-1/3 text-right">
                                 {{ item.product.price }} €</p>
+
+                            <div class="dropdown dropdown-end">
+                                <div tabindex="0" role="button" class="" @click.stop>
+                                    <img :src="item.user.image" alt="Usuari" class="img-fluid rounded-full "
+                                        style="width: 25px; height: 25px;">
+                                </div>
+                                <div tabindex="0"
+                                    class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-[300px]">
+                                    <p class="title text-center color-[#ff5e00] mt-1">
+                                        Asigna el producte a un membre del grup</p>
+
+                                    <div class="flex items-center gap-2 bg-white p-1 mb-2 mt-2 w-full ">
+
+                                        <Link
+                                            class="flex items-center bg-white gap-2 rounded-full w-full cursor-pointer">
+                                        <img :src="item.user.image" alt=""
+                                            class="fit-content !h-10 !w-10 rounded-full object-cover">
+                                        <p>{{ item.user.name }} </p>
+
+
+
+                                        </Link>
+
+
+                                        <div class="flex justify-end w-full">
+                                            <div
+                                                class="badge badge-outline border-transparent text-[#ff5e00] justify-end">
+                                                Asignat
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="members" v-for="member in $page.props.members" :key="member.id" >  
+                                        <form @click="assignProduct(item.product.id, member.id, item.id)">
+                                            <div
+                                                class="flex items-center gap-2 bg-white p-1 rounded-full mb-2 w-full members-asignar">
+                                                <div
+                                                    class="flex items-center bg-white gap-2 rounded-full  w-full cursor-pointer hover-members">
+                                                    <img :src="member.image" alt=""
+                                                        class="fit-content !h-10 !w-10 rounded-full object-cover">
+                                                    <p>{{ member.name }} </p>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="grid-baskets" v-else>
-                    <h1>No hi ha productes a la cistella</h1>
+                <div class="grid-baskets !align-left" v-else>
+                    <h1 class="!pl-0">
+                        No hi ha productes a la cistella</h1>
                 </div>
-
-
-                <div class="total">
-                    <p>Total: </p>
+                <div class="total" v-if="barbecue && barbecue.basket && barbecue.basket.basket_product">
+                    <p class="!text-lg">
+                        Total: </p>
 
                     <h1>
                         {{
                             barbecue.basket.basket_product.reduce(
-                                (total, item) => total + parseFloat(item.product.price),
+                                (total, item) => total + parseFloat(item.product.price) * item.quantity,
                                 0
                             ).toFixed(2)
                         }}
@@ -127,29 +270,30 @@ const deleteMember = (memberId) => {
             </div>
         </div>
 
-
-
-
-
         <div class="dates" :class="{
-
             'notSelected': highlightedArea !== 'dates' && highlightedArea !== null
-        }">
+        }" @click="addEvent">
+            <!-- get the date 1/01/2024 in 1/01/2024 18:00h on barbacue.date -->
+            <h2 v-if="barbecue.date">{{ barbecue.date.split(' ')[0] }}</h2>
+            <h1 v-if="barbecue.date">{{ barbecue.date.split(' ')[1] }}</h1>
+            <h2 class="" v-else="barbecue.date">No hi ha cap data programada!!</h2>
 
-            <h1>24 d'abril de
-                <br>
-                2021
-            </h1>
-            <h2>
-                12:00h
-            </h2>
         </div>
-        <div class="maps" @click="highlightArea('maps')" :class="{
+
+        <div class="maps" :class="{
             'selected': highlightedArea === 'maps',
             'notSelected': highlightedArea !== 'maps' && highlightedArea !== null
         }">
-            <img src="/assets/img/map.png" alt="Mapa" class="img-fluid">
+            <img src="/assets/img/map.png" alt="Mapa" class="img-fluid hidden" @click="handleMapClick">
+            <MapOnSteroids v-model="coordinates" :offsetX="-245" :offsetY="300" />
+
+            <iframe class="w-full h-50 mapagoogle"
+                :src="'https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d877.7659237744726!2d' + barbecue.longitude + '!3d' + barbecue.latitude + '!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses!2ses!4v1715779032596!5m2!1ses!2ses'"
+                width="" height="200" style="border:0;" allowfullscreen="" loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
         </div>
+
         <div class="costs" :class="{
 
             'notSelected': highlightedArea !== 'costs' && highlightedArea !== null
@@ -159,7 +303,13 @@ const deleteMember = (memberId) => {
 
                 <div class="total">
                     <p>Total</p>
-                    <h1>25 <span>€</span></h1>
+                    <h1 v-if="barbecue.basket?.basket_product">{{
+                        barbecue.basket.basket_product.reduce(
+                            (total, item) => total + parseFloat(item.product.price),
+                            0
+                        ).toFixed(2)
+                    }}<span>€</span></h1>
+                    <h1 v-else>0 €</h1>
                 </div>
             </div>
 
@@ -169,11 +319,19 @@ const deleteMember = (memberId) => {
 
                 <div class="pay">
                     <p>A pagar</p>
-                    <h1>25 <span>€</span>
-                    </h1>
+
+                    <h1 v-if="barbecue.basket?.basket_product">{{
+                        (barbecue.basket.basket_product.reduce(
+                            (total, item) => total + parseFloat(item.product.price),
+                            0
+                        ) / $page.props.members.length).toFixed(2)
+                    }}<span>€</span></h1>
+                    <h1 v-else>0 €</h1>
+
                 </div>
             </div>
         </div>
+
         <div class="users" :class="{
             'selected': highlightedArea === 'users' || highlightedArea === 'usersinvite',
             'notSelected': highlightedArea !== 'users' && highlightedArea !== null && highlightedArea !== 'usersinvite' && highlightedArea !== null
@@ -189,23 +347,24 @@ const deleteMember = (memberId) => {
                     <p>
                         Veure tots els usuaris inscrits
                     </p>
-                    <img src="/assets/svg/arrow-right.svg" alt="Fletxa dreta" class="img-fluid">
+                    <img src="/assets/svg/arrow-right.svg" alt="Fletxa dreta" class="img-fluid bounce-left">
                 </div>
 
                 <div v-if="highlightedArea === 'users'" v-for="member in $page.props.members" :key="member.id">
                     <div class="flex items-center gap-2 bg-white p-1 rounded-xl mb-2 w-full mt-2">
+                        <Link :href="route('profile.show', member.id)"
+                            class="flex items-center bg-white gap-2 rounded-xl  w-full cursor-pointer">
 
                         <img :src="member.image" alt="" class="fit-content h-10 w-10 rounded-full object-cover">
                         <div class="flex flex-row items-center gap-1 w-full">
                             <p>
                                 {{ member.name }}
                             </p>
-                            <p>
-                                {{ member.surnames }}
-                            </p>
-                        </div>
 
-                        <div class="flex justify-end" v-if="member.id !== barbecue.user_id">
+                        </div>
+                        </Link>
+                        <div class="flex justify-end w-1/2"
+                            v-if="member.id !== barbecue.user_id && barbecue.friendships.find(friendship => friendship.user_id === member.id && friendship.is_admin === 0)">
                             <Link @click="deleteMember(member.id)" class="flex items-center pr-1">
                             <button title="Add New" class="group cursor-pointer outline-none hover:rotate-[135deg]
                                 duration-300 rotate-45">
@@ -221,9 +380,10 @@ const deleteMember = (memberId) => {
                             </Link>
                         </div>
 
-                        <div v-if="member.id === barbecue.user_id" class="flex justify-end w-full">
+                        <div v-if="member.id === barbecue.user_id || barbecue.friendships.find(friendship => friendship.user_id === member.id && friendship.is_admin === 1)"
+                            class="flex justify-end w-full">
 
-                            <div class="badge badge-outline border-transparent text-pink-400 ">
+                            <div class="badge badge-outline border-transparent text-[#ff5e00] ">
                                 Admin</div>
 
                         </div>
@@ -231,21 +391,27 @@ const deleteMember = (memberId) => {
                     </div>
                 </div>
             </div>
-
-            <div class="inviteusers" @click="highlightArea('usersinvite')" :class="{
-                'selected': highlightedArea === 'usersinvite',
-                'notSelected': highlightedArea !== 'usersinvite' && highlightedArea !== null
-            }">
-                <div class="usersdiv">
+            <div class="inviteusers"
+                v-if="authStore.user.id === barbecue.user_id || barbecue.friendships.find(friendship => friendship.user_id === authStore.user.id && friendship.is_admin === 1)"
+                @click="highlightArea('usersinvite')" :class="{
+                    'selected': highlightedArea === 'usersinvite',
+                    'notSelected': highlightedArea !== 'usersinvite' && highlightedArea !== null
+                }">
+                <div class="usersdiv mb-2">
                     <p>
                         Invitar als teus amics
                     </p>
-                    <img src="/assets/svg/arrow-right.svg" alt="Fletxa dreta" class="img-fluid">
+                    <img src="/assets/svg/arrow-right.svg" alt="Fletxa dreta" class="img-fluid bounce-left">
                 </div>
-                <div v-for="friend in friends" :key="friend.id" v-if="highlightedArea === 'usersinvite'">
-                    <div class="flex items-center gap-2 bg-white p-1 rounded-xl mb-2 w-full">
+                <div v-for="friend in friends" :key="friend.id" v-if="highlightedArea === 'usersinvite'"
+                    class="overflow-y-auto cursor-default">
+                    <div class="flex items-center gap-2 bg-white p-1 rounded-xl mb-2 w-full ">
+
+                        <Link :href="route('profile.show', friend.id)" @click="highlightArea('usersinvite')"
+                            class="flex items-center bg-white gap-2 rounded-xl  w-full cursor-pointer">
                         <img :src="friend.image" alt="" class="fit-content h-10 w-10 rounded-full object-cover">
                         <p>{{ friend.name }} </p>
+                        </Link>
 
                         <div class="flex justify-end w-full">
                             <Link @click="inviteUser(friend.id)" class="flex items-center pr-1">
@@ -271,25 +437,38 @@ const deleteMember = (memberId) => {
 </template>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+
 .baskets {
     grid-area: baskets;
     width: 100%;
-    background: rgb(255, 189, 148);
-    background: linear-gradient(140deg, rgba(255, 189, 148, 1) 0%, rgba(255, 97, 0, 1) 100%);
+    background: #f2f2f2;
     border-radius: 10px;
     cursor: pointer;
 
     h1 {
         font-size: 1.5rem;
-        color: #9B3B00;
-        font-weight: bold;
+        color: #ff5e00;
         margin-left: 5px;
         padding-left: 15px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
         padding-top: 10px;
     }
 
+    .text {
+        font-size: 0.7rem;
+        color: #ff5e00;
+        font-weight: 500;
+        padding-left: 20px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
     img {
-        width: 250px;
+        object-fit: cover;
+        width: 240px;
     }
 
     .img {
@@ -297,6 +476,7 @@ const deleteMember = (memberId) => {
         justify-content: flex-end;
         padding-right: 10px;
         padding-bottom: 10px;
+        height: 110px;
     }
 
     .grid-baskets {
@@ -310,7 +490,7 @@ const deleteMember = (memberId) => {
     .title-grid-baskets {
 
         color: #9B3B00;
-        font-weight: bold;
+        font-weight: 600;
         display: flex;
         justify-content: space-between;
         padding: 10px;
@@ -323,13 +503,12 @@ const deleteMember = (memberId) => {
         flex-direction: column;
         justify-content: center;
         align-items: center;
-
         width: 100%;
     }
 
-    .producte1,
-    .producte2,
-    .producte3 {
+
+
+    .producte1 {
         background-color: rgba(255, 255, 255, 0.5);
         border-radius: 10px;
         display: flex;
@@ -338,8 +517,16 @@ const deleteMember = (memberId) => {
         width: 100%;
         padding: 5px;
         margin-bottom: 10px;
+        align-items: center;
+
+        p {
+            align-items: center !important;
+        }
     }
 
+    .producte1:hover {
+        background-color: #ffffff;
+    }
 
     .total {
         display: flex;
@@ -359,32 +546,42 @@ const deleteMember = (memberId) => {
         padding: 0;
     }
 
+    .product,
+    .quantity,
+    .price {
+        font-size: 0.9rem;
+        font-weight: 600;
+        padding: 0;
+        color: #9B3B00;
+    }
 }
-
 
 .dates {
     grid-area: dates;
-    background: rgb(255, 255, 255);
-    background: linear-gradient(140deg, rgb(223, 248, 255) 0%, rgb(44, 181, 215) 100%);
-    padding: 15px;
-    width: 100%;
+    background: #f2f2f2;
+    padding: 10px;
+    width: auto;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    height: 100%;
 
     h1 {
-        font-size: 1.6rem;
-        color: #073e48;
-        font-weight: bold;
+        font-size: 1.4rem;
+        color: #020202;
+        font-weight: 600;
         text-align: center;
+        font-family: 'Montserrat', sans-serif;
     }
 
     h2 {
-        font-size: 1.2rem;
-        color: #000000;
+        display: flex;
+        
+        font-size: 0.9rem;
+        color: #ff5e00;
         font-weight: bold;
     }
 
@@ -401,12 +598,12 @@ const deleteMember = (memberId) => {
 
 .costs {
     grid-area: costs;
-    background: rgb(57, 255, 0);
-    background: linear-gradient(140deg, rgba(57, 255, 0, 1) 0%, rgba(255, 235, 0, 1) 100%);
+    background: #f2f2f2;
     padding: 10px;
     width: 100%;
     border-radius: 10px;
     cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
 
     .top {
         display: flex;
@@ -417,8 +614,8 @@ const deleteMember = (memberId) => {
 
         h1 {
             font-size: 1.5rem;
-            color: #0D5C00;
-            font-weight: bolder;
+            color: #ff5e00;
+            font-weight: 600;
         }
 
         .total {
@@ -429,12 +626,12 @@ const deleteMember = (memberId) => {
             p {
                 font-size: 0.9rem;
                 color: #ff5e00;
-                font-weight: bolder;
+                font-weight: 600;
             }
 
             h1 {
                 font-size: 1rem;
-                color: #0D5C00;
+                color: #000000;
                 font-weight: bolder;
             }
         }
@@ -460,13 +657,13 @@ const deleteMember = (memberId) => {
             p {
                 font-size: 1rem;
                 color: #ff5e00;
-                font-weight: bolder;
+                font-weight: 600;
                 padding-right: 35px;
             }
 
             h1 {
                 font-size: 3rem;
-                color: #0D5C00;
+                color: #000000;
                 font-weight: bolder;
             }
 
@@ -483,8 +680,8 @@ const deleteMember = (memberId) => {
 
 .users {
     grid-area: users;
-    background: rgb(192, 0, 255);
-    background: linear-gradient(140deg, rgb(173, 129, 188) 0%, rgb(206, 84, 204) 100%);
+    font-family: 'Montserrat', sans-serif;
+    background: #f2f2f2;
     padding: 10px;
     width: 100%;
     border-radius: 10px;
@@ -492,23 +689,23 @@ const deleteMember = (memberId) => {
 
     h1 {
         font-size: 1.5rem;
-        color: #4e003d;
-        font-weight: bold;
+        color: #ff5e00;
+        font-weight: 600;
         text-align: start;
-        padding-left: 15px;
+        padding-left: 10px;
     }
 
     .usersdiv {
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        padding: 10px;
+        padding: 10px 0px 10px 10px;
         gap: 10px;
 
         p {
             font-size: 1rem;
-            color: #340029;
-            font-weight: bold;
+            color: #000000;
+            font-weight: 500;
         }
 
         img {
@@ -519,29 +716,36 @@ const deleteMember = (memberId) => {
     .usersdiv:hover {
         background-color: rgba(255, 255, 255, 0.5);
         border-radius: 10px;
-
     }
 }
-
 
 
 .grid-aside {
     display: grid;
     grid-template-areas:
         'baskets baskets'
-        'dates maps'
+        'dates dates'
+        'maps maps'
         'costs costs'
         'users users';
     grid-gap: 10px;
     padding: 10px;
     width: 100%;
-    height: 100%;
+    height: max-content;
 }
-
-/* selected is true */
-.baskets.selected {}
 
 .notSelected {
     display: none;
+}
+.mapagoogle{
+    border-radius: 10px;
+}
+.members-asignar:hover {
+    background-color: #f0f0f0;
+
+    .hover-members {
+        background-color: #f0f0f0;
+
+    }
 }
 </style>

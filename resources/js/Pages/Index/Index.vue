@@ -91,7 +91,6 @@ const getCookie = (name) => {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    margin-top: 20px;
 }
 
 </style>

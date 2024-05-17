@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useAuthStore } from "@/stores/auth";
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import { useProfileStore } from "@/stores/profile";
@@ -52,32 +52,53 @@ function closeModal() {
     showModal.value = false;
 }
 
+function cancelChangeImage() {
+    form.image = [];
+    const imagesNamesElement = document.getElementById('logoImage');
+    imagesNamesElement.innerHTML = '';
+
+    closeModal();
+}
+
 const handleFileChange = (event) => {
     const file = event.target.files[0];
     form.image = file;
+
+    const fileName = file.name;
+
+    const logoImageDiv = document.getElementById('logoImage');
+
+    const fileNameParagraph = document.createElement('p');
+
+    fileNameParagraph.textContent = fileName;
+
+    logoImageDiv.appendChild(fileNameParagraph);
 };
 
+
 const updateUserPhoto = () => {
-    // showModal.value = false;
-    // let id = profileStore.user.id;
-    // let formData = new FormData();
-    // formData.append('image', form.image); 
-
-    // form.post(route('updateuserphoto', id), formData); 
-
     let id = profileStore.user.id;
     let formData = new FormData();
+
     formData.append('image', form.image);
     profileStore.user.image = URL.createObjectURL(form.image);
     showModal.value = false;
-    form.post(route('updateuserphoto', id), {
-        ...formData,
-        onSuccess: () => {
+
+    axios.post(route('updateuserphoto', id), formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+        .then(response => {
+            const imagesNamesElement = document.getElementById('logoImage');
+            imagesNamesElement.innerHTML = '';
+
             authStore.updateUserData();
             analyzeImageColors(profileStore.user.image);
-        }
-    });
-
+        })
+        .catch(error => {
+            console.log(error);
+        });
 };
 
 const togglePrivateOrPublic = () => {
@@ -92,43 +113,85 @@ const togglePrivateOrPublic = () => {
 }
 
 
+const bgcolor1 = ref('#f8f9fa');
+const bgcolor2 = ref('#e9ecef');
+const bgcolor3 = ref('#dee2e6');
 
-const bgcolor1 = ref('');
-const bgcolor2 = ref('');
-const bgcolor3 = ref('');
 
 onMounted(() => {
     analyzeImageColors(profileStore.user.image);
 });
 
 async function analyzeImageColors(imageUrl) {
-  const colorThief = new ColorThief();
-  const img = new Image();
-  img.crossOrigin = 'Anonymous';
-  img.src = imageUrl;
-  
-  img.onload = () => {
-    const [color1, color2, color3] = colorThief.getPalette(img, 3);
-    bgcolor1.value = rgbToHex(color1[0], color1[1], color1[2]);
-    bgcolor2.value = rgbToHex(color2[0], color2[1], color2[2]);
-    bgcolor3.value = rgbToHex(color3[0], color3[1], color3[2]);
-  };
+    const colorThief = new ColorThief();
+    const img = new Image();
+
+    img.src = imageUrl;
+
+    img.onload = () => {
+        const [color1, color2, color3] = colorThief.getPalette(img, 3);
+        bgcolor1.value = rgbToHex(color1[0], color1[1], color1[2]);
+        bgcolor2.value = rgbToHex(color2[0], color2[1], color2[2]);
+        bgcolor3.value = rgbToHex(color3[0], color3[1], color3[2]);
+    };
 }
 
 function rgbToHex(r, g, b) {
-  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 }
+
+
+
+
+//
+
+const isSaving = ref(false);
+let timeoutId = null;
+
+function saveDescription() {
+    console.log('saveDescription');
+    isSaving.value = true;
+
+    if (timeoutId !== null) {
+        clearTimeout(timeoutId);
+    }
+
+    timeoutId = setTimeout(() => {
+
+        isSaving.value = false;
+        console.log('Guardat!');
+        console.log(profileStore.user.description);
+
+        let id = authStore.user.id;
+        axios.post(route('updateuserdescription', id), {
+            description: profileStore.user.description
+        })
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+    }, 1500);
+}
+
+watch(() => profileStore.user.description, (newValue) => {
+    if (newValue.length > 100) {
+        profileStore.user.description = newValue.slice(0, 100);
+    }
+});
+
 </script>
 
 <template>
     <div v-if="profileStore.user && authStore.user">
 
-        <div class="background w-full h-[150px] bg-cover bg-no-repeat bg-center rounded-t-[20px]" :style="{ backgroundImage: `linear-gradient(to right, ${bgcolor1}, ${bgcolor2}, ${bgcolor3})` }"></div>
+        <div class="background w-full h-[150px] bg-cover bg-no-repeat bg-center rounded-t-[20px]"
+            :style="{ backgroundImage: `linear-gradient(to right, ${bgcolor1}, ${bgcolor2}, ${bgcolor3})` }"></div>
 
+        <div class="relative flex flex-1 w-full bg-white pb-2 pr-4 pl-4 pt-4">
 
-
-        <div class="relative flex flex-1 w-full bg-white rounded-b-[20px] p-4">
-            
             <div style="margin-top: -6rem;">
 
                 <div v-if="profileStore.user.id == authStore.user.id">
@@ -150,7 +213,8 @@ function rgbToHex(r, g, b) {
                     <dialog id="my_modal_3" class="modal" :open="showModal" @click.self="closeModal">
                         <div class="modal-box">
                             <form @submit.prevent="closeModal" method="dialog">
-                                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                                    @click="cancelChangeImage">
                                     ✕
                                 </button>
                             </form>
@@ -177,13 +241,17 @@ function rgbToHex(r, g, b) {
                                         <span>Click per seleccionar una imatge</span>
                                     </div>
 
-                                    <input type="file" id="file" name="image" @change="handleFileChange">
+                                    <div class="text" id="logoImage">
+                                    </div>
+
+                                    <input type="file" id="file" name="image" @change="handleFileChange"
+                                        accept="image/*">
 
                                 </label>
 
                                 <div class="flex justify-center mt-4 space-x-4">
                                     <button class="btn" type="submit">Guardar</button>
-                                    <button class="btn " @click="closeModal">Cancelar</button>
+                                    <button class="btn" @click="cancelChangeImage">Cancelar</button>
                                 </div>
 
                             </form>
@@ -201,9 +269,44 @@ function rgbToHex(r, g, b) {
 
             </div>
             <div class="flex flex-col text-left">
-                <h1 class="text-2xl font-bold text-gray-800">
-                    {{ profileStore.user.name }} {{ profileStore.user.surnames }}
-                </h1>
+                <div class="flex">
+                    <h1 class="text-2xl font-bold text-gray-800 ">
+                        {{ profileStore.user.name }} {{ profileStore.user.surnames }}
+                    </h1>
+
+                    <div class="flex">
+                        <div v-if="profileStore.user.vegetarian"
+                            class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md bg-gray-50">
+                            <img src="/assets/img/intolerance/vegetarian.png" class="h-7" alt="">
+                            <p class="font-semibold text-green-700">Vegetarià</p>
+                        </div>
+                        <div v-if="profileStore.user.lactose"
+                            class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md tooltip bg-gray-50"
+                            data-tip="Intolerant a la lactosa">
+                            <img src="/assets/img/intolerance/lactose.png" class="h-7" alt="">
+                            <p class="font-semibold text-blue-400">Lactosa</p>
+                        </div>
+                        <div v-if="profileStore.user.gluten"
+                            class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md tooltip bg-gray-50"
+                            data-tip="Intolerant al gluten">
+                            <img src="/assets/img/intolerance/gluten.png" class="h-7" alt="">
+                            <p class="font-semibold text-yellow-600">Gluten</p>
+                        </div>
+                        <div v-if="profileStore.user.spicy"
+                            class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md tooltip bg-gray-50"
+                            data-tip="Intolerant al picant">
+                            <img src="/assets/img/intolerance/spicy.png" class="h-7" alt="">
+                            <p class="font-semibold text-red-700">Picant</p>
+                        </div>
+                        <div v-if="profileStore.user.halal"
+                            class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md bg-gray-50">
+                            <img src="/assets/img/intolerance/halal.png" class="h-7" alt="">
+                            <p class="font-semibold text-black">Halal</p>
+                        </div>
+
+                    </div>
+
+                </div>
 
                 <div class="flex items-center content-center">
                     <img src="/assets/svg/marcador.svg" alt="Marcador" class="w-3 mr-1">
@@ -303,13 +406,65 @@ function rgbToHex(r, g, b) {
 
                         </div>
                     </div>
+
                 </div>
+
             </div>
+
+
         </div>
+        <div class="userdescription bg-white rounded-b-[20px] ">
+            <div class="" v-if="profileStore.user.description && profileStore.user.id != authStore.user.id">
+                <p class="">{{ profileStore.user.description }}</p>
+            </div>
+            <div v-if="profileStore.user.id == authStore.user.id">
+                <div class="input-container flex ">
+                    <div class="underlineinput flex w-full">
+                        <input type="text" id="animated-input" class="outline-none bg-transparent border-none w-full "
+                            v-model="profileStore.user.description" @input="saveDescription"
+                            placeholder="Escriu la teva descripció..." />
+                        <span v-if="isSaving" class="loading loading-spinner loading-xs"></span>
+                    
+                            <span v-if="profileStore.user.description" :class="{ 'text-red-500 font-bold': profileStore.user.description.length === 100 }"
+                            class="char-count">
+                            {{ profileStore.user.description.length }}/100
+                        </span>
+                        
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+
     </div>
 </template>
 
 <style scoped>
+@keyframes slideIn {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+.underlineinput {
+    border-bottom: 0.5px solid rgb(197, 197, 197);
+    font-style: italic;
+}
+
+#animated-input {
+    animation: slideIn 0.5s forwards;
+}
+
+
+.char-count {}
+
+
 .avatar .image-container {
     position: relative;
     overflow: hidden;
@@ -339,7 +494,7 @@ function rgbToHex(r, g, b) {
     cursor: pointer;
 }
 
-.background {}
+
 
 .modal {
     background-color: rgba(0, 0, 0, 0.5);
@@ -394,5 +549,12 @@ function rgbToHex(r, g, b) {
 .custum-file-upload:hover svg {
     transform: scale(1.2);
     filter: brightness(0%);
+}
+
+.userdescription {
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 15px;
+    font-style: italic;
 }
 </style>

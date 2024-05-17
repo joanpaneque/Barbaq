@@ -43,7 +43,10 @@ class UserController extends Controller
 
     public function apiShowLogged()
     {
-        $user = User::with('notifications','friends')->where('id', auth()->id())->first();
+        $user = User::with('friends', 'barbecuesFriendships', 'products')->where('id', auth()->id())->first();
+        
+        $user['notifications'] = $user->notifications();
+        
             return response()->json($user);
     }
 
@@ -79,6 +82,16 @@ class UserController extends Controller
         //reload the page
         
         
+    }
+
+
+    public function updateDescription(Request $request, string $id)
+    {
+        $user = User::findOrFail($id);
+        $user->description = $request->description;
+        $user->save();
+
+        return redirect()->back();
     }
 
     public function togglePrivate()

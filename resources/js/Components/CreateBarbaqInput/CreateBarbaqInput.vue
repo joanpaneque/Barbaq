@@ -1,6 +1,5 @@
 <script setup>
-import { ref } from 'vue';
-import { createApp } from 'vue'
+import { ref, createApp, onMounted } from 'vue';
 import { QuillEditor } from '@vueup/vue-quill'
 import { useAuthStore } from "@/stores/auth";
 import { useBarbecueStore } from '@/stores/barbecue';
@@ -8,30 +7,93 @@ import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import { useForm } from '@inertiajs/vue3';
 import axios from 'axios';
 
+
 const authStore = useAuthStore();
 const barbecueStore = useBarbecueStore();
-
 
 const app = createApp()
 app.component('QuillEditor', QuillEditor)
 
 const isOpen = ref(false);
+const showModalLocation = ref(false);
+const showModalCalendar = ref(false);
+const showModalImages = ref(false);
+
 const quillContent = ref(null);
 
 const barbecueForm = useForm({
     title: '',
     content: '',
-    latitude: '123',
-    longitude: '123',
-    address: '123',
+    latitude: '',
+    longitude: '',
+    address: '',
     date: '',
 });
 
-const toggleDropdown = () => {
+const openDropdown = () => {
     if (!isOpen.value) {
         isOpen.value = true;
     }
 };
+
+const closeDropdown = () => {
+    if (isOpen.value) {
+        isOpen.value = false;
+    }
+};
+
+function cancelDate() {
+    dateForm.day = '';
+    dateForm.month = '';
+    dateForm.year = '';
+    dateForm.hour = '';
+    dateForm.minute = '';
+
+    closeModalCalendar();
+};
+
+function openModalLocation() {
+    showModalLocation.value = true;
+}
+
+function closeModalLocation() {
+    showModalLocation.value = false;
+}
+
+function cancelLocation() {
+    barbecueForm.latitude = '';
+    barbecueForm.longitude = '';
+    barbecueForm.address = '';
+
+    closeModalLocation();
+};
+
+function openModalCalendar() {
+    showModalCalendar.value = true;
+}
+
+function closeModalCalendar() {
+    const stringDate = `${dateForm.day}/${dateForm.month}/${dateForm.year} ${dateForm.hour}:${dateForm.minute}h`;
+    barbecueForm.date = stringDate;
+
+    showModalCalendar.value = false;
+}
+
+function openModalImages() {
+    showModalImages.value = true;
+}
+
+function closeModalImages() {
+    showModalImages.value = false;
+}
+
+function cancelImages() {
+    imagesForm.image = [];
+    const imagesNamesElement = document.getElementById('imagesNames');
+    imagesNamesElement.innerHTML = '';
+
+    closeModalImages();
+}
 
 const submitBarbecueForm = () => {
     barbecueForm.content = quillContent.value.getHTML();
@@ -103,21 +165,11 @@ const submitBarbecueForm = () => {
         })
 };
 
-const showModalImages = ref(false);
-
-function openModalImages() {
-    showModalImages.value = true;
-}
-
-function closeModalImages() {
-    showModalImages.value = false;
-}
-
 const imagesForm = useForm({
     image: [],
 });
 
-const handleFileChange = (event) => {
+const handleImagesChange = (event) => {
     imagesForm.image = event.target.files;
 
     const fileList = Array.from(imagesForm.image);
@@ -129,27 +181,6 @@ const handleFileChange = (event) => {
 
     console.log("Selected images:", imagesForm.image);
 };
-
-function cancelImages() {
-    imagesForm.image = [];
-    const imagesNamesElement = document.getElementById('imagesNames');
-    imagesNamesElement.innerHTML = '';
-
-    closeModalImages();
-}
-
-const showModalCalendar = ref(false);
-
-function openModalCalendar() {
-    showModalCalendar.value = true;
-}
-
-function closeModalCalendar() {
-    const stringDate = `Dia ${dateForm.day}/${dateForm.month}/${dateForm.year} a les ${dateForm.hour}:${dateForm.minute}h`;
-    barbecueForm.date = stringDate;
-
-    showModalCalendar.value = false;
-}
 
 const currentYear = new Date().getFullYear();
 const numberOfYears = 2;
@@ -166,30 +197,120 @@ const dateForm = useForm({
     minute: '',
 });
 
-function cancelDate() {
-    dateForm.day = '';
-    dateForm.month = '';
-    dateForm.year = '';
-    dateForm.hour = '';
-    dateForm.minute = '';
+const locations = ref([]);
+const ul = ref(null);
 
-    closeModalCalendar();
+const getData = async () => {
+    try {
+        const response = await axios.get(
+            `https://api.opencagedata.com/geocode/v1/json?q=Catalunya, ${barbecueForm.address}&key=eccf391632f347fab191d32ea7c72b34&language=ca`,
+        );
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
 };
+
+const actualitzarCerca = async () => {
+    try {
+        const response = await getData();
+        locations.value = response.results;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+function parseCoords(lat, lng) {
+    const f = (c) => {
+        const parts = c.match(/[0-9.]+|[NSWE]+/g);
+        const degrees = parseFloat(parts[0]);
+        const minutes = parseFloat(parts[1]);
+        const seconds = parseFloat(parts[2]);
+        const direction = parts[3];
+
+        let decimal = degrees + minutes / 60 + seconds / 3600;
+
+        if (direction === 'S' || direction === 'W') {
+            decimal = -decimal;
+        }
+        return decimal;
+    };
+
+    return {
+        latitude: f(lat),
+        longitude: f(lng)
+    };
+}
+
+function selectAddress(event) {
+    const ul = event.target.parentElement;
+    ul.style.display = 'none';
+
+    barbecueForm.address = event.target.innerText;
+    let lat = event.target.getAttribute('lat');
+    let lng = event.target.getAttribute('lng');
+
+    const coords = parseCoords(lat, lng);
+
+    barbecueForm.latitude = coords.latitude;
+    console.log('Latitut: ' + barbecueForm.latitude);
+
+    barbecueForm.longitude = coords.longitude;
+    console.log('Longitud: ' + barbecueForm.longitude);
+}
+
+onMounted(() => {
+    getData()
+        .then((response) => {
+            locations.value = response.results;
+            console.log(locations.value);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+});
+
+function showSearch() {
+    if (ul.value.style.display === 'none') {
+        ul.value.style.display = 'block';
+    }
+}
+
+function showNoSearch() {
+    ul.style.display = 'none';
+}
 
 </script>
 
 <template>
 
-    <form @submit.prevent="submitBarbecueForm" class="dropdown " :class="{ open: isOpen }" @click="toggleDropdown"
-        v-if="authStore.user">
+    <form 
+        @submit.prevent="submitBarbecueForm" 
+        class="dropdown mb-5"
+        :class="{ open: isOpen }"
+        v-if="authStore.user"
+    >
         <div class="flex">
             <img :src="authStore.user.image" alt="Foto de perfil" class="mr-2 h-16 w-16 rounded-full imgprofile">
             <div class="w-full mt-auto mb-auto ">
                 <div class="input-container">
-                    <input type="text" placeholder="Crear nova barbacoa..." v-model="barbecueForm.title">
+                    <input type="text" placeholder="Crear nova barbacoa..." v-model="barbecueForm.title" @click="openDropdown">
                 </div>
             </div>
-            <img src="/assets/svg/edit.svg" alt="Imatge de editar" class="">
+            <img 
+                v-if="!isOpen" 
+                src="/assets/svg/plus.svg" 
+                alt="Afegir barbacoa"
+                class="cursor-pointer" 
+                @click="openDropdown"
+            >
+            <img 
+                v-else 
+                src="/assets/svg/minus.svg" 
+                alt="Minimitzar afegir barbacoa"
+                class="cursor-pointer"
+                @click="closeDropdown"
+            >
         </div>
 
         <div class="content " :style="{ height: isOpen ? 'auto' : '0' }">
@@ -217,6 +338,7 @@ function cancelDate() {
                     src="/assets/svg/addlocation.svg" 
                     alt="Imatge insertar ubicació" 
                     class="add-info cursor-pointer"
+                    @click="openModalLocation"
                 >
 
                 <button 
@@ -244,7 +366,7 @@ function cancelDate() {
                 
                     <h3 class="font-bold text-lg mb-2">Selecciona la imatge/s</h3>
 
-                    <label class="custum-file-upload" for="file">
+                    <label class="custum-file-upload" for="images">
                         <div class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="" viewBox="0 0 24 24">
                                 <g stroke-width="0" id="SVGRepo_bgCarrier"></g>
@@ -273,11 +395,11 @@ function cancelDate() {
                         
                         <input 
                             type="file" 
-                            id="file" 
+                            id="images" 
                             name="image" 
-                            multiple 
+                            multiple
                             accept="image/*" 
-                            @change="handleFileChange"
+                            @change="handleImagesChange"
                         />
                     </label>
 
@@ -310,15 +432,15 @@ function cancelDate() {
                         <div class="flex gap-2 w-full">
                             <select name="day" id="day" class="border border-black rounded-lg p-3 flex-1" v-model="dateForm.day">
                                 <option value="" disabled selected hidden>Dia</option>
-                                <option value="01">1</option>
-                                <option value="02">2</option>
-                                <option value="03">3</option>
-                                <option value="04">4</option>
-                                <option value="05">5</option>
-                                <option value="06">6</option>
-                                <option value="07">7</option>
-                                <option value="08">8</option>
-                                <option value="09">9</option>
+                                <option value="01">01</option>
+                                <option value="02">02</option>
+                                <option value="03">03</option>
+                                <option value="04">04</option>
+                                <option value="05">05</option>
+                                <option value="06">06</option>
+                                <option value="07">07</option>
+                                <option value="08">08</option>
+                                <option value="09">09</option>
                                 <option value="10">10</option>
                                 <option value="11">11</option>
                                 <option value="12">12</option>
@@ -417,6 +539,62 @@ function cancelDate() {
                 </form>
             </div>
         </dialog>
+
+        <dialog id="my_modal_3" class="modal cursor-auto" :open="showModalLocation" @click.self="closeModalLocation">
+            <div class="modal-box w-1/2">
+                <form 
+                    @submit.prevent="closeModalLocation"
+                    class="flex flex-col gap-4"
+                >
+                    <button 
+                        class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                        @click="cancelLocation"
+                    >
+                        ✕
+                    </button>
+                
+                    <h3 class="flex justify-center font-bold text-lg mb-2">Selecciona l'ubicació de la barbacoa</h3>
+
+                    <div class="search-input max-h-52 overflow-auto">
+                        <input 
+                            type="text" 
+                            placeholder="Buscar ubicació..." 
+                            class="input input-bordered w-full max-h-40 sticky top-0 z-10"
+                            id="address"
+                            title="address"
+                            v-model="barbecueForm.address"
+                            @input="actualitzarCerca"
+                            @click="showSearch"
+                            @self.click="showNoSearch"
+                            autocomplete="off"
+                        />
+                        
+                        <div class="options-location w-full">
+                            <ul
+                                ref="ul"
+                            >
+                                <li
+                                    v-for="(location) in locations"
+                                    :key="location.formatted"
+                                    :lat="location.annotations.DMS.lat"
+                                    :lng="location.annotations.DMS.lng"
+                                    @click="selectAddress"
+                                    class="result-location w-full overflow-auto"
+                                >
+                                    {{ location.formatted }}
+                                </li>
+                            </ul>
+                        </div>
+                        
+                    </div>
+
+                    <div class="flex justify-center space-x-4">
+                        <button class="btn" type="submit">Guardar</button>
+                        <button class="btn" @click="cancelDate">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </dialog>
     </form>
 </template>
 
@@ -427,7 +605,6 @@ function cancelDate() {
     background-color: white;
     border-radius: 20px;
     padding: 10px 20px;
-    cursor: pointer;
 }
 
 .content {
@@ -576,5 +753,50 @@ input::-webkit-inner-spin-button {
 .custum-file-upload:hover svg {
     transform: scale(1.2);
     filter: brightness(0%);
+}
+
+.search-input {
+    position: relative;
+}
+
+.search-input input {
+    height: 100%;
+    padding: 15px;
+    border: 1px solid #adadad;
+    border-radius: 10px;
+}
+
+.search-input input:focus-visible {
+    outline: none;
+}
+
+.search-input input:focus {
+    border-color: #000;
+}
+
+.search-input input:focus {
+    opacity: 1;
+    transition: 0.2s;
+}
+
+.options-location {
+    background: #eee;
+    border-radius: 10px;
+}
+
+.result-location {
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    background: #eee;
+    display: grid;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.result-location:hover {
+    cursor: pointer;
+    background: #dcdcdc;
 }
 </style>

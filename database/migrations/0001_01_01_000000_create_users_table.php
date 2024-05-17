@@ -16,9 +16,15 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('image')->default('/assets/img/default/person.png');
             $table->string('banner')->nullable();
+            $table->string('description', 100)->nullable();
             $table->boolean('public')->default(true);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('vegetarian')->default(false);
+            $table->boolean('lactose')->default(false);
+            $table->boolean('gluten')->default(false);
+            $table->boolean('spicy')->default(false);
+            $table->boolean('halal')->default(false);
             $table->rememberToken();
         });
 

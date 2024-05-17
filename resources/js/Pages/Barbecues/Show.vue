@@ -21,18 +21,17 @@ const props = defineProps({
 
 const barbecueStore = useBarbecueStore();
 barbecueStore.setBarbecue(props.barbecue);
-console.log(barbecueStore.barbecue);
-console.log(props.friends);
+
 </script>
 
 <template>
     <MainLayout :title="barbecue.title">
         <template #main-content>
-            <Chat />
+            <Chat v-if="authStore.user"/>
         </template>
         <template #right-aside>
             <div class="aside-menu">
-                <BarbacuesAside :friends="friends" />
+                <BarbacuesAside :friends="friends" :barbecue="barbecue"/>
             </div>
         </template>
     </MainLayout>
@@ -41,8 +40,8 @@ console.log(props.friends);
 <style scoped>
 .aside-menu {
     width: 100%;
-    height: 400px;
-    background: white;
+    height: max-content;
+    background: white   ;
     border-radius: 20px;
 }
 </style>

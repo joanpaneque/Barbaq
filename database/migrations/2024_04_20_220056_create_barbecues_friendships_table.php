@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
 
-            $table->foreignId('barbecue_id')->constrained();
+            $table->foreignId('barbecue_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained();
             $table->foreignId('guest_id')->constrained('users');
             $table->boolean('is_admin')->default(false);

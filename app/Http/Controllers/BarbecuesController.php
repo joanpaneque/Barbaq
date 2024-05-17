@@ -112,8 +112,10 @@ class BarbecuesController extends Controller
         $barbecue = Barbecue::findOrFail($id);
         $barbecue = Barbecue::with('basket')
         ->with('basket.basketProduct')
+        ->with('basket.basketProduct.user')
         ->with('basket.basketProduct.product')
         ->with('members')
+        ->with('friendships')
         ->find($id);
        
         $members = $barbecue->members()->get();
@@ -157,7 +159,11 @@ class BarbecuesController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+            
+        $barbecue = Barbecue::findOrFail($id);
+        $barbecue->delete();
+        return response()->json($barbecue);
+        
     }
 
     /**
@@ -172,6 +178,19 @@ class BarbecuesController extends Controller
         return redirect()->route('barbecues.show', ['barbecue' => $id]);
     }
 
+
+    /**
+     * Send barbecue join request.
+     */
+    public function sendBarbecueJoinRequest(Request $request, string $id)
+    {
+        $user = auth()->user();
+        $barbecue = Barbecue::findOrFail($id);
+        $user->sendBarbecueJoinRequest($barbecue);
+
+        return redirect()->route('barbecues.show', ['barbecue' => $id]);
+    }
+
     /**
      * Destroy frienship by user id and barbecue id.
      */
@@ -182,6 +201,72 @@ class BarbecuesController extends Controller
         $friendship = BarbecueFriendship::where('barbecue_id', $id)->where('guest_id', $user->id)->firstOrFail();
         $friendship->delete();
 
+        return redirect()->route('barbecues.show', ['barbecue' => $id]);
+    }
+
+    public function acceptBarbecueJoinRequest(Request $request, string $barbecueId, string $userId)
+    {
+        $barbecue = Barbecue::findOrFail($barbecueId);
+        $user = User::findOrFail($userId);
+        $barbecue->acceptJoinRequest($user);
+        return response()->json([$barbecueId, $userId]);
+    }
+
+    /**
+     * Add new product to product list, basket_product and basket.
+     */
+    public function addProduct(Request $request, string $id)
+    {
+        $request = $request->all();
+        $user = auth()->user();
+        $barbecue = Barbecue::findOrFail($id);
+        
+        $product = Product::firstOrCreate([
+            'user_id' => $user->id,
+            'name' => $request['product_name'],
+            'price' => $request['product_price'],
+            'is_deleted' => false
+        ]);
+        
+        $basket = Basket::firstOrCreate(['barbecue_id' => $barbecue->id]);
+        
+        $existingBasketProduct = BasketProduct::where('basket_id', $basket->id)
+                                            ->where('product_id', $product->id)
+                                            ->first();
+        
+        if ($existingBasketProduct) {
+            $existingBasketProduct->quantity += 1;
+            $existingBasketProduct->save();
+            $basketProduct = $existingBasketProduct;
+        } else {
+            $basketProduct = BasketProduct::create([
+                'user_id' => $user->id,
+                'basket_id' => $basket->id,
+                'product_id' => $product->id,
+                'price' => $request['product_price'],
+                'quantity' => 1
+            ]);
+        }
+        
+        return redirect()->route('barbecues.show', ['barbecue' => $id]);
+    }
+
+    /**
+     * Assign product to user.
+     */
+
+    public function assignProduct(Request $request, string $id)
+    {
+        $request = $request->all();
+        $memberId = $request['member_id'];
+        $barbecue = Barbecue::findOrFail($id);
+        $product = Product::findOrFail($request['product_id']);
+        $basket = Basket::firstOrCreate(['barbecue_id' => $barbecue->id]);
+        $basketProduct = BasketProduct::where('basket_id', $basket->id)
+                                        ->where('product_id', $product->id)
+                                        ->first();
+        $basketProduct->user_id = $memberId;
+        $basketProduct->save();
         return redirect()->route('barbecues.show', ['barbecue' => $id]);
     }
 

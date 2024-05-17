@@ -86,30 +86,10 @@ class ProfileController extends Controller
     {
 
         $request->all();
-        dd($request->all());
-
-        // if is a file "image" in the request
-        if ($request->hasFile('image')) {
-            // get the file
-            $file = $request->file('image');
-            // generate a new filename. getClientOriginalExtension() for the file extension
-            $filename = Str::random() . '.' . $file->getClientOriginalExtension();
-            // save to storage/app/public as the new $filename
-            $path = $file->storeAs('public', $filename);
-            // delete the old image.
-            Storage::delete($request->user()->image);
-            // update the user
-            $request->image = $filename;
-        }
-
-
         $user = $request->user();
-        $user->update($request);
-        
+        $user->update($request->only('name', 'email', 'surnames', 'vegetarian', 'lactose', 'gluten', 'spicy', 'halal')); 
 
-        return Inertia::render('UserProfile/Index', [
-            'user' => $user,
-        ]);
+        return redirect()->route('profile.show', ['profile' => $id]);
     }
 
 
