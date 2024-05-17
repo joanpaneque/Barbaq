@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { useBarbecueStore } from "@/stores/barbecue";
 import { useAuthStore } from '@/stores/auth';
 import { defineProps } from 'vue';
@@ -31,32 +31,30 @@ onUnmounted(() => {
 
 })
 
-let highlightedArea = ref(null);
-
+const highlightedArea = ref(null);
 const showAddUsers = ref(false);
-function highlightArea(area) {
 
+function highlightArea(area) {
     if (showAddUsers.value === false) {
         showAddUsers.value = true;
-    }
-    else {
+    } else {
         showAddUsers.value = false;
     }
 
-
-    if (highlightedArea.value === area) {
-        highlightedArea.value = null;
-
-        console.log('highlightedArea', highlightedArea.value);
-    } else {
-        highlightedArea.value = area;
-        console.log('highlightedArea', highlightedArea.value);
+    if (highlightedArea.value !== 'baskets') {
+        if (highlightedArea.value === area) {
+            highlightedArea.value = null;
+            console.log('highlightedArea', highlightedArea.value);
+        } else {
+            highlightedArea.value = area;
+            console.log('highlightedArea', highlightedArea.value);
+        }
     }
-
 }
 
 function resetHighlight() {
-    highlightedArea(null);
+    highlightedArea.value = null; 
+    console.log('highlightedArea', highlightedArea.value);
 }
 
 const barbecueStore = useBarbecueStore();
@@ -124,9 +122,6 @@ function formatDate(date) {
     return `${date.getUTCFullYear()}${pad(date.getUTCMonth() + 1)}${pad(date.getUTCDate())}T${pad(date.getUTCHours())}${pad(date.getUTCMinutes())}${pad(date.getUTCSeconds())}Z`;
 }
 
-
-
-
 const formProduct = useForm({
     member_id: null,
     product_id: null,
@@ -139,11 +134,43 @@ const assignProduct = (productId, memberId, basketProductId) => {
     formProduct.basket_product_id = basketProductId;
     formProduct.post('/assignproduct/' + barbecue.id);
     formProduct.reset();
-    highlightArea('null');
-
 }
 
+const formProductQuantity = useForm({
+    product_name: '',
+    product_price: '',
+    product_id: null,
+});
+const addOldProduct = (product) => {
+  axios.post(route('addproduct', { id: barbecueStore.barbecue.id }), {
+    product_name: product.name,
+    product_price: product.price,
+  })
+  .then(response => {
+    barbecueStore.setBasketProduct(product.id, response.data.quantity);
+    highlightArea('baskets');
+  })
+  .catch(error => {
+    console.error('Error adding product:', error);
+  });
+};
 
+const minusProduct = (product) => {
+  axios.post(route('minusproduct', { id: barbecueStore.barbecue.id }), {
+    product_id: product.id,
+  })
+  .then(response => {
+    if (response.data.deleted) {
+      barbecueStore.removeBasketProduct(product.id);
+    } else {
+      barbecueStore.setBasketProduct(product.id, response.data.quantity);
+    }
+    highlightArea('baskets');
+  })
+  .catch(error => {
+    console.error('Error removing product:', error);
+  });
+};
 
 </script>
 
@@ -162,7 +189,7 @@ const assignProduct = (productId, memberId, basketProductId) => {
                     </p>
                 </div>
                 <div v-if="highlightedArea === 'baskets'" class="flex items-center mr-2">
-                    <button class="p-2  hover:bg-orange-500 rounded-full" @click="resetHighlight">
+                    <button class="p-2  hover:bg-orange-500 rounded-full" @click.stop="resetHighlight">
                         <img src="/assets/svg/deshacer.svg" alt="Desfer" class="img-fluid" style="width: 20px;">
                     </button>
                     <AddProductModal @click="highlightArea('baskets')" />
@@ -187,12 +214,24 @@ const assignProduct = (productId, memberId, basketProductId) => {
                     <div class="grid-info">
                         <div class="producte1"
                             v-for="item in barbecue.basket.basket_product.filter((product, index, self) => self.findIndex(t => t.product.id === product.product.id) === index)"
-                            :key="item.product.id">
+                            :key="item.product.id" @click.stop>
                             <p class="w-2/5">
                                 {{ item.product.name }}</p>
-                            <p> {{ item.quantity }} </p>
-                            <p class="w-1/3 text-right">
-                                {{ item.product.price }} €</p>
+                            <div class="flex items-center gap-1" >
+                                <div class="minus" @click.stop="minusProduct(item.product)">
+                                    <img src="/assets/svg/menosmini.svg" alt="Menys" class="img-fluid"
+                                        style="width: 17px;">
+                                </div>
+                                <p>{{ item.quantity }}</p>
+                                <div class="plus" @click.stop="addOldProduct(item.product)">
+                                    <img src="/assets/svg/plusmini.svg" alt="Més" class="img-fluid"
+                                        style="width: 17px;">
+                                </div>
+                            </div>
+                            <!-- item * quantity -->
+                            <p class=" text-right w-1/3 mr-4">
+                                {{ (parseFloat(item.product.price) * item.quantity).toFixed(2) }}
+                                €</p>
 
                             <div class="dropdown dropdown-end">
                                 <div tabindex="0" role="button" class="" @click.stop>
@@ -226,7 +265,7 @@ const assignProduct = (productId, memberId, basketProductId) => {
                                         </div>
                                     </div>
 
-                                    <div class="members" v-for="member in $page.props.members" :key="member.id" >  
+                                    <div class="members" v-for="member in $page.props.members" :key="member.id">
                                         <form @click="assignProduct(item.product.id, member.id, item.id)">
                                             <div
                                                 class="flex items-center gap-2 bg-white p-1 rounded-full mb-2 w-full members-asignar">
@@ -298,9 +337,10 @@ const assignProduct = (productId, memberId, basketProductId) => {
 
                 <div class="total">
                     <p>Total</p>
+                    <!-- plus all items, and items * quantity too -->
                     <h1 v-if="barbecue.basket?.basket_product">{{
                         barbecue.basket.basket_product.reduce(
-                            (total, item) => total + parseFloat(item.product.price),
+                            (total, item) => total + parseFloat(item.product.price) * item.quantity,
                             0
                         ).toFixed(2)
                     }}<span>€</span></h1>
@@ -314,12 +354,12 @@ const assignProduct = (productId, memberId, basketProductId) => {
 
                 <div class="pay">
                     <p>A pagar</p>
-
+                    <!-- my items assogned to my * quantity -->
                     <h1 v-if="barbecue.basket?.basket_product">{{
-                        (barbecue.basket.basket_product.reduce(
-                            (total, item) => total + parseFloat(item.product.price),
+                        barbecue.basket.basket_product.filter(item => item.user.id === authStore.user.id).reduce(
+                            (total, item) => total + parseFloat(item.product.price) * item.quantity,
                             0
-                        ) / $page.props.members.length).toFixed(2)
+                        ).toFixed(2)
                     }}<span>€</span></h1>
                     <h1 v-else>0 €</h1>
 
@@ -358,8 +398,7 @@ const assignProduct = (productId, memberId, basketProductId) => {
 
                         </div>
                         </Link>
-                        <div class="flex justify-end w-1/2"
-                            v-if="member.id !== barbecue.user_id && barbecue.friendships.find(friendship => friendship.user_id === member.id && friendship.is_admin === 0)">
+                        <div class="flex justify-end w-1/2" v-if="member.id !== barbecue.user_id">
                             <Link @click="deleteMember(member.id)" class="flex items-center pr-1">
                             <button title="Add New" class="group cursor-pointer outline-none hover:rotate-[135deg]
                                 duration-300 rotate-45">
@@ -574,7 +613,7 @@ const assignProduct = (productId, memberId, basketProductId) => {
 
     h2 {
         display: flex;
-        
+
         font-size: 0.9rem;
         color: #ff5e00;
         font-weight: bold;
@@ -732,15 +771,22 @@ const assignProduct = (productId, memberId, basketProductId) => {
 .notSelected {
     display: none;
 }
-.mapagoogle{
+
+.mapagoogle {
     border-radius: 10px;
 }
+
 .members-asignar:hover {
     background-color: #f0f0f0;
 
     .hover-members {
         background-color: #f0f0f0;
-
     }
+}
+
+.minus:hover,
+.plus:hover {
+    background-color: #e0e0e0;
+    border-radius: 50%;
 }
 </style>

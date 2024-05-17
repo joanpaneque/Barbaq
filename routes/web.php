@@ -62,6 +62,7 @@ Route::post('/acceptbarbecuejoinrequest/{barbecueId}/{userId}', [BarbecuesContro
 Route::post('/toggleprivate', [UserController::class, 'togglePrivate'])->name('toggleprivate');
 
 Route::post('/addproduct/{id}', [BarbecuesController::class, 'addProduct'])->name('addproduct');
+Route::post('/minusproduct/{id}', [BarbecuesController::class, 'minusProduct'])->name('minusproduct');
 Route::post('/assignproduct/{id}', [BarbecuesController::class, 'assignProduct'])->name('assignproduct');
 
 
