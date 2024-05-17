@@ -7,6 +7,7 @@ import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import BarbaqUserProfile from '../UserProfile/BarbaqUserProfile.vue';
 import axios from 'axios';
 import MapOnSteroids from '../Steroids/MapOnSteroids.vue';
+import PhotoAlbum from '../Barbecues/PhotoAlbum/PhotoAlbum.vue';
 
 import AddProductModal from '../Barbecues/AddProductModal.vue';
 import { parse } from 'vue/compiler-sfc';
@@ -318,6 +319,10 @@ const minusProduct = (product) => {
             <h2 class="" v-else="barbecue.date">No hi ha cap data programada!!</h2>
 
         </div>
+        <div class="album" onclick="my_modal_2.showModal()">
+           <PhotoAlbum/>
+        </div>
+
 
         <div class="maps" :class="{
             'selected': highlightedArea === 'maps',
@@ -627,6 +632,20 @@ const minusProduct = (product) => {
 
 }
 
+.album {
+    grid-area: album;
+    background: #f2f2f2;
+    
+    width: auto;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    height: 100%;
+}
+
 .maps {
     grid-area: maps;
     border-radius: 10px;
@@ -763,7 +782,7 @@ const minusProduct = (product) => {
     display: grid;
     grid-template-areas:
         'baskets baskets'
-        'dates dates'
+        'dates album'
         'maps maps'
         'costs costs'
         'users users';

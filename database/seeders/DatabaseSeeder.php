@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 
 use App\Models\Barbecue;
+use App\Models\Image;
 use App\Models\BasketProduct;
 use App\Models\Basket;
 use App\Models\Product;
@@ -347,6 +348,15 @@ class DatabaseSeeder extends Seeder
             'title' => 'Barbacoa a l\'Estartit, Girona',
             'content' => '<h1>Barbacoa a l\'estartit, girona</h1><p>Benvinguts a la barbacoa a l\'estartit, en aquet lloc podreu gaudir de la millor barbacoa de la ciutat. Us esperem a tots!</p>',
             'date' => '08/08/2024 20:30h'
+        ]);
+
+        Image::create([
+            'barbecue_id' => 32,
+            'path' => 'https://random.imagecdn.app/490/462'
+        ]);
+        Image::create([
+            'barbecue_id' => 32,
+            'path' => 'https://random.imagecdn.app/496/479'
         ]);
 
         BarbecueFriendship::create([

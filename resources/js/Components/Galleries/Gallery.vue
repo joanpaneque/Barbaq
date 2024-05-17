@@ -113,6 +113,7 @@ function openModal(image) {
         height: 100%;
         width: 100%;
         position: relative;
+        background: black;
     }
 
     .gallery-modal-carousel-buttons {
@@ -164,6 +165,7 @@ function openModal(image) {
 
     .gallery-container {
         cursor: pointer;
+        
     }
 
     .gallery-mosaic {
