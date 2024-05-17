@@ -7,6 +7,7 @@ import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import BarbaqUserProfile from '../UserProfile/BarbaqUserProfile.vue';
 import axios from 'axios';
 import MapOnSteroids from '../Steroids/MapOnSteroids.vue';
+import PhotoAlbum from '../Barbecues/PhotoAlbum/PhotoAlbum.vue';
 
 import AddProductModal from '../Barbecues/AddProductModal.vue';
 import { parse } from 'vue/compiler-sfc';
@@ -231,7 +232,7 @@ const assignProduct = (productId, memberId, basketProductId) => {
                                         </div>
                                     </div>
 
-                                    <div class="members" v-for="member in $page.props.members" :key="member.id" >  
+                                    <div class="members" v-for="member in $page.props.members" :key="member.id">
                                         <form @click="assignProduct(item.product.id, member.id, item.id)">
                                             <div
                                                 class="flex items-center gap-2 bg-white p-1 rounded-full mb-2 w-full members-asignar">
@@ -279,6 +280,10 @@ const assignProduct = (productId, memberId, basketProductId) => {
             <h2 class="" v-else="barbecue.date">No hi ha cap data programada!!</h2>
 
         </div>
+        <div class="album" onclick="my_modal_2.showModal()">
+           <PhotoAlbum/>
+        </div>
+
 
         <div class="maps" :class="{
             'selected': highlightedArea === 'maps',
@@ -579,13 +584,27 @@ const assignProduct = (productId, memberId, basketProductId) => {
 
     h2 {
         display: flex;
-        
+
         font-size: 0.9rem;
         color: #ff5e00;
         font-weight: bold;
     }
 
 
+}
+
+.album {
+    grid-area: album;
+    background: #f2f2f2;
+    
+    width: auto;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    height: 100%;
 }
 
 .maps {
@@ -724,7 +743,7 @@ const assignProduct = (productId, memberId, basketProductId) => {
     display: grid;
     grid-template-areas:
         'baskets baskets'
-        'dates dates'
+        'dates album'
         'maps maps'
         'costs costs'
         'users users';
@@ -737,9 +756,11 @@ const assignProduct = (productId, memberId, basketProductId) => {
 .notSelected {
     display: none;
 }
-.mapagoogle{
+
+.mapagoogle {
     border-radius: 10px;
 }
+
 .members-asignar:hover {
     background-color: #f0f0f0;
 

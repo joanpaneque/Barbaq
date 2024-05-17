@@ -116,6 +116,7 @@ class BarbecuesController extends Controller
         ->with('basket.basketProduct.product')
         ->with('members')
         ->with('friendships')
+        ->with('images')
         ->find($id);
        
         $members = $barbecue->members()->get();
