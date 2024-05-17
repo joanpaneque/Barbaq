@@ -133,7 +133,7 @@ updateDate(barbecue.date);
         </template>
         <template #right-aside>
             <div class="aside-menu">
-                <BarbacuesAside/>
+                <BarbacuesAside :barbecue="barbecue"/>
             </div>
         </template>
     </MainLayout>
