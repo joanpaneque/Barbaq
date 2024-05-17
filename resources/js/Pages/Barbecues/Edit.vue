@@ -2,7 +2,7 @@
 import MainLayout from "@/Layouts/MainLayout.vue";
 import Chat from "@/Components/Barbecues/Chat.vue";
 import BarbacuesAside from "@/Components/Barbecues/BarbacuesAside.vue";
-import { defineProps, ref } from "vue";
+import { defineProps, createApp, ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { useBarbecueStore } from "@/stores/barbecue";
 import { useForm } from '@inertiajs/inertia-vue3';
@@ -10,15 +10,27 @@ import TextInput from '@/Components/TextInput.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import htmlButtonHasType from "eslint-plugin-vue/lib/rules/html-button-has-type";
+import { QuillEditor } from '@vueup/vue-quill';
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
 const authStore = useAuthStore();
 authStore.updateUserData();
-
+const app = createApp()
+app.component('QuillEditor', QuillEditor);
+const quillContent = ref();
 const props = defineProps({
     barbecue: {
         type: Object,
         required: true
-    }
+    },
+    friends: {
+        type: Object,
+        required: true,
+    },
 });
+const formQuill = ref({
+    content: ''
+});
+const displayedContent = ref('');
 const barbecueStore = useBarbecueStore();
 barbecueStore.setBarbecue(props.barbecue);
 console.log(barbecueStore.barbecue);
@@ -39,12 +51,13 @@ const form = useForm({
 });
 
 const submitForm = () => {
+    form.content = quillContent.value.getHTML();
+    displayedContent.value = formQuill.content;
     const formattedData = {
         ...form,
-        date: form.dateFormatted 
+        date: form.dateFormatted
     };
 
-    form.content = document.getElementById("content").innerHTML;
     form.patch(route('barbecues.update', { id: barbecue.id }), form.dateFormatted);
 };
 
@@ -56,7 +69,7 @@ const formatDateToSend = (date) => {
     const formattedDate = new Date(date);
 
     const day = formattedDate.getDate().toString().padStart(2, '0');
-    const month = (formattedDate.getMonth() + 1).toString().padStart(2, '0'); 
+    const month = (formattedDate.getMonth() + 1).toString().padStart(2, '0');
     const year = formattedDate.getFullYear();
     const hour = formattedDate.getHours().toString().padStart(2, '0');
     const minute = formattedDate.getMinutes().toString().padStart(2, '0');
@@ -80,7 +93,7 @@ updateDate(barbecue.date);
     <MainLayout :title="barbecue.title">
         <template #main-content>
             <div class="form-barbecues flex justify-center">
-                <div class="bg-white rounded-lg p-8 w-full md:max-w-xl">
+                <div class="bg-white rounded-2xl p-8 w-full md:max-w-xl">
                     <form @submit.prevent="submitForm" class="space-y-6">
                         <div class="flex flex-col">
                             <div class="mb-6">
@@ -94,7 +107,10 @@ updateDate(barbecue.date);
                                 <InputLabel for="content" value="Descripció" />
                                 <div id="content" contenteditable
                                     class="editable-content mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                    v-html="form.content" required></div>
+                                    v-html="form.content">
+                                </div>
+                                <QuillEditor theme="snow" class="rounded-b-lg min-h-24" ref="quillContent"
+                                    v-html="displayedContent" required />
                                 <InputError class="mt-2" :message="form.errors.content" />
                             </div>
 
@@ -133,7 +149,6 @@ updateDate(barbecue.date);
         </template>
         <template #right-aside>
             <div class="aside-menu">
-                <BarbacuesAside :barbecue="barbecue"/>
             </div>
         </template>
     </MainLayout>
@@ -142,11 +157,12 @@ updateDate(barbecue.date);
 <style scoped>
 .aside-menu {
     width: 100%;
-    height: 400px;
+    height: 100%;
     background: white;
     border-radius: 20px;
 }
+
 .form-barbecues {
-    background: none; /* Remove background color from the outer container */
+    background: none;
 }
 </style>
