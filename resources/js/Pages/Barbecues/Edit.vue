@@ -30,7 +30,6 @@ const props = defineProps({
 const formQuill = ref({
     content: ''
 });
-const displayedContent = ref('');
 const barbecueStore = useBarbecueStore();
 barbecueStore.setBarbecue(props.barbecue);
 console.log(barbecueStore.barbecue);
@@ -51,14 +50,15 @@ const form = useForm({
 });
 
 const submitForm = () => {
-    form.content = quillContent.value.getHTML();
-    displayedContent.value = formQuill.content;
-    const formattedData = {
-        ...form,
-        date: form.dateFormatted
-    };
+    if (!modal.value.open) {
+        form.content = quillContent.value.getHTML();
+        const formattedData = {
+            ...form,
+            date: form.dateFormatted
+        };
 
-    form.patch(route('barbecues.update', { id: barbecue.id }), form.dateFormatted);
+        form.patch(route('barbecues.update', { id: barbecue.id }), form.dateFormatted);
+    }
 };
 
 const formatDateToSend = (date) => {
@@ -87,6 +87,18 @@ const updateDate = (date) => {
 };
 
 updateDate(barbecue.date);
+const openModal = () => {
+    modal.value.showModal();
+};
+
+const closeModal = () => {
+    modal.value.close();
+};
+const saveContent = () => {
+    console.log("Content saved:", form.content);
+    closeModal();
+};
+const modal = ref(null);
 </script>
 
 <template>
@@ -105,12 +117,21 @@ updateDate(barbecue.date);
                             </div>
                             <div class="mb-6">
                                 <InputLabel for="content" value="Descripció" />
-                                <div id="content" contenteditable
+                                <div id="content"
                                     class="editable-content mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                     v-html="form.content">
-                                </div>
-                                <QuillEditor theme="snow" class="rounded-b-lg min-h-24" ref="quillContent"
-                                    v-html="displayedContent" required />
+                                </div> <button class="btn" @click="openModal">Open modal</button>
+                                <dialog id="my_modal_1" class="modal" ref="modal">
+                                    <div class="modal-box" @click.stop>
+                                        <QuillEditor theme="snow" class="rounded-b-lg min-h-24" ref="quillContent"
+                                            v-model="form.content" required />
+                                        <div class="quill-container" ref="quillContainer"></div>
+                                        <div class="modal-action">
+                                            <button class="btn" @click.stop="closeModal">Close</button>
+                                            <button class="btn" @click.stop="saveContent">Guardar</button>
+                                        </div>
+                                    </div>
+                                </dialog>
                                 <InputError class="mt-2" :message="form.errors.content" />
                             </div>
 
