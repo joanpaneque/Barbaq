@@ -202,7 +202,6 @@ const modalOpened = ref(false);
         </template>
     </MainLayout>
 </template>
-
 <style scoped>
 .aside-menu {
     width: 100%;
