@@ -53,13 +53,14 @@ const closeImageModal = () => {
 
 
             </div>
-            <div v-if="openedImage" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50" @click="closeImageModal">
+            <div v-if="openedImage" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
+                @click="closeImageModal">
                 <div>
                     <img :src="openimgpath" alt="">
                 </div>
             </div>
 
-            
+
         </div>
 
         <form method="dialog" class="modal-backdrop">
@@ -71,18 +72,17 @@ const closeImageModal = () => {
 </template>
 
 <style>
-.modal{
-    
-   
-}
-.modal-box{
+.modal {}
+
+.modal-box {
     width: 1000px !important;
     /* background-color: transparent !important;
     box-shadow: none !important; */
 }
-.imgsection{
-    height: 350px;
+
+.imgsection {
+
     /* background-color: transparent !important; */
-    
+
 }
 </style>

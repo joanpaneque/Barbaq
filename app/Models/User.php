@@ -175,8 +175,8 @@ class User extends Authenticatable
         $notifications = [];
 
         $friendRequests = $this->pendingFriendsRequests()->get();
-
         $barbecuesJoinRequests = $this->barbecuesJoinRequests();
+        
 
         foreach ($friendRequests as $friendRequest) {
             $notifications[] = [
