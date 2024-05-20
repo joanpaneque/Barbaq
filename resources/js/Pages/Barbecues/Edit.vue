@@ -1,21 +1,18 @@
 <script setup>
 import MainLayout from "@/Layouts/MainLayout.vue";
-import Chat from "@/Components/Barbecues/Chat.vue";
-import BarbacuesAside from "@/Components/Barbecues/BarbacuesAside.vue";
-import { defineProps, createApp, ref } from "vue";
+import { defineProps, ref } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { useBarbecueStore } from "@/stores/barbecue";
 import { useForm } from '@inertiajs/inertia-vue3';
 import TextInput from '@/Components/TextInput.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
-import htmlButtonHasType from "eslint-plugin-vue/lib/rules/html-button-has-type";
 import { QuillEditor } from '@vueup/vue-quill';
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
+
 const authStore = useAuthStore();
 authStore.updateUserData();
-const app = createApp()
-app.component('QuillEditor', QuillEditor);
+
 const quillContent = ref();
 const props = defineProps({
     barbecue: {
@@ -27,12 +24,15 @@ const props = defineProps({
         required: true,
     },
 });
+
 const formQuill = ref({
     content: ''
 });
+let originalContent = '';
 const barbecueStore = useBarbecueStore();
 barbecueStore.setBarbecue(props.barbecue);
 console.log(barbecueStore.barbecue);
+
 const barbecue = {
     id: props.barbecue.id,
     title: props.barbecue.title,
@@ -50,15 +50,11 @@ const form = useForm({
 });
 
 const submitForm = () => {
-    if (!modal.value.open) {
-        form.content = quillContent.value.getHTML();
-        const formattedData = {
-            ...form,
-            date: form.dateFormatted
-        };
-
-        form.patch(route('barbecues.update', { id: barbecue.id }), form.dateFormatted);
+    if (form.date) {
+        form.dateFormatted = formatDateToSend(form.date);
     }
+
+    form.patch(route('barbecues.update', { id: barbecue.id }), form.data);
 };
 
 const formatDateToSend = (date) => {
@@ -87,25 +83,39 @@ const updateDate = (date) => {
 };
 
 updateDate(barbecue.date);
-const openModal = () => {
-    modal.value.showModal();
-};
 
+const openModal = () => {
+    modalOpened.value = true;
+    modal.value.showModal();
+
+    originalContent = form.content;
+};
 const closeModal = () => {
+    const newContent = quillContent.value ? quillContent.value.getHTML().trim() : '';
+    if (newContent === '') {
+        form.content = originalContent;
+    }
+
     modal.value.close();
 };
 const saveContent = () => {
-    console.log("Content saved:", form.content);
+    const newContent = quillContent.value ? quillContent.value.getHTML().trim() : '';
+    if (newContent !== '') {
+        form.content = newContent;
+    }
     closeModal();
 };
+
+
 const modal = ref(null);
+const modalOpened = ref(false);
 </script>
 
 <template>
     <MainLayout :title="barbecue.title">
         <template #main-content>
             <div class="form-barbecues flex justify-center">
-                <div class="bg-white rounded-2xl p-8 w-full md:max-w-xl">
+                <div class="bg-white rounded-2xl p-8 mx-auto md:mx-2 w-full max-w-screen-2xl md:max-w-3xl">
                     <form @submit.prevent="submitForm" class="space-y-6">
                         <div class="flex flex-col">
                             <div class="mb-6">
@@ -115,20 +125,38 @@ const modal = ref(null);
                                     v-model="form.title" required autofocus />
                                 <InputError class="mt-2" :message="form.errors.title" />
                             </div>
-                            <div class="mb-6">
+                            <div class="mb-6 relative">
                                 <InputLabel for="content" value="Descripció" />
-                                <div id="content"
-                                    class="editable-content mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                    v-html="form.content">
-                                </div> <button class="btn" @click="openModal">Open modal</button>
+                                <div class="relative">
+                                    <div id="content"
+                                        class="editable-content mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                        v-html="form.content">
+                                    </div>
+                                    <button type="button" class="absolute top-1/2 right-3 transform -translate-y-1/2"
+                                        @click="openModal">
+                                        <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="8.000000pt"
+                                            height="8.000000pt" viewBox="0 0 512.000000 512.000000"
+                                            preserveAspectRatio="xMidYMid meet">
+
+                                            <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
+                                                fill="#000000" stroke="none">
+                                                <path d="M4100 5111 c-70 -23 -125 -70 -377 -323 l-273 -273 533 -533 532
+-532 277 277 c180 181 284 293 298 322 31 62 36 135 15 207 -16 58 -23 65
+-393 437 -259 259 -391 384 -420 399 -47 22 -151 33 -192 19z" />
+                                                <path d="M1572 2637 l-1572 -1572 0 -533 0 -532 533 0 532 0 1575 1575 1575
+1575 -530 530 c-291 291 -532 530 -535 530 -3 0 -713 -708 -1578 -1573z" />
+                                            </g>
+                                        </svg>
+                                    </button>
+                                </div>
                                 <dialog id="my_modal_1" class="modal" ref="modal">
                                     <div class="modal-box" @click.stop>
                                         <QuillEditor theme="snow" class="rounded-b-lg min-h-24" ref="quillContent"
-                                            v-model="form.content" required />
+                                            v-html="form.content" required />
                                         <div class="quill-container" ref="quillContainer"></div>
                                         <div class="modal-action">
-                                            <button class="btn" @click.stop="closeModal">Close</button>
-                                            <button class="btn" @click.stop="saveContent">Guardar</button>
+                                            <button type="button" class="btn" @click.stop="closeModal">Close</button>
+                                            <button type="button" class="btn" @click.stop="saveContent">Guardar</button>
                                         </div>
                                     </div>
                                 </dialog>
@@ -184,6 +212,8 @@ const modal = ref(null);
 }
 
 .form-barbecues {
+    width: 100%;
+    border-radius: 20px;
     background: none;
 }
 </style>
