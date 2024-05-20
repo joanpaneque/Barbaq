@@ -84,7 +84,6 @@ const props = defineProps({
     --gap: 0px;
     display: grid;
     height: 100%;
-    gap: var(--gap);
     grid-template-rows: 100%;
     padding-top: calc(90px + var(--gap));
 

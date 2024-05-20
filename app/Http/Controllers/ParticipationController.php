@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class MessagesController extends Controller
+use App\Models\User;
+
+
+class ParticipationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,9 +17,35 @@ class MessagesController extends Controller
     {
         $user = auth()->user();
         $friends = $user->friends()->get();
+        
+        $users = User::whereNotIn('id', $friends->pluck('id'))
+                ->where('id', '!=', $user->id)
+                ->inRandomOrder()
+                ->get();
+    
+        for ($i = 0; $i < count($users); $i++) {
+            $friendStatus = "none";
+            if ($user->isFriendWith($users[$i])) {
+                $friendStatus = 'friend';
+            } else if ($user->alreadySentFriendRequestTo($users[$i])) {
+                $friendStatus = 'sent';
+            } else if ($user->alreadyHasFriendRequestFrom($users[$i])) {
+                $friendStatus = 'received';
+            } 
+            $users[$i]->friendStatus = $friendStatus;
+        }
 
-        return Inertia::render('Messages/Index', [
+        // get only the users that the friend status is none
+        $filteredUsers = [];
+        foreach ($users as $user) {
+            if ($user->friendStatus === 'none') {
+                $filteredUsers[] = $user;
+            }
+        }
+
+        return Inertia::render('Participation/Index', [
             'friends' => $friends,
+            'filteredUsers' => $filteredUsers,
         ]);
     }
 
