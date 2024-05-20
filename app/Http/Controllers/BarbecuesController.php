@@ -116,6 +116,8 @@ class BarbecuesController extends Controller
         ->with('basket.basketProduct.product')
         ->with('members')
         ->with('friendships')
+        ->with('images')
+        ->with('messages')
         ->find($id);
        
         $members = $barbecue->members()->get();
@@ -160,9 +162,12 @@ class BarbecuesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit( Request $request, string $id)
     {
-        //
+        $barbecue = Barbecue::findOrFail($id);
+        return Inertia::render('Barbecues/Edit', [
+            'barbecue' => $barbecue,
+        ]);
     }
 
     /**
@@ -170,8 +175,10 @@ class BarbecuesController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $barbecue = Barbecue::findOrFail($id);
+        $barbecue->update($request->all());
     }
+    
 
     /**
      * Remove the specified resource from storage.
@@ -267,26 +274,44 @@ class BarbecuesController extends Controller
             ]);
         }
         
-        return redirect()->route('barbecues.show', ['barbecue' => $id]);
+        return response()->json($basketProduct);
     }
-
-    /**
-     * Assign product to user.
-     */
-
-    public function assignProduct(Request $request, string $id)
+    
+    public function minusProduct(Request $request, string $id)
     {
         $request = $request->all();
-        $memberId = $request['member_id'];
+        $user = auth()->user();
         $barbecue = Barbecue::findOrFail($id);
         $product = Product::findOrFail($request['product_id']);
         $basket = Basket::firstOrCreate(['barbecue_id' => $barbecue->id]);
         $basketProduct = BasketProduct::where('basket_id', $basket->id)
                                         ->where('product_id', $product->id)
                                         ->first();
-        $basketProduct->user_id = $memberId;
-        $basketProduct->save();
-        return redirect()->route('barbecues.show', ['barbecue' => $id]);
+        $basketProduct->quantity -= 1;
+        if ($basketProduct->quantity === 0) {
+            $basketProduct->delete();
+            return response()->json(['deleted' => true]);
+        } else {
+            $basketProduct->save();
+            return response()->json($basketProduct);
+        }
     }
 
+    /**
+     * Assign product to user.
+     */
+
+     public function assignProduct(Request $request, string $id)
+     {
+         $data = $request->all();
+         $memberId = $data['member_id'];
+         $barbecue = Barbecue::findOrFail($id);
+         $product = Product::findOrFail($data['product_id']);
+         $basket = Basket::firstOrCreate(['barbecue_id' => $barbecue->id]);
+         $basketProduct = BasketProduct::where('basket_id', $basket->id)
+                                         ->where('product_id', $product->id)
+                                         ->first();
+         $basketProduct->user_id = $memberId;
+         $basketProduct->save();
+     }
 }

@@ -14,6 +14,7 @@ use App\Models\BarbecueFriendship;
 use App\Models\ChatMessage;
 use App\Models\BasketProduct;
 use App\Models\Basket;
+use App\Models\Review;
 
 
 
@@ -264,9 +265,15 @@ class User extends Authenticatable
 
     }
 
-    // get all barbecues where the user is a member or the owner
     public function myBarbecues()
     {
         return $this->barbecuesFriendships()->get();
     }
+    
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+
 }

@@ -6,6 +6,7 @@ import { Link, useForm, usePage } from '@inertiajs/vue3';
 
 const authStore = useAuthStore();
 const barbecueStore = useBarbecueStore();
+console.log('Basket', barbecueStore.basket.basket_product);
 const showModal = ref(false);
 const showNewProduct = ref(false);
 const showOldProducts = ref(false);
@@ -34,15 +35,39 @@ const form = useForm({
 });
 
 const addProduct = () => {
-    form.post(route('addproduct', { id: barbecueStore.barbecue.id }));
-    showMainContent();
-    closeModal();
+  axios.post(route('addproduct', { id: barbecueStore.barbecue.id }), {
+    product_name: form.product_name,
+    product_price: form.product_price,
+  })
+  .then(response => {
+    if (response.data) {
+        console.log(response.data);
+      barbecueStore.addProductToBasket(response.data);
+      closeModal();
+      console.log(response.data);
+    } else {
+      throw new Error('Invalid product data from server');
+      console.log(response.data);
+    }
+    })
+  .catch(error => {
+    console.error('Error adding product:', error);
+  });
+  console.log(form, barbecueStore.basket.basket_product);
 };
 
 const addOldProduct = (product) => {
-    form.product_name = product.name;
-    form.product_price = product.price;
-    form.post(route('addproduct', { id: barbecueStore.barbecue.id }));
+  axios.post(route('addproduct', { id: barbecueStore.barbecue.id }), {
+    product_name: product.name,
+    product_price: product.price,
+  })
+  .then(response => {
+    barbecueStore.setBasketProduct(product.id, response.data.quantity);
+    highlightArea('baskets');
+  })
+  .catch(error => {
+    console.error('Error adding product:', error);
+  });
 };
 
 const showMainContent = () => {

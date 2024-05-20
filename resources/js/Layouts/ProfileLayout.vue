@@ -34,9 +34,9 @@ const props = defineProps({
                 <MainLeftAside />
             </div>
             <div class="main-layout-content-wrapper">
-                <Banner class="banner-profile "/>
+                <Banner class="banner-profile " />
                 <slot name="main-content">
-                    
+
                 </slot>
             </div>
         </div>
@@ -44,10 +44,15 @@ const props = defineProps({
 </template>
 
 <style scoped>
+.main-layout-left-aside {
+    width: 100%;
+}
+
 .main-layout-header {
     padding-inline: 12%;
     grid-template-columns: 270px auto 350px;
 }
+
 .main-layout-content {
     padding-inline: 12%;
     grid-template-columns: 270px auto;
@@ -75,13 +80,42 @@ const props = defineProps({
 }
 
 .main-layout-content {
-    --gap: 20px;
+    margin-top: 20px;
+    --gap: 0px;
     display: grid;
     height: 100%;
     grid-template-rows: 100%;
     padding-top: calc(90px + var(--gap));
-   
+
 }
+
+@media (max-width: 1450px) {
+
+    .main-layout-content {
+        display: block;
+    }
+
+    .main-layout-left-aside {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 10000;
+    }
+    .main-layout-content{
+        padding: 5%;
+        padding-top: 90px;
+    }
+
+}
+
+@media (max-width: 1000px) {
+    .main-layout-content{
+        padding: 1%;
+        padding-top: 90px;
+    }
+}
+
+
 
 .main-layout-title {
     display: flex;
@@ -99,5 +133,5 @@ const props = defineProps({
     display: flex;
     justify-content: center;
     align-items: center;
-} 
+}
 </style>

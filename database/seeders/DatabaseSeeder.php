@@ -6,10 +6,12 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 
 use App\Models\Barbecue;
+use App\Models\Image;
 use App\Models\BasketProduct;
 use App\Models\Basket;
 use App\Models\Product;
 use App\Models\BarbecueFriendship;
+use App\Models\Review;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,7 +24,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Joan',
             'surnames' => 'Paneque Domingo',
             'email' => 'jpaneque@cendrassos.net',
-            'description' => 'Sóc un noi de 22 anys que m\'agrada molt la cuina i fer barbacoes amb els amics. M\'agrada molt la música i la natura',
+            'description' => 'Sóc un noi de 22 anys que m\'agrada molt la cuina i fer barbacoes amb els amics. ',
             'password' => bcrypt('123456')
         ]);
 
@@ -30,7 +32,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Roman',
             'surnames' => 'Mysyura',
             'email' => 'rmysyura@cendrassos.net',
-            'description' => 'Sóc un noi de 53 anys que m\'agrada molt la cuina i fer barbacoes amb els amics. M\'agrada molt la música i la natura',
+            'description' => 'Sóc un noi de 53 anys que m\'agrada molt la cuina i fer barbacoes amb els amics. ',
             'password' => bcrypt('123456'),
             'image' => '/assets/img/roman.jpg'
         ]);
@@ -39,7 +41,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Emma',
             'surnames' => 'Cardosa',
             'email' => 'ecardosa@cendrassos.net',
-            'description' => 'Sóc una noia de 22 anys que m\'agrada molt la cuina i fer barbacoes amb els amics. M\'agrada molt la música',
+            'description' => 'Sóc una noia de 22 anys que m\'agrada molt la cuina i fer barbacoes amb els amics. ',
             'password' => bcrypt('123456'),
             'image' => '/assets/img/emma.jpg'
         ]);
@@ -48,7 +50,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Aniol',
             'surnames' => 'Moreno',
             'email' => 'amoreno@cendrassos.net',
-            'description' => 'Sóc un noi de 22 anys que m\'agrada molt la cuina i fer barbacoes amb els amics. M\'agrada molt la música i la natura',
+            'description' => 'Sóc un noi de 22 anys que m\'agrada molt la cuina i fer barbacoes amb els amics. ',
             'password' => bcrypt('123456'),
             'image' => '/assets/img/aniol.jpg'
         ]);
@@ -307,6 +309,14 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Producte nº' . $i,
                 'price' => random_float(1, 10),
             ]);
+
+            Review::create([
+                'user_id' => $random_user->id,
+                'guest_id' => $user->id,
+                'barbecue_id' => $barbecue->id,
+                'rating' => rand(1, 5),
+                'content' => 'Comentari de prova'
+            ]);
         }
         
 
@@ -350,6 +360,35 @@ class DatabaseSeeder extends Seeder
             'date' => '08/08/2024 20:30h'
         ]);
 
+        Image::create([
+            'barbecue_id' => 32,
+            'path' => '/assets//img/barbaquiu1.jpg'
+        ]);
+        Image::create([
+            'barbecue_id' => 32,
+            'path' => '/assets//img/barbaquiu2.jpg'
+        ]);
+        Image::create([
+            'barbecue_id' => 32,
+            'path' => '/assets//img/barbaquiu3.jpg'
+        ]);
+        Image::create([
+            'barbecue_id' => 32,
+            'path' => '/assets//img/barbaquiu2.jpg'
+        ]);
+        Image::create([
+            'barbecue_id' => 32,
+            'path' => '/assets//img/barbaquiu1.jpg'
+        ]);
+        Image::create([
+            'barbecue_id' => 32,
+            'path' => '/assets//img/barbaquiu3.jpg'
+        ]);
+        Image::create([
+            'barbecue_id' => 32,
+            'path' => '/assets//img/barbaquiu1.jpg'
+        ]);
+        
         BarbecueFriendship::create([
             'barbecue_id' => 1,
             'user_id' => 1,

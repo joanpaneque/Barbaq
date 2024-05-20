@@ -1,11 +1,10 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch, computed } from 'vue';
 import { useAuthStore } from "@/stores/auth";
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import { useProfileStore } from "@/stores/profile";
 import axios from 'axios';
 import ColorThief from 'colorthief';
-
 import { toFormData } from "axios";
 
 
@@ -142,6 +141,58 @@ function rgbToHex(r, g, b) {
 
 
 
+
+//
+
+const isSaving = ref(false);
+let timeoutId = null;
+
+function saveDescription() {
+    console.log('saveDescription');
+    isSaving.value = true;
+
+    if (timeoutId !== null) {
+        clearTimeout(timeoutId);
+    }
+
+    timeoutId = setTimeout(() => {
+
+        isSaving.value = false;
+        console.log('Guardat!');
+        console.log(profileStore.user.description);
+
+        let id = authStore.user.id;
+        axios.post(route('updateuserdescription', id), {
+            description: profileStore.user.description
+        })
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+    }, 1500);
+}
+
+watch(() => profileStore.user.description, (newValue) => {
+    if (newValue.length > 100) {
+        profileStore.user.description = newValue.slice(0, 100);
+    }
+});
+
+// get the total rating of the user from profileStore.user.reviews array (1 - 5)
+// average the total rating
+
+const averageRating = computed(() => {
+    if (profileStore.user.reviews.length > 0) {
+        const totalRating = profileStore.user.reviews.reduce((acc, review) => acc + review.rating, 0);
+        return totalRating / profileStore.user.reviews.length;
+    }
+
+    return 0;
+});
+
 </script>
 
 <template>
@@ -149,8 +200,6 @@ function rgbToHex(r, g, b) {
 
         <div class="background w-full h-[150px] bg-cover bg-no-repeat bg-center rounded-t-[20px]"
             :style="{ backgroundImage: `linear-gradient(to right, ${bgcolor1}, ${bgcolor2}, ${bgcolor3})` }"></div>
-
-
 
         <div class="relative flex flex-1 w-full bg-white pb-2 pr-4 pl-4 pt-4">
 
@@ -175,7 +224,8 @@ function rgbToHex(r, g, b) {
                     <dialog id="my_modal_3" class="modal" :open="showModal" @click.self="closeModal">
                         <div class="modal-box">
                             <form @submit.prevent="closeModal" method="dialog">
-                                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" @click="cancelChangeImage">
+                                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                                    @click="cancelChangeImage">
                                     ✕
                                 </button>
                             </form>
@@ -201,11 +251,12 @@ function rgbToHex(r, g, b) {
                                     <div class="text">
                                         <span>Click per seleccionar una imatge</span>
                                     </div>
-                                    
+
                                     <div class="text" id="logoImage">
                                     </div>
 
-                                    <input type="file" id="file" name="image" @change="handleFileChange" accept="image/*">
+                                    <input type="file" id="file" name="image" @change="handleFileChange"
+                                        accept="image/*">
 
                                 </label>
 
@@ -234,7 +285,7 @@ function rgbToHex(r, g, b) {
                         {{ profileStore.user.name }} {{ profileStore.user.surnames }}
                     </h1>
 
-                    <div class="flex">
+                    <div class="flex intolerances">
                         <div v-if="profileStore.user.vegetarian"
                             class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md bg-gray-50">
                             <img src="/assets/img/intolerance/vegetarian.png" class="h-7" alt="">
@@ -275,6 +326,28 @@ function rgbToHex(r, g, b) {
             </div>
             <div class="flex flex-col text-right ml-auto">
                 <div v-if="authStore.user && profileStore.user" class="flex gap-3 ">
+
+                    <div class="reviews profilestars" v-if="profileStore.user.reviews.length > 0" >
+                        <div id="average-rating">
+                            <div class="rating">
+                                <input type="radio" name="rating-2" class="mask mask-star-2 bg-orange-400" disabled
+                                    :checked="averageRating >= 1" />
+                                <input type="radio" name="rating-2" class="mask mask-star-2 bg-orange-400" disabled
+                                    :checked="averageRating >= 2" />
+                                <input type="radio" name="rating-2" class="mask mask-star-2 bg-orange-400" disabled
+                                    :checked="averageRating >= 3" />
+                                <input type="radio" name="rating-2" class="mask mask-star-2 bg-orange-400" disabled
+                                    :checked="averageRating >= 4" />
+                                <input type="radio" name="rating-2" class="mask mask-star-2 bg-orange-400" disabled
+                                    :checked="averageRating >= 5" />
+                            </div>
+                        </div>
+                        <Link :href="route('profile.reviews', { id: profileStore.user.id })"
+                            class="text-sm hover:underline cursor-pointer transition duration-150 ">
+                        Veure totes les valoracions
+                        </Link>
+                    </div>
+
                     <button class="content-center justify-center" v-if="authStore.user.id == profileStore.user.id">
                         <label v-if="authStore.user.public == 1" class="swap">
                             <input type="checkbox" />
@@ -376,17 +449,24 @@ function rgbToHex(r, g, b) {
         <div class="userdescription bg-white rounded-b-[20px] ">
             <div class="" v-if="profileStore.user.description && profileStore.user.id != authStore.user.id">
                 <p class="">{{ profileStore.user.description }}</p>
-                <hr class="w-full border-gray-300">
             </div>
-            <div class="" v-if="profileStore.user.id == authStore.user.id">
-                <form action="">
-                    <div class="input-container flex">
-                        <input type="text" id="animated-input"
-                            class="outline-none bg-transparent border-none w-full underlineinput" v-model="profileStore.user.description"
+            <div v-if="profileStore.user.id == authStore.user.id" class="userdescriptiontext">
+                <div class="input-container flex ">
+                    <div class="underlineinput flex w-full">
+                        <input type="text" id="animated-input" class="outline-none bg-transparent border-none w-full "
+                            v-model="profileStore.user.description" @input="saveDescription"
                             placeholder="Escriu la teva descripció..." />
-                        <span class="char-count">{{ profileStore.user.description.length }}/140</span>
+                        <span v-if="isSaving" class="loading loading-spinner loading-xs"></span>
+
+                        <span v-if="profileStore.user.description"
+                            :class="{ 'text-red-500 font-bold': profileStore.user.description.length === 100 }"
+                            class="char-count">
+                            {{ profileStore.user.description.length }}/100
+                        </span>
+
                     </div>
-                </form>
+                </div>
+
             </div>
 
 
@@ -406,6 +486,7 @@ function rgbToHex(r, g, b) {
     }
 }
 
+
 .underlineinput {
     border-bottom: 0.5px solid rgb(197, 197, 197);
     font-style: italic;
@@ -416,9 +497,7 @@ function rgbToHex(r, g, b) {
 }
 
 
-.char-count {
-    
-}
+.char-count {}
 
 
 .avatar .image-container {
@@ -512,5 +591,18 @@ function rgbToHex(r, g, b) {
     padding-right: 30px;
     padding-bottom: 15px;
     font-style: italic;
+}
+
+
+@media (max-width: 1000px) {
+ .intolerances {
+    display: none;
+ }
+ .userdescriptiontext{
+    display: none;
+ }
+ .profilestars{
+    display: none;
+ }
 }
 </style>
