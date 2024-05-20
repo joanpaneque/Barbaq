@@ -62,4 +62,13 @@ const authStore = useAuthStore();
     border-radius: 20px;
     height: min-content;
 }
+
+@media (max-width: 1000px) {
+    .right{
+        display: none;
+    }
+    .barbaq-user-template{
+        display: block;
+    }
+}
 </style>
