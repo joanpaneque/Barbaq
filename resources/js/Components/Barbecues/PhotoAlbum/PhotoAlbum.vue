@@ -1,10 +1,30 @@
 <script setup>
+import { ref } from 'vue';
 import { useBarbecueStore } from "@/stores/barbecue";
-import Gallery from '@/Components/Galleries/Gallery.vue';
 
 const barbecueStore = useBarbecueStore();
 const barbecue = barbecueStore.barbecue;
+const selectedImage = ref(null);
+const openedImage = ref(false);
 
+const openimgpath = ref('');
+
+const openImageModal = (image) => {
+    selectedImage.value = image;
+    openedImage.value = true;
+    console.log("Opened image modal");
+    console.log(selectedImage.value.id);
+    console.log(selectedImage.value.path);
+    openimgpath.value = selectedImage.value.path;
+
+};
+
+const closeImageModal = () => {
+    openedImage.value = false;
+    selectedImage.value = null;
+    console.log("Close image modal");
+
+};
 </script>
 
 <template>
@@ -24,17 +44,42 @@ const barbecue = barbecueStore.barbecue;
     </div>
 
 
-    <dialog id="my_modal_2" class="modal ">
+    <dialog id="my_modal_2" class="modal">
         <div class="modal-box" v-if="barbecueStore">
-           
-            <Gallery :images="barbecue.images.map(image => image.path)" />
+            <div class="columns-1 md:columns-2 xl:columns-3 gap-2 imgsection">
+                <div v-for="image in barbecue.images" :key="image.id" class="break-inside-avoid mb-2">
+                    <img :src="image.path" class="h-auto max-w-full rounded-lg" @click="openImageModal(image)" alt="">
+                </div>
 
+
+            </div>
+            <div v-if="openedImage" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50" @click="closeImageModal">
+                <div>
+                    <img :src="openimgpath" alt="">
+                </div>
+            </div>
+
+            
         </div>
+
         <form method="dialog" class="modal-backdrop">
             <button>close</button>
         </form>
+
     </dialog>
 
 </template>
 
-<style scoped></style>
+<style>
+.modal{
+    
+   
+}
+.modal-box{
+    width: 1000px !important;
+}
+.imgsection{
+    height: auto;
+    
+}
+</style>

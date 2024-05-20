@@ -352,13 +352,33 @@ class DatabaseSeeder extends Seeder
 
         Image::create([
             'barbecue_id' => 32,
-            'path' => 'https://random.imagecdn.app/490/462'
+            'path' => '/assets//img/barbaquiu1.jpg'
         ]);
         Image::create([
             'barbecue_id' => 32,
-            'path' => 'https://random.imagecdn.app/496/479'
+            'path' => '/assets//img/barbaquiu2.jpg'
         ]);
-
+        Image::create([
+            'barbecue_id' => 32,
+            'path' => '/assets//img/barbaquiu3.jpg'
+        ]);
+        Image::create([
+            'barbecue_id' => 32,
+            'path' => '/assets//img/barbaquiu2.jpg'
+        ]);
+        Image::create([
+            'barbecue_id' => 32,
+            'path' => '/assets//img/barbaquiu1.jpg'
+        ]);
+        Image::create([
+            'barbecue_id' => 32,
+            'path' => '/assets//img/barbaquiu3.jpg'
+        ]);
+        Image::create([
+            'barbecue_id' => 32,
+            'path' => '/assets//img/barbaquiu1.jpg'
+        ]);
+        
         BarbecueFriendship::create([
             'barbecue_id' => 1,
             'user_id' => 1,
