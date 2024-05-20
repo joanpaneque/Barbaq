@@ -18,7 +18,7 @@ const authStore = useAuthStore();
         <div class="left mt-5">
 
             <div v-if="authStore.user && profileStore.user">
-                <div v-if="authStore.user.id">
+                <div v-if="profileStore.user.id == authStore.user.id">
                     <CreateBarbaqInput class="mb-5" />
                 </div>
 
@@ -30,7 +30,8 @@ const authStore = useAuthStore();
 
                 <div 
                     v-if="profileStore.user.public == 1
-                    || profileStore.friendStatus == 'friend'"
+                    || profileStore.friendStatus == 'friend'
+                    || profileStore.user.id == authStore.user.id"
                 >
                     <div v-for="barbecue in profileStore.user.barbecues" :key="barbecue.id">
                         <Barbecue :barbecue="barbecue" class="mb-5" />

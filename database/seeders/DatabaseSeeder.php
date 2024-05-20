@@ -242,7 +242,8 @@ class DatabaseSeeder extends Seeder
                 'longitude' => random_float(1, 3),
                 'address' => "Adreça de la barbacoa nº$i",
                 'title' => "Barbacoa nº$i",
-                'content' => "<p>Benvinguts a la barbacoa nº$i, en aquet lloc podreu gaudir de la millor barbacoa de la ciutat. Us esperem a tots!</p>"
+                'content' => "<p>Benvinguts a la barbacoa nº$i, en aquet lloc podreu gaudir de la millor barbacoa de la ciutat. Us esperem a tots!</p>",
+                'date' => "08/08/2026 16:15h"
             ]);
 
             $random_images = rand(1, 4);

@@ -39,7 +39,7 @@ class BarbecuesController extends Controller
         $distance = $request->input('distance');
 
         // get the barbecue with user and images
-        $barbecues = Barbecue::with('user', 'images', 'comments');
+        $barbecues = Barbecue::with('user', 'images', 'comments', 'friendships');
 
         if ($limit) {
             $barbecues = $barbecues->limit($limit);
@@ -132,6 +132,30 @@ class BarbecuesController extends Controller
             'members' => $members,
         ]);
     }
+
+    public function apiMyBarbecues() {
+        $user = auth()->user();
+        
+        $joinedBarbecues = $user->joinedBarbecues()->get()->toArray();
+        
+        $organizedBarbecues = Barbecue::where('user_id', $user->id)->get()->toArray();
+        
+        $barbecues = [];
+    
+        foreach ($joinedBarbecues as $relationship) {
+            $barbecue = $relationship['barbecue'];
+            $barbecue['user'] = User::find($barbecue['user_id'])->toArray();
+            $barbecues[] = $barbecue;
+        }
+    
+        foreach ($organizedBarbecues as $barbecue) {
+            $barbecue['user'] = $user->toArray();
+            $barbecues[] = $barbecue;
+        }
+    
+        return response()->json($barbecues);
+    }
+    
 
     /**
      * Show the form for editing the specified resource.
