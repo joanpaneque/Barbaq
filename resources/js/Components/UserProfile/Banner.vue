@@ -327,7 +327,7 @@ const averageRating = computed(() => {
             <div class="flex flex-col text-right ml-auto">
                 <div v-if="authStore.user && profileStore.user" class="flex gap-3 ">
 
-                    <div class="reviews" v-if="profileStore.user.reviews.length > 0">
+                    <div class="reviews profilestars" v-if="profileStore.user.reviews.length > 0" >
                         <div id="average-rating">
                             <div class="rating">
                                 <input type="radio" name="rating-2" class="mask mask-star-2 bg-orange-400" disabled
@@ -343,7 +343,7 @@ const averageRating = computed(() => {
                             </div>
                         </div>
                         <Link :href="route('profile.reviews', { id: profileStore.user.id })"
-                            class="text-sm hover:underline cursor-pointer transition duration-150">
+                            class="text-sm hover:underline cursor-pointer transition duration-150 ">
                         Veure totes les valoracions
                         </Link>
                     </div>
@@ -599,6 +599,9 @@ const averageRating = computed(() => {
     display: none;
  }
  .userdescriptiontext{
+    display: none;
+ }
+ .profilestars{
     display: none;
  }
 }
