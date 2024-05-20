@@ -91,6 +91,11 @@ class User extends Authenticatable
         return $this->mergedRelationWithModel(User::class, 'friends_view');
     }
 
+    public function joinedBarbecues()
+    {
+        return $this->mergedRelationWithModel(User::class, 'joined_barbecues_view')->with('barbecue');
+    }
+
     public function pendingFriendsRequests()
     {
         return $this->belongsToMany(User::class, 'friendships', 'friend_id', 'user_id')->wherePivot('accepted', false);
@@ -221,6 +226,11 @@ class User extends Authenticatable
         return $this->hasMany(BarbecueFriendship::class, 'user_id');
     }
 
+    public function barbecuesFriendships2()
+    {
+        return $this->hasMany(BarbecueFriendship::class, 'guest_id');
+    }
+
     public function barbecueInvitations()
     {
         return $this->barbecuesFriendships()->where('accepted', false);
@@ -255,6 +265,11 @@ class User extends Authenticatable
 
     }
 
+    public function myBarbecues()
+    {
+        return $this->barbecuesFriendships()->get();
+    }
+    
     public function reviews()
     {
         return $this->hasMany(Review::class);

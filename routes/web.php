@@ -9,7 +9,7 @@ use App\Http\Controllers\BarbecuesController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleController;
-// use App\Http\Controllers\MessagesController;
+use App\Http\Controllers\ParticipationController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\ImagesController;
@@ -48,7 +48,7 @@ Route::post('/api/chat/{barbecueId}', [ChatMessagesController::class, 'store']);
 Route::resource('profile', ProfileController::class);
 
 
-Route::get('/messages', [MessagesController::class, 'index'])->name('messages.index');
+Route::get('/participation', [ParticipationController::class, 'index'])->name('participation.index');
 
 Route::get('/auth/google', [GoogleController::class, 'index']);
 Route::get('/auth/google/callback', [GoogleController::class, 'store']);
@@ -57,6 +57,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('profile', ProfileController::class);
 });
 
+Route::get("/api/my-barbecues", [BarbecuesController::class, 'apiMyBarbecues']);
 
 Route::get('/api/barbecue/{id}/messages', [MessagesController::class, 'apiIndex']);
 
@@ -68,18 +69,20 @@ Route::get('/api/user', [UserController::class, 'apiShowLogged']);
 
 Route::post('/updateuserphoto/{id}', [UserController::class, 'update'])->name('updateuserphoto');
 
-
 });
 
+Route::post('/api/discordbot', [DiscordBotController::class, 'broadcast']);
 
+Route::post('/sendinvitation/{id}', [BarbecuesController::class, 'sendInvitation'])->name('sendinvitation');
+Route::delete('/destroyfriendship/{id}', [BarbecuesController::class, 'destroyFriendship'])->name('destroyfriendship');
+Route::post('/sendbarbecuejoinrequest/{id}', [BarbecuesController::class, 'sendBarbecueJoinRequest'])->name('sendbarbecuejoinrequest');
 
+Route::post('/acceptbarbecuejoinrequest/{barbecueId}/{userId}', [BarbecuesController::class, 'acceptBarbecueJoinRequest'])->name('acceptbarbecuejoinrequest');
 
+Route::post('/toggleprivate', [UserController::class, 'togglePrivate'])->name('toggleprivate');
 
-
-
-
-
-
+Route::post('/addproduct/{id}', [BarbecuesController::class, 'addProduct'])->name('addproduct');
+Route::post('/assignproduct/{id}', [BarbecuesController::class, 'assignProduct'])->name('assignproduct');
 
 
 

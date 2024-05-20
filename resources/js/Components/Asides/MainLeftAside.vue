@@ -24,11 +24,10 @@ const authStore = useAuthStore();
             </div>
         </Link>
 
-        <Link :href="route('messages.index')">
-            <div class="item" :class="{ active: route().current() === 'messages.index' }">
+        <Link :href="route('participation.index')">
+            <div class="item" :class="{ active: route().current() === 'participation.index' }">
                 <img src="/assets/svg/envelope.svg" alt="Icon" />
-                <span>Missatges</span>
-                <span class="counter">12</span>
+                <span style="font-size: 0.9rem">Participacions</span>
             </div>
         </Link>
         
