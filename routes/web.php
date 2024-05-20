@@ -41,6 +41,8 @@ Route::get('/auth/google/callback', [GoogleController::class, 'store']);
 Route::middleware('auth')->group(function () {
     Route::resource('profile', ProfileController::class);
 });
+Route::get('/profile/{id}/reviews', [ProfileController::class, 'reviews'])->name('profile.reviews');
+
 
 Route::get('/api/barbecue/{id}/messages', [MessagesController::class, 'apiIndex']);
 

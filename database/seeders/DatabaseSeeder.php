@@ -11,6 +11,7 @@ use App\Models\BasketProduct;
 use App\Models\Basket;
 use App\Models\Product;
 use App\Models\BarbecueFriendship;
+use App\Models\Review;
 
 class DatabaseSeeder extends Seeder
 {
@@ -306,6 +307,14 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $random_user->id,
                 'name' => 'Producte nº' . $i,
                 'price' => random_float(1, 10),
+            ]);
+
+            Review::create([
+                'user_id' => $random_user->id,
+                'guest_id' => $user->id,
+                'barbecue_id' => $barbecue->id,
+                'rating' => rand(1, 5),
+                'content' => 'Comentari de prova'
             ]);
         }
         

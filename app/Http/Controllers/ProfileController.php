@@ -12,6 +12,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\User;
 use App\Models\UserBarbecues;
+use App\Models\Review;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
@@ -26,7 +27,11 @@ class ProfileController extends Controller
 
         $profile = User::with(['barbecues' => function ($query) {
             $query->orderBy('created_at', 'desc');
-        }])->where('id', $id)->first();
+        }])
+        ->with(['reviews' => function ($query) {
+            $query->with('guest')->orderBy('created_at', 'desc');
+        }])
+        ->where('id', $id)->first();
         
         $friendStatus = "none";
 
@@ -69,8 +74,65 @@ class ProfileController extends Controller
             'friends' => $friends,
             'filteredUsers' => $filteredUsers,
         ]);
-
     }	
+
+    public function reviews(string $id)
+    {  
+        $user = auth()->user();
+        $friends = $user->friends()->get();
+
+        // with reviews and the guest that made the review
+        $profile = User::with(['barbecues' => function ($query) {
+            $query->orderBy('created_at', 'desc');
+        }])
+        ->with(['reviews' => function ($query) {
+            $query->with('guest')->orderBy('created_at', 'desc');
+        }])
+        ->where('id', $id)->first();
+        
+        $friendStatus = "none";
+
+        if ($user->isFriendWith($profile)) {
+            $friendStatus = 'friend';
+        } else if ($user->alreadySentFriendRequestTo($profile)) {
+            $friendStatus = 'sent';
+        } else if ($user->alreadyHasFriendRequestFrom($profile)) {
+            $friendStatus = 'received';
+        } 
+
+        $users = User::whereNotIn('id', $friends->pluck('id'))
+        ->where('id', '!=', $user->id)
+        ->inRandomOrder()
+        ->get();
+
+        for ($i = 0; $i < count($users); $i++) {
+            $friendStatus1 = "none";
+            if ($user->isFriendWith($users[$i])) {
+                $friendStatus1 = 'friend';
+            } else if ($user->alreadySentFriendRequestTo($users[$i])) {
+                $friendStatus1 = 'sent';
+            } else if ($user->alreadyHasFriendRequestFrom($users[$i])) {
+                $friendStatus1 = 'received';
+            } 
+            $users[$i]->friendStatus1 = $friendStatus1;
+        }
+
+        // get only the users that the friend status is none
+        $filteredUsers = [];
+        foreach ($users as $user) {
+            if ($user->friendStatus1 === 'none') {
+                $filteredUsers[] = $user;
+            }
+        }
+
+        return Inertia::render('UserProfile/Reviews', [
+            'user' => $profile,
+            'friendStatus' => $friendStatus,
+            'friends' => $friends,
+            'filteredUsers' => $filteredUsers,
+        ]);
+    }
+
     /**
      * Display the user's profile form.
      */
