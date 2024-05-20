@@ -319,7 +319,10 @@ const minusProduct = (product) => {
             <h2 class="" v-else="barbecue.date">No hi ha cap data programada!!</h2>
 
         </div>
-        <div class="album" onclick="my_modal_2.showModal()">
+        <div class="album" onclick="my_modal_2.showModal()"
+        :class="{
+            'notSelected': highlightedArea !== 'album' && highlightedArea !== null
+        }">
            <PhotoAlbum/>
         </div>
 
