@@ -274,7 +274,7 @@ watch(() => profileStore.user.description, (newValue) => {
                         {{ profileStore.user.name }} {{ profileStore.user.surnames }}
                     </h1>
 
-                    <div class="flex">
+                    <div class="flex intolerances">
                         <div v-if="profileStore.user.vegetarian"
                             class="border border-inherit w-auto flex justify-center items-center ml-2 p-1 rounded-md bg-gray-50">
                             <img src="/assets/img/intolerance/vegetarian.png" class="h-7" alt="">
@@ -417,7 +417,7 @@ watch(() => profileStore.user.description, (newValue) => {
             <div class="" v-if="profileStore.user.description && profileStore.user.id != authStore.user.id">
                 <p class="">{{ profileStore.user.description }}</p>
             </div>
-            <div v-if="profileStore.user.id == authStore.user.id">
+            <div v-if="profileStore.user.id == authStore.user.id" class="userdescriptiontext">
                 <div class="input-container flex ">
                     <div class="underlineinput flex w-full">
                         <input type="text" id="animated-input" class="outline-none bg-transparent border-none w-full "
@@ -451,6 +451,7 @@ watch(() => profileStore.user.description, (newValue) => {
         width: 100%;
     }
 }
+
 
 .underlineinput {
     border-bottom: 0.5px solid rgb(197, 197, 197);
@@ -556,5 +557,15 @@ watch(() => profileStore.user.description, (newValue) => {
     padding-right: 30px;
     padding-bottom: 15px;
     font-style: italic;
+}
+
+
+@media (max-width: 1000px) {
+ .intolerances {
+    display: none;
+ }
+ .userdescriptiontext{
+    display: none;
+ }
 }
 </style>
