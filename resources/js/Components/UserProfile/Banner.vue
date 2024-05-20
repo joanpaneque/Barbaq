@@ -1,11 +1,10 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch, computed } from 'vue';
 import { useAuthStore } from "@/stores/auth";
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import { useProfileStore } from "@/stores/profile";
 import axios from 'axios';
 import ColorThief from 'colorthief';
-
 import { toFormData } from "axios";
 
 
@@ -182,6 +181,18 @@ watch(() => profileStore.user.description, (newValue) => {
     }
 });
 
+// get the total rating of the user from profileStore.user.reviews array (1 - 5)
+// average the total rating
+
+const averageRating = computed(() => {
+    if (profileStore.user.reviews.length > 0) {
+        const totalRating = profileStore.user.reviews.reduce((acc, review) => acc + review.rating, 0);
+        return totalRating / profileStore.user.reviews.length;
+    }
+
+    return 0;
+});
+
 </script>
 
 <template>
@@ -315,6 +326,28 @@ watch(() => profileStore.user.description, (newValue) => {
             </div>
             <div class="flex flex-col text-right ml-auto">
                 <div v-if="authStore.user && profileStore.user" class="flex gap-3 ">
+
+                    <div class="reviews" v-if="profileStore.user.reviews.length > 0">
+                        <div id="average-rating">
+                            <div class="rating">
+                                <input type="radio" name="rating-2" class="mask mask-star-2 bg-orange-400" disabled
+                                    :checked="averageRating >= 1" />
+                                <input type="radio" name="rating-2" class="mask mask-star-2 bg-orange-400" disabled
+                                    :checked="averageRating >= 2" />
+                                <input type="radio" name="rating-2" class="mask mask-star-2 bg-orange-400" disabled
+                                    :checked="averageRating >= 3" />
+                                <input type="radio" name="rating-2" class="mask mask-star-2 bg-orange-400" disabled
+                                    :checked="averageRating >= 4" />
+                                <input type="radio" name="rating-2" class="mask mask-star-2 bg-orange-400" disabled
+                                    :checked="averageRating >= 5" />
+                            </div>
+                        </div>
+                        <Link :href="route('profile.reviews', { id: profileStore.user.id })"
+                            class="text-sm hover:underline cursor-pointer transition duration-150">
+                        Veure totes les valoracions
+                        </Link>
+                    </div>
+
                     <button class="content-center justify-center" v-if="authStore.user.id == profileStore.user.id">
                         <label v-if="authStore.user.public == 1" class="swap">
                             <input type="checkbox" />
@@ -424,12 +457,13 @@ watch(() => profileStore.user.description, (newValue) => {
                             v-model="profileStore.user.description" @input="saveDescription"
                             placeholder="Escriu la teva descripció..." />
                         <span v-if="isSaving" class="loading loading-spinner loading-xs"></span>
-                    
-                            <span v-if="profileStore.user.description" :class="{ 'text-red-500 font-bold': profileStore.user.description.length === 100 }"
+
+                        <span v-if="profileStore.user.description"
+                            :class="{ 'text-red-500 font-bold': profileStore.user.description.length === 100 }"
                             class="char-count">
                             {{ profileStore.user.description.length }}/100
                         </span>
-                        
+
                     </div>
                 </div>
 

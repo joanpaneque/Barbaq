@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Image;
 use App\Models\Comment;
 use App\Models\BarbecueFriendship;
+use App\Models\Review;
 
 class Barbecue extends Model
 {
@@ -92,5 +93,10 @@ class Barbecue extends Model
     public function friendships()
     {
         return $this->hasMany(BarbecueFriendship::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
     }
 }

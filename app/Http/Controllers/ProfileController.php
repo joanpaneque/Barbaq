@@ -12,6 +12,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\User;
 use App\Models\UserBarbecues;
+use App\Models\Review;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
@@ -26,7 +27,11 @@ class ProfileController extends Controller
 
         $profile = User::with(['barbecues' => function ($query) {
             $query->orderBy('created_at', 'desc');
-        }])->where('id', $id)->first();
+        }])
+        ->with(['reviews' => function ($query) {
+            $query->with('guest')->orderBy('created_at', 'desc');
+        }])
+        ->where('id', $id)->first();
         
         $friendStatus = "none";
 
@@ -76,10 +81,13 @@ class ProfileController extends Controller
         $user = auth()->user();
         $friends = $user->friends()->get();
 
+        // with reviews and the guest that made the review
         $profile = User::with(['barbecues' => function ($query) {
             $query->orderBy('created_at', 'desc');
         }])
-        ->with('reviews')
+        ->with(['reviews' => function ($query) {
+            $query->with('guest')->orderBy('created_at', 'desc');
+        }])
         ->where('id', $id)->first();
         
         $friendStatus = "none";
