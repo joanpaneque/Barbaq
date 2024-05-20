@@ -46,7 +46,7 @@ const closeImageModal = () => {
 
     <dialog id="my_modal_2" class="modal">
         <div class="modal-box" v-if="barbecueStore">
-            <div class="columns-1 md:columns-2 xl:columns-3 gap-2 imgsection">
+            <div class="columns-1 md:columns-2 gap-2 imgsection">
                 <div v-for="image in barbecue.images" :key="image.id" class="break-inside-avoid mb-2">
                     <img :src="image.path" class="h-auto max-w-full rounded-lg" @click="openImageModal(image)" alt="">
                 </div>
@@ -77,9 +77,12 @@ const closeImageModal = () => {
 }
 .modal-box{
     width: 1000px !important;
+    /* background-color: transparent !important;
+    box-shadow: none !important; */
 }
 .imgsection{
-    height: auto;
+    height: 350px;
+    /* background-color: transparent !important; */
     
 }
 </style>
