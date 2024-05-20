@@ -9,6 +9,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import { QuillEditor } from '@vueup/vue-quill';
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
+import FindFriendsRightAside from "@/Components/Asides/FindFriendsRightAside.vue";
 
 const authStore = useAuthStore();
 authStore.updateUserData();
@@ -105,8 +106,6 @@ const saveContent = () => {
     }
     closeModal();
 };
-
-
 const modal = ref(null);
 const modalOpened = ref(false);
 </script>
@@ -115,7 +114,7 @@ const modalOpened = ref(false);
     <MainLayout :title="barbecue.title">
         <template #main-content>
             <div class="form-barbecues flex justify-center">
-                <div class="bg-white rounded-2xl p-8 mx-auto md:mx-2 w-full max-w-screen-2xl md:max-w-3xl">
+                <div class=" barbecues-radius bg-white p-8 mx-auto md:mx-2 w-full max-w-screen-2xl md:max-w-3xl">
                     <form @submit.prevent="submitForm" class="space-y-6">
                         <div class="flex flex-col">
                             <div class="mb-6">
@@ -128,11 +127,12 @@ const modalOpened = ref(false);
                             <div class="mb-6 relative">
                                 <InputLabel for="content" value="Descripció" />
                                 <div class="relative">
+                                    <div class="border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                                     <div id="content"
-                                        class="editable-content mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                        class="editable-content mt-1 block px-3 py-2"
                                         v-html="form.content">
                                     </div>
-                                    <button type="button" class="absolute top-1/2 right-3 transform -translate-y-1/2"
+                                    <button type="button" class="absolute top-1/2 right-3 -translate-y-1/2 ml-3"
                                         @click="openModal">
                                         <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="8.000000pt"
                                             height="8.000000pt" viewBox="0 0 512.000000 512.000000"
@@ -141,14 +141,15 @@ const modalOpened = ref(false);
                                             <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
                                                 fill="#000000" stroke="none">
                                                 <path d="M4100 5111 c-70 -23 -125 -70 -377 -323 l-273 -273 533 -533 532
--532 277 277 c180 181 284 293 298 322 31 62 36 135 15 207 -16 58 -23 65
--393 437 -259 259 -391 384 -420 399 -47 22 -151 33 -192 19z" />
+            -532 277 277 c180 181 284 293 298 322 31 62 36 135 15 207 -16 58 -23 65
+            -393 437 -259 259 -391 384 -420 399 -47 22 -151 33 -192 19z" />
                                                 <path d="M1572 2637 l-1572 -1572 0 -533 0 -532 533 0 532 0 1575 1575 1575
-1575 -530 530 c-291 291 -532 530 -535 530 -3 0 -713 -708 -1578 -1573z" />
+            1575 -530 530 c-291 291 -532 530 -535 530 -3 0 -713 -708 -1578 -1573z" />
                                             </g>
                                         </svg>
                                     </button>
                                 </div>
+                            </div>
                                 <dialog id="my_modal_1" class="modal" ref="modal">
                                     <div class="modal-box" @click.stop>
                                         <QuillEditor theme="snow" class="rounded-b-lg min-h-24" ref="quillContent"
@@ -198,6 +199,7 @@ const modalOpened = ref(false);
         </template>
         <template #right-aside>
             <div class="aside-menu">
+                <FindFriendsRightAside />
             </div>
         </template>
     </MainLayout>
@@ -205,14 +207,20 @@ const modalOpened = ref(false);
 <style scoped>
 .aside-menu {
     width: 100%;
-    height: 100%;
     background: white;
     border-radius: 20px;
+    padding: 26px 30px;
 }
 
 .form-barbecues {
     width: 100%;
-    border-radius: 20px;
     background: none;
+}
+
+.barbecues-radius {
+    border-radius: 20px;
+}
+.editable-content{
+    width: 100%;
 }
 </style>
