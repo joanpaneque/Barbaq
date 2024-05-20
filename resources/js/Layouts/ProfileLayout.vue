@@ -110,7 +110,10 @@ const props = defineProps({
 }
 
 @media (max-width: 1000px) {
-
+    .main-layout-content{
+        padding: 1%;
+        padding-top: 110px;
+    }
 }
 
 
