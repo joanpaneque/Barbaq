@@ -9,11 +9,12 @@ use App\Http\Controllers\BarbecuesController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleController;
-use App\Http\Controllers\MessagesController;
+// use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\DiscordBotController;
+use App\Http\Controllers\ChatMessagesController;
 
 Route::get('/', [IndexController::class, 'show'])->name('index');
 
@@ -23,6 +24,10 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/test', [TestController::class, 'index'])->name('test');
 Route::get('/test/profile', [TestController::class, 'indexProfile'])->name('test.profile');
+
+
+Route::post('/api/chat/{barbecueId}', [ChatMessagesController::class, 'store']);
+
 
 Route::resource('profile', ProfileController::class);
 
@@ -36,6 +41,8 @@ Route::get('/auth/google/callback', [GoogleController::class, 'store']);
 Route::middleware('auth')->group(function () {
     Route::resource('profile', ProfileController::class);
 });
+
+Route::get('/api/barbecue/{id}/messages', [MessagesController::class, 'apiIndex']);
 
 Route::delete('/friends/{id}', [FriendsController::class, 'destroy'])->name('friends.destroy');
 

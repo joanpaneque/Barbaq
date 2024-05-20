@@ -42,9 +42,6 @@ class FriendsController extends Controller
                 $filteredUsers[] = $user;
             }
         }
-
-    
-        
     
         return Inertia::render('Friends/Index', [
             'friends' => $friends,
@@ -69,7 +66,6 @@ class FriendsController extends Controller
         $sender = auth()->user();
         $receiver = User::findOrFail($id);
         $sender->sendFriendRequest($receiver);
-
     }
 
     /**
