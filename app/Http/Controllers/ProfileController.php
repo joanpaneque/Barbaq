@@ -69,8 +69,62 @@ class ProfileController extends Controller
             'friends' => $friends,
             'filteredUsers' => $filteredUsers,
         ]);
-
     }	
+
+    public function reviews(string $id)
+    {  
+        $user = auth()->user();
+        $friends = $user->friends()->get();
+
+        $profile = User::with(['barbecues' => function ($query) {
+            $query->orderBy('created_at', 'desc');
+        }])
+        ->with('reviews')
+        ->where('id', $id)->first();
+        
+        $friendStatus = "none";
+
+        if ($user->isFriendWith($profile)) {
+            $friendStatus = 'friend';
+        } else if ($user->alreadySentFriendRequestTo($profile)) {
+            $friendStatus = 'sent';
+        } else if ($user->alreadyHasFriendRequestFrom($profile)) {
+            $friendStatus = 'received';
+        } 
+
+        $users = User::whereNotIn('id', $friends->pluck('id'))
+        ->where('id', '!=', $user->id)
+        ->inRandomOrder()
+        ->get();
+
+        for ($i = 0; $i < count($users); $i++) {
+            $friendStatus1 = "none";
+            if ($user->isFriendWith($users[$i])) {
+                $friendStatus1 = 'friend';
+            } else if ($user->alreadySentFriendRequestTo($users[$i])) {
+                $friendStatus1 = 'sent';
+            } else if ($user->alreadyHasFriendRequestFrom($users[$i])) {
+                $friendStatus1 = 'received';
+            } 
+            $users[$i]->friendStatus1 = $friendStatus1;
+        }
+
+        // get only the users that the friend status is none
+        $filteredUsers = [];
+        foreach ($users as $user) {
+            if ($user->friendStatus1 === 'none') {
+                $filteredUsers[] = $user;
+            }
+        }
+
+        return Inertia::render('UserProfile/Reviews', [
+            'user' => $profile,
+            'friendStatus' => $friendStatus,
+            'friends' => $friends,
+            'filteredUsers' => $filteredUsers,
+        ]);
+    }
+
     /**
      * Display the user's profile form.
      */
