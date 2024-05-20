@@ -54,10 +54,6 @@ const getCookie = (name) => {
     return "";
 }
 
-// Función para eliminar una cookie
-const deleteCookie = (name) => {
-    document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-}
 </script>
 <template>
     <MainLayout title="Inici">

@@ -138,9 +138,12 @@ class BarbecuesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit( Request $request, string $id)
     {
-        //
+        $barbecue = Barbecue::findOrFail($id);
+        return Inertia::render('Barbecues/Edit', [
+            'barbecue' => $barbecue,
+        ]);
     }
 
     /**
@@ -148,8 +151,10 @@ class BarbecuesController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $barbecue = Barbecue::findOrFail($id);
+        $barbecue->update($request->all());
     }
+    
 
     /**
      * Remove the specified resource from storage.

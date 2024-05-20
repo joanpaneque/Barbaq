@@ -24,7 +24,6 @@ class Barbecue extends Model
         'content',
         'date',
     ];
-
     public function invitations()
     {
         return $this->belongsToMany(User::class, 'barbecues_friendships', 'user_id', 'guest_id')->withPivot('accepted', 'is_admin', 'barbecue_id')->withTimestamps();
