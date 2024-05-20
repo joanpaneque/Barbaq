@@ -14,6 +14,7 @@ use App\Models\BarbecueFriendship;
 use App\Models\ChatMessage;
 use App\Models\BasketProduct;
 use App\Models\Basket;
+use App\Models\Review;
 
 
 
@@ -253,4 +254,11 @@ class User extends Authenticatable
         return $reqs;
 
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+
 }
