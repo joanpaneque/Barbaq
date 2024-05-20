@@ -16,6 +16,14 @@
             "runOptions": {
                 "runOn": "folderOpen"
             }
+        },
+        {
+            "label": "REVERB",
+            "type": "shell",
+            "command": "./vendor/bin/sail artisan reverb:start",
+            "runOptions": {
+                "runOn": "folderOpen"
+            }
         }
     ]
 }

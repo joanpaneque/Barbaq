@@ -15,7 +15,7 @@ const authStore = useAuthStore();
             </div>
         </Link>
         <Link :href="route('friends.index')">
-            <div class="item active">
+            <div class="item" :class="{ active: route().current() === 'friends.index' }">
                 <img src="/assets/svg/following.svg" alt="Icon" />
                 <span>Amics</span>
                 <span
@@ -25,7 +25,7 @@ const authStore = useAuthStore();
         </Link>
 
         <Link :href="route('messages.index')">
-            <div class="item">
+            <div class="item" :class="{ active: route().current() === 'messages.index' }">
                 <img src="/assets/svg/envelope.svg" alt="Icon" />
                 <span>Missatges</span>
                 <span class="counter">12</span>
@@ -33,7 +33,7 @@ const authStore = useAuthStore();
         </Link>
         
         <Link :href="route('notifications.index')">
-            <div class="item">
+            <div class="item" :class="{ active: route().current() === 'notifications.index' }">
                 <img src="/assets/svg/bell.svg" alt="Icon" />
                 <span>Notificacions</span>
                 <div v-if="authStore.user">

@@ -80,6 +80,7 @@ const props = defineProps({
 
     .main-layout-content-wrapper {
         grid-template-columns: 720px auto;
+        height: calc(100% - 150px);
     }
 }
 
