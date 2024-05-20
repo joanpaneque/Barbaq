@@ -117,6 +117,7 @@ class BarbecuesController extends Controller
         ->with('members')
         ->with('friendships')
         ->with('images')
+        ->with('messages')
         ->find($id);
        
         $members = $barbecue->members()->get();

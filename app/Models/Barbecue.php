@@ -93,4 +93,9 @@ class Barbecue extends Model
     {
         return $this->hasMany(BarbecueFriendship::class);
     }
+
+    public function messages()
+    {
+        return $this->hasMany(ChatMessage::class)->with('user');
+    }
 }
