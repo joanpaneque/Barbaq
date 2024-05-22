@@ -46,13 +46,18 @@ const closeImageModal = () => {
 
 
     <dialog id="my_modal_2" class="modal">
-        <div class="modal-box" v-if="barbecueStore">
+        <div class="modal-box1" v-if="barbecueStore">
             <div class="columns-2 gap-2 imgsection" :class="{'columns-2': barbecue.images.length < 3, 'columns-3': barbecue.images.length > 2 && barbecue.images.length < 5, 'columns-4': barbecue.images.length > 4}"
-            >
+            v-if="barbecue.images.length > 0">
                 <div v-for="image in barbecue.images" :key="image.id" class="break-inside-avoid mb-2 h-full w-full">
                     <img :src="image.path" class="h-full max-w-full rounded-lg object-cover fit-content"
                         @click="openImageModal(image)" alt="">
                 </div>
+            </div>
+
+            <div v-else class="flex justify-center items-center h-36 w-full bg-gray-100 rounded-lg">
+                <p class="text-center px-10 text-lg">
+                    No hi ha imatges en aquesta barbacoa</p>
             </div>
         </div>
         <div class="modal-box-open" v-if="barbecueStore">
@@ -72,7 +77,7 @@ const closeImageModal = () => {
 </template>
 
 <style>
-.modal-box {
+.modal-box1 {
     max-width: 100%;
     max-height: 100%;
     height: auto;
