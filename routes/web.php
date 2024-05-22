@@ -39,37 +39,32 @@ Route::middleware('auth')->group(function () {
     Route::resource('/barbecues/{barbecueId}/edit', BarbecuesController::class);
 
     Route::get('/test', [TestController::class, 'index'])->name('test');
-Route::get('/test/profile', [TestController::class, 'indexProfile'])->name('test.profile');
+    Route::get('/test/profile', [TestController::class, 'indexProfile'])->name('test.profile');
 
+    Route::post('/api/chat/{barbecueId}', [ChatMessagesController::class, 'store']);
 
-Route::post('/api/chat/{barbecueId}', [ChatMessagesController::class, 'store']);
+    Route::resource('profile', ProfileController::class);
 
+    Route::get('/participation', [ParticipationController::class, 'index'])->name('participation.index');
 
-Route::resource('profile', ProfileController::class);
+    Route::resource('profile', ProfileController::class);
 
+    Route::get("/api/my-barbecues", [BarbecuesController::class, 'apiMyBarbecues']);
 
-Route::get('/participation', [ParticipationController::class, 'index'])->name('participation.index');
+    Route::get('/api/barbecue/{id}/messages', [MessagesController::class, 'apiIndex']);
+
+    Route::delete('/friends/{id}', [FriendsController::class, 'destroy'])->name('friends.destroy');
+
+    Route::post('/sendfriendrequest/{id}', [FriendsController::class, 'store'])->name('sendfriendrequest');
+
+    Route::get('/api/user', [UserController::class, 'apiShowLogged']);
+
+    Route::post('/updateuserphoto/{id}', [UserController::class, 'update'])->name('updateuserphoto');
+
+});
 
 Route::get('/auth/google', [GoogleController::class, 'index']);
 Route::get('/auth/google/callback', [GoogleController::class, 'store']);
-
-Route::middleware('auth')->group(function () {
-    Route::resource('profile', ProfileController::class);
-});
-
-Route::get("/api/my-barbecues", [BarbecuesController::class, 'apiMyBarbecues']);
-
-Route::get('/api/barbecue/{id}/messages', [MessagesController::class, 'apiIndex']);
-
-Route::delete('/friends/{id}', [FriendsController::class, 'destroy'])->name('friends.destroy');
-
-Route::post('/sendfriendrequest/{id}', [FriendsController::class, 'store'])->name('sendfriendrequest');
-
-Route::get('/api/user', [UserController::class, 'apiShowLogged']);
-
-Route::post('/updateuserphoto/{id}', [UserController::class, 'update'])->name('updateuserphoto');
-
-});
 
 Route::post('/api/discordbot', [DiscordBotController::class, 'broadcast']);
 

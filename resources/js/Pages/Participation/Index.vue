@@ -64,10 +64,10 @@ const enableLinks = (event) => {
 
             <section>
                 <h1>
-                    Actius
+                    Actives
                 </h1>
 
-                <div class="grid grid-cols-2 gap-5">
+                <div class="grid gap-5">
                     <div v-for="barbecue in futureBarbecues" :key="barbecue.id" class="barbecue-container">
                         <div class="barbecue-header">
                             <div class="barbecue-left-section">
@@ -78,7 +78,7 @@ const enableLinks = (event) => {
                                 </div>
 
                                 <div class="barbecue-left-texts">
-                                    <UserLink :userId="barbecue.user.id" :name="barbecue.user.name + ' ' + barbecue.user.surnames" class="text-[18px]"/>
+                                    <UserLink :userId="barbecue.user.id" :name="barbecue.user.name + ' ' + barbecue.user.surnames" />
 
                                     <div class="barbecue-address">
                                         <img src="/assets/svg/marker.svg" alt="Location" />
@@ -111,7 +111,7 @@ const enableLinks = (event) => {
             
             <section class="my-5">
                 <h1>
-                    Finalitzats
+                    Finalitzades
                 </h1>
 
                 <div class="grid grid-cols-2 gap-5">
@@ -155,7 +155,7 @@ const enableLinks = (event) => {
         </template>
 
         <template #right-aside>
-            <div class="aside-menu">
+            <div class="aside-menu mb-5">
                 <FindFriendsRightAside />
             </div>
         </template>
@@ -167,7 +167,7 @@ const enableLinks = (event) => {
 h1 {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     font-size: 32px;
     font-weight: 700;
     color: #333;
@@ -218,8 +218,8 @@ h1 {
 }
 
 .barbecue-profile-image img {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     object-fit: cover;
 }
@@ -255,7 +255,7 @@ h1 {
 }
 
 .barbecue-title {
-    font-size: 20px;
+    font-size: 24px;
 }
 
 .barbecue-date {
