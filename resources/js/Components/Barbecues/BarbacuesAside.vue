@@ -380,10 +380,10 @@ const minusProduct = (product) => {
                     <p>A pagar</p>
                     <!-- my items assogned to my * quantity -->
                     <h1 v-if="barbecue.basket?.basket_product">{{
-                        barbecue.basket.basket_product.filter(item => item.user.id === authStore.user.id).reduce(
+                        barbecue.basket.basket_product.reduce(
                             (total, item) => total + parseFloat(item.product.price) * item.quantity,
                             0
-                        ).toFixed(2)
+                        ) / $page.props.members.length .toFixed(2)
                     }}<span>€</span></h1>
                     <h1 v-else>0 €</h1>
 
