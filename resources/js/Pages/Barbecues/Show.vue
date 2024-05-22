@@ -1,6 +1,7 @@
 <script setup>
 import MainLayout from "@/Layouts/MainLayout.vue";
 import Chat from "@/Components/Barbecues/Chat.vue";
+import NoAuthBBQ from "@/Components/Barbecues/NoAuthBBQ.vue";
 import BarbacuesAside from "@/Components/Barbecues/BarbacuesAside.vue";
 import { defineProps } from "vue";
 import { useAuthStore } from "@/stores/auth";
@@ -27,11 +28,12 @@ barbecueStore.setBarbecue(props.barbecue);
 <template>
     <MainLayout :title="barbecue.title">
         <template #main-content>
-            <Chat v-if="authStore.user"/>
+            <Chat v-if="authStore.user && (props.barbecue.members.map(member => member.id).includes(authStore.user.id) || authStore.user.id === props.barbecue.user_id)" />
+            <NoAuthBBQ v-else />
         </template>
         <template #right-aside>
             <div class="aside-menu">
-                <BarbacuesAside :friends="friends" :barbecue="barbecue"/>
+                <BarbacuesAside :friends="friends" :barbecue="barbecue" />
             </div>
         </template>
     </MainLayout>
@@ -41,7 +43,7 @@ barbecueStore.setBarbecue(props.barbecue);
 .aside-menu {
     width: 100%;
     height: max-content;
-    background: white   ;
+    background: white;
     border-radius: 20px;
 }
 </style>
