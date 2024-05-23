@@ -13,12 +13,10 @@ const authStore = useAuthStore();
 </script>
 
 <template>
-
     <div class="barbaq-user-template">
         <div class="left mt-5">
-
             <div v-if="authStore.user && profileStore.user">
-                <div v-if="profileStore.user.id == authStore.user.id">
+                <div v-if="authStore.user.id">
                     <CreateBarbaqInput class="mb-5" />
                 </div>
 
@@ -30,8 +28,7 @@ const authStore = useAuthStore();
 
                 <div 
                     v-if="profileStore.user.public == 1
-                    || profileStore.friendStatus == 'friend'
-                    || profileStore.user.id == authStore.user.id"
+                    || profileStore.friendStatus == 'friend'"
                 >
                     <div v-for="barbecue in profileStore.user.barbecues" :key="barbecue.id">
                         <Barbecue :barbecue="barbecue" class="mb-5" />
@@ -62,14 +59,5 @@ const authStore = useAuthStore();
     background-color: white;
     border-radius: 20px;
     height: min-content;
-}
-
-@media (max-width: 1000px) {
-    .right{
-        display: none;
-    }
-    .barbaq-user-template{
-        display: block;
-    }
 }
 </style>
