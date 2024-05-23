@@ -35,6 +35,8 @@ const deleteBbq = (id) => {
                     <Link :href="route('profile.show', barbecue.user.id)">
                         <img :src="barbecue.user.image" alt="Profile image">
                     </Link>
+
+
                 </div>
                 <div class="barbecue-left-texts">
                     <UserLink :userId="barbecue.user.id" :name="barbecue.user.name + ' ' + barbecue.user.surnames" />
@@ -53,14 +55,12 @@ const deleteBbq = (id) => {
                     </div>
 
                     <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                        <Link :href="'/barbecues/' + barbecue.id + '/edit'">
                         <li>
                             <a class=" font-bold">
                                 <img class="h-4" src="/assets/svg/editbbq2.svg" alt="Edit" />
                                 Editar
                             </a>
                         </li>
-                    </Link>
 
                         <li>
                             <a @click="deleteBbq(barbecue.id)" class="text-red-500 font-bold">

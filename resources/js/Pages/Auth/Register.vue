@@ -26,9 +26,6 @@ const googleLogin = () => {
     <div class="center">
 
         <form @submit.prevent="submit" class="form">
-            <div class="logo flex justify-center">
-                <img src="/assets/img/barbaq-logo.png" alt="Barbaq" class="w-32">
-            </div>
             <div class="flex-column">
                 <label for="name">Nom</label>
             </div>
@@ -112,7 +109,7 @@ const googleLogin = () => {
             </div>
 
             <button 
-            class="btn hover:bg-[#FF6100] mt-4 hover:border-[#FF6100] border-[#FF6100] w-full hover:text-white bg-white text-[#FF6100] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF6100] focus:ring-offset-white active:bg-[#FF6100] active:text-white px-4 py-2 rounded-md transition ease-in-out duration-150"
+                class="button-submit" 
                 :class="{ 'opacity-25': form.processing }" 
                 :disabled="form.processing"
             >
@@ -120,14 +117,14 @@ const googleLogin = () => {
             </button>
             
             <p class="p">
-                Ja tens compte? <Link :href="route('login')" class="span">Inicia Sessió</Link>
+                Ja tens compte? <Link :href="route('login')" class="span">Incia Sessió</Link>
             </p>
 
             <p class="p line">O amb</p>
 
             <div class="flex-row">
                 <button 
-                    class="btn w-full google"
+                    class="btn google"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                     @click="googleLogin"
@@ -175,7 +172,7 @@ const googleLogin = () => {
 }
 
 .inputForm {
-    border: 1.5px solid #FF6100;
+    border: 1.5px solid #ecedec;
     border-radius: 10px;
     height: 50px;
     display: flex;
@@ -198,7 +195,7 @@ const googleLogin = () => {
 }
 
 .inputForm:focus-within {
-    border: 1.5px solid #FF6100;
+    border: 1.5px solid #2d79f3;
 }
 
 .flex-row {
@@ -219,7 +216,7 @@ const googleLogin = () => {
 .span {
     font-size: 14px;
     margin-left: 5px;
-    color: #FF6100;
+    color: #2d79f3;
     font-weight: 500;
     cursor: pointer;
 }
@@ -243,7 +240,21 @@ const googleLogin = () => {
     font-size: 14px;
 }
 
-
+.btn {
+    margin-top: 10px;
+    width: 100%;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 500;
+    gap: 10px;
+    border: 1px solid #ededef;
+    background-color: white;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
 
 .btn:hover {
     border: 1px solid #2d79f3;
