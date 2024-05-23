@@ -2,6 +2,7 @@
 import MainLayout from "@/Layouts/MainLayout.vue";
 import Chat from "@/Components/Barbecues/Chat.vue";
 import BarbacuesAside from "@/Components/Barbecues/BarbacuesAside.vue";
+import NoAuthBBQ from "@/Components/Barbecues/NoAuthBBQ.vue";
 import { defineProps } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { useBarbecueStore } from "@/stores/barbecue";
@@ -33,7 +34,10 @@ barbecueStore.setBarbecue(props.barbecue);
             <!-- <div >
             
             </div> -->
-            <Chat v-if="authStore.user && !responsiveStore.filtersOpened || responsiveStore.screenWidth > 1200" />
+            <div v-if="authStore.user && !responsiveStore.filtersOpened || responsiveStore.screenWidth > 1200">
+                <Chat v-if="(props.barbecue.members.map(member => member.id).includes(authStore.user.id) || authStore.user.id === props.barbecue.user_id)" />
+                <NoAuthBBQ v-else />
+            </div>
             <div v-else>
                 <BarbacuesAside :friends="friends" :barbecue="barbecue"/>
             </div>
