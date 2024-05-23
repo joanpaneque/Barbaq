@@ -115,7 +115,7 @@ const togglePrivateOrPublic = () => {
 const bgcolor1 = ref('#f8f9fa');
 const bgcolor2 = ref('#e9ecef');
 const bgcolor3 = ref('#dee2e6');
-
+ 
 
 onMounted(() => {
     analyzeImageColors(profileStore.user.image);
@@ -325,7 +325,7 @@ const averageRating = computed(() => {
                 </div>
             </div>
             <div class="flex flex-col text-right ml-auto">
-                <div v-if="authStore.user && profileStore.user" class="flex gap-3 ">
+                <div v-if="authStore.user && profileStore.user" class="flex gap-3">
 
                     <div class="reviews profilestars" v-if="profileStore.user.reviews.length > 0" >
                         <div id="average-rating">
@@ -348,7 +348,7 @@ const averageRating = computed(() => {
                         </Link>
                     </div>
 
-                    <button class="content-center justify-center" v-if="authStore.user.id == profileStore.user.id">
+                    <a class="" v-if="authStore.user.id == profileStore.user.id">
                         <label v-if="authStore.user.public == 1" class="swap">
                             <input type="checkbox" />
 
@@ -377,9 +377,9 @@ const averageRating = computed(() => {
                             </div>
                         </label>
 
-                    </button>
-                    <Link :href="route('profile.edit', { profile: profileStore.user.id })"
-                        v-if="authStore.user.id == profileStore.user.id">
+                    </a>
+                    <Link class="" :href="route('profile.edit', { profile: profileStore.user.id })"
+                        v-if="authStore.user.id == profileStore.user.id" >
 
                     <button
                         class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150">
@@ -486,6 +486,9 @@ const averageRating = computed(() => {
     }
 }
 
+.swap{
+    
+}
 
 .underlineinput {
     border-bottom: 0.5px solid rgb(197, 197, 197);

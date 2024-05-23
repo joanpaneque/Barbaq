@@ -80,10 +80,10 @@ const props = defineProps({
 }
 
 .main-layout-content {
-    --gap: 20px;
+    margin-top: 20px;
+    --gap: 0px;
     display: grid;
     height: 100%;
-    gap: var(--gap);
     grid-template-rows: 100%;
     padding-top: calc(90px + var(--gap));
 
@@ -100,11 +100,10 @@ const props = defineProps({
         bottom: 0;
         left: 0;
         z-index: 10000;
-
     }
     .main-layout-content{
         padding: 5%;
-        padding-top: 110px;
+        padding-top: 90px;
     }
 
 }
@@ -112,7 +111,7 @@ const props = defineProps({
 @media (max-width: 1000px) {
     .main-layout-content{
         padding: 1%;
-        padding-top: 110px;
+        padding-top: 90px;
     }
 }
 

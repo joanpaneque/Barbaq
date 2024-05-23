@@ -29,7 +29,7 @@ const props = defineProps({
 const formQuill = ref({
     content: ''
 });
-let originalContent = '';
+let originalContent = '';   
 const barbecueStore = useBarbecueStore();
 barbecueStore.setBarbecue(props.barbecue);
 console.log(barbecueStore.barbecue);

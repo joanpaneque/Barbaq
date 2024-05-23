@@ -35,8 +35,6 @@ const deleteBbq = (id) => {
                     <Link :href="route('profile.show', barbecue.user.id)">
                         <img :src="barbecue.user.image" alt="Profile image">
                     </Link>
-
-
                 </div>
                 <div class="barbecue-left-texts">
                     <UserLink :userId="barbecue.user.id" :name="barbecue.user.name + ' ' + barbecue.user.surnames" />
