@@ -54,6 +54,10 @@ const enableLinks = (event) => {
     });
 }
 
+
+const leaveBarbecue = () => {
+    console.log('Leaving barbecue');
+}
 </script>
 
 <template>
@@ -89,9 +93,9 @@ const enableLinks = (event) => {
                                     </div>
                                 </div>
                             </div>
-                            <div class="ml-auto mr-2"><button title="Abandonar"
-                                    class="cursor-pointer flex items-center fill-lime-400 bg-orange-600 hover:bg-orange-900 active:border active:border-lime-400 rounded-md duration-100 p-2">
-                                    <svg width="28px" height="28px" viewBox="0 0 24 24" version="1.1"
+                            <div class="ml-auto mr-2"><button title="Abandonar" onclick="leaveBarbecue()"
+                                    class="cursor-pointer flex items-center fill-lime-400 bg-orange-600 hover:bg-orange-900 active:border active:border-lime-400 rounded-md duration-100 p-1">
+                                    <svg width="27px" height="27px" viewBox="0 0 24 24" version="1.1"
                                         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                                         fill="#000000">
                                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -104,15 +108,15 @@ const enableLinks = (event) => {
                                                 <g id="Session-Leave">
                                                     <rect id="Rectangle" fill-rule="nonzero" x="0" y="0" width="24"
                                                         height="24"> </rect>
-                                                    <line x1="9" y1="12" x2="19" y2="12" id="Path" stroke="#0C0310"
+                                                    <line x1="9" y1="12" x2="19" y2="12" id="Path" stroke="#ffffff"
                                                         stroke-width="2" stroke-linecap="round"> </line>
                                                     <path
                                                         d="M16,8 L18.5858,10.5858 C19.3668,11.3668 19.3668,12.6332 18.5858,13.4142 L16,16"
-                                                        id="Path" stroke="#0C0310" stroke-width="2"
+                                                        id="Path" stroke="#ffffff" stroke-width="2"
                                                         stroke-linecap="round"> </path>
                                                     <path
                                                         d="M16,4 L6,4 C4.89543,4 4,4.89543 4,6 L4,18 C4,19.1046 4.89543,20 6,20 L16,20"
-                                                        id="Path" stroke="#0C0310" stroke-width="2"
+                                                        id="Path" stroke="#ffffff" stroke-width="2"
                                                         stroke-linecap="round"> </path>
                                                 </g>
                                             </g>
