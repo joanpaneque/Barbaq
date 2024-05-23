@@ -27,7 +27,7 @@ const authStore = useAuthStore();
         <Link :href="route('participation.index')">
             <div class="item" :class="{ active: route().current() === 'participation.index' }">
                 <img src="/assets/svg/envelope.svg" alt="Icon" />
-                <span style="font-size: 0.9rem">Participacions</span>
+                <span>Barbacoes</span>
             </div>
         </Link>
         

@@ -23,7 +23,7 @@ onMounted(() => {
             allBarbecues.value = response.data.sort((a, b) => {
                 return new Date(b.created_at) - new Date(a.created_at);
             });
-            
+
             for (const barbecue of allBarbecues.value) {
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
@@ -57,13 +57,14 @@ const enableLinks = (event) => {
 </script>
 
 <template>
+
     <Head title="Barbacoes en que participes" />
 
     <MainLayout title="Barbacoes en que participes">
         <template #main-content>
 
             <section>
-                <h1>
+                <h1 class="activestext">
                     Actives
                 </h1>
 
@@ -73,19 +74,52 @@ const enableLinks = (event) => {
                             <div class="barbecue-left-section">
                                 <div class="barbecue-profile-image">
                                     <Link :href="route('profile.show', barbecue.user.id)">
-                                        <img :src="barbecue.user.image" alt="Profile image">
+                                    <img :src="barbecue.user.image" alt="Profile image">
                                     </Link>
                                 </div>
 
                                 <div class="barbecue-left-texts">
-                                    <UserLink :userId="barbecue.user.id" :name="barbecue.user.name + ' ' + barbecue.user.surnames" />
+                                    <UserLink :userId="barbecue.user.id"
+                                        :name="barbecue.user.name + ' ' + barbecue.user.surnames" />
 
                                     <div class="barbecue-address">
                                         <img src="/assets/svg/marker.svg" alt="Location" />
                                         <span>{{ barbecue.address }}</span>
+
                                     </div>
                                 </div>
                             </div>
+                            <div class="ml-auto mr-2"><button title="Abandonar"
+                                    class="cursor-pointer flex items-center fill-lime-400 bg-orange-600 hover:bg-orange-900 active:border active:border-lime-400 rounded-md duration-100 p-2">
+                                    <svg width="28px" height="28px" viewBox="0 0 24 24" version="1.1"
+                                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        fill="#000000">
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
+                                        </g>
+                                        <g id="SVGRepo_iconCarrier">
+                                            <title>Session-Leave</title>
+                                            <g id="Page-1" stroke="none" stroke-width="1" fill="none"
+                                                fill-rule="evenodd">
+                                                <g id="Session-Leave">
+                                                    <rect id="Rectangle" fill-rule="nonzero" x="0" y="0" width="24"
+                                                        height="24"> </rect>
+                                                    <line x1="9" y1="12" x2="19" y2="12" id="Path" stroke="#0C0310"
+                                                        stroke-width="2" stroke-linecap="round"> </line>
+                                                    <path
+                                                        d="M16,8 L18.5858,10.5858 C19.3668,11.3668 19.3668,12.6332 18.5858,13.4142 L16,16"
+                                                        id="Path" stroke="#0C0310" stroke-width="2"
+                                                        stroke-linecap="round"> </path>
+                                                    <path
+                                                        d="M16,4 L6,4 C4.89543,4 4,4.89543 4,6 L4,18 C4,19.1046 4.89543,20 6,20 L16,20"
+                                                        id="Path" stroke="#0C0310" stroke-width="2"
+                                                        stroke-linecap="round"> </path>
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                    <span class="text-sm text-white font-bold pr-1">Abandonar</span>
+                                </button></div>
 
                             <div class="barbecue-right-section">
                                 <Timestamp :datetime="barbecue.created_at" class="barbecue-creation text-sm" />
@@ -95,37 +129,39 @@ const enableLinks = (event) => {
 
                         <div class="barbecue-content-wrapper">
                             <div class="flex">
-                                <Link
-                                    :href="'/barbecues/' + barbecue.id"
-                                    class="barbecue-title hover:text-orange-500 transition-colors"
-                                >
-                                    {{ barbecue.title }}
+                                <Link :href="'/barbecues/' + barbecue.id"
+                                    class="barbecue-title hover:text-orange-500 transition-colors">
+                                {{ barbecue.title }}
+
                                 </Link>
+
                             </div>
-                            
+
                             <span class="barbecue-date">{{ barbecue.date }}</span>
                         </div>
                     </div>
                 </div>
             </section>
-            
+
             <section class="my-5">
-                <h1>
+                <h1 class="finalitzadestext">
                     Finalitzades
                 </h1>
 
                 <div class="grid grid-cols-2 gap-5">
                     <div v-for="barbecue in pastBarbecues" :key="barbecue.id">
-                        <div class="barbecue-container past-barbecues" @mouseover="disableLinks" @mouseleave="enableLinks">
+                        <div class="barbecue-container past-barbecues" @mouseover="disableLinks"
+                            @mouseleave="enableLinks">
                             <div class="barbecue-header">
                                 <div class="barbecue-left-section">
                                     <div class="barbecue-profile-image">
                                         <Link :href="route('profile.show', barbecue.user.id)">
-                                            <img :src="barbecue.user.image" alt="Profile image">
+                                        <img :src="barbecue.user.image" alt="Profile image">
                                         </Link>
                                     </div>
                                     <div class="barbecue-left-texts">
-                                        <UserLink :userId="barbecue.user.id" :name="barbecue.user.name + ' ' + barbecue.user.surnames" />
+                                        <UserLink :userId="barbecue.user.id"
+                                            :name="barbecue.user.name + ' ' + barbecue.user.surnames" />
                                         <div class="barbecue-address">
                                             <img src="/assets/svg/marker.svg" alt="Location" />
                                             <span>{{ barbecue.address }}</span>
@@ -137,14 +173,12 @@ const enableLinks = (event) => {
 
                             <div class="barbecue-content-wrapper">
                                 <div class="flex">
-                                    <Link
-                                        :href="'/barbecues/' + barbecue.id"
-                                        class="barbecue-title hover:text-orange-500 transition-colors"
-                                    >
-                                        {{ barbecue.title }}
+                                    <Link :href="'/barbecues/' + barbecue.id"
+                                        class="barbecue-title hover:text-orange-500 transition-colors">
+                                    {{ barbecue.title }}
                                     </Link>
                                 </div>
-                                
+
                                 <span class="barbecue-date">{{ barbecue.date }}</span>
                             </div>
                         </div>
@@ -164,14 +198,28 @@ const enableLinks = (event) => {
 </template>
 
 <style scoped>
-h1 {
+.activestext {
     display: flex;
     justify-content: center;
-    margin-bottom: 10px;
-    font-size: 32px;
+    margin-bottom: 20px;
+    font-size: 22px;
     font-weight: 700;
-    color: #333;
-    text-decoration: underline;
+    color: #00ac1d;
+
+    background-color: rgb(255, 255, 255);
+    border-radius: 20px;
+}
+
+.finalitzadestext {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #cc4e00;
+
+    background-color: rgb(255, 255, 255);
+    border-radius: 20px;
 }
 
 .barbecue-container {
@@ -270,5 +318,4 @@ h1 {
     border-radius: 20px;
     padding: 26px 30px;
 }
-
 </style>
