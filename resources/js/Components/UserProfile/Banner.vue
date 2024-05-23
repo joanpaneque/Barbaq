@@ -27,7 +27,6 @@ const deleteFriend = () => {
     let id = profileStore.user.id;
     form.delete(route('friends.destroy', id));
     profileStore.friendStatus = 'none';
-
 };
 
 const cancelFrientRequest = () => {
@@ -318,11 +317,6 @@ const averageRating = computed(() => {
                     </div>
 
                 </div>
-
-                <div class="flex items-center content-center">
-                    <img src="/assets/svg/marcador.svg" alt="Marcador" class="w-3 mr-1">
-                    <p class="text-sm ">L'Estartit</p>
-                </div>
             </div>
             <div class="flex flex-col text-right ml-auto">
                 <div v-if="authStore.user && profileStore.user" class="flex gap-3">
@@ -390,12 +384,6 @@ const averageRating = computed(() => {
                     </Link>
                     <div v-else>
                         <div class="flex items-center justify-center dark:bg-gray-800 gap-2">
-                            <Link
-                                class="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 bg-white">
-                            <img class="" src="/assets/svg/sendmessage.svg" loading="lazy" alt="Google Logo">
-                            <span class="text-black font-bold">Enviar missatge</span>
-                            </Link>
-
                             <form v-if="profileStore.friendStatus === 'none'" @submit.prevent="sendFriendRequest"
                                 class="form">
 
