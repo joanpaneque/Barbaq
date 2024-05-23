@@ -15,6 +15,7 @@ use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\DiscordBotController;
 use App\Http\Controllers\ChatMessagesController;
+use App\Http\Controllers\ParticipationController;
 
 Route::get('/', [IndexController::class, 'show'])->name('index');
 
@@ -30,10 +31,14 @@ Route::post('/api/chat/{barbecueId}', [ChatMessagesController::class, 'store']);
 
 
 Route::resource('profile', ProfileController::class);
+Route::resource('participations', ParticipationController::class);
+
+Route::get('/api/my-barbecues', [BarbecuesController::class, 'apiMyBarbecues']);
+
 
 Route::get('friends', [FriendsController::class, 'index'])->name('friends.index');
 
-Route::get('/messages', [MessagesController::class, 'index'])->name('messages.index');
+// Route::get('/messages', [MessagesController::class, 'index'])->name('messages.index');
 
 Route::get('/auth/google', [GoogleController::class, 'index']);
 Route::get('/auth/google/callback', [GoogleController::class, 'store']);
@@ -42,7 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('profile', ProfileController::class);
 });
 
-Route::get('/api/barbecue/{id}/messages', [MessagesController::class, 'apiIndex']);
+// Route::get('/api/barbecue/{id}/messages', [MessagesController::class, 'apiIndex']);
 
 Route::delete('/friends/{id}', [FriendsController::class, 'destroy'])->name('friends.destroy');
 

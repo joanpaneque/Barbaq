@@ -26,11 +26,10 @@ const responsiveStore = useResponsiveStore();
             </div>
         </Link>
 
-        <Link :href="route('messages.index')">
-            <div class="item" :class="{ active: route().current() === 'messages.index' }">
+        <Link :href="route('participations.index')">
+            <div class="item" :class="{ active: route().current() === 'participations.index' }">
                 <img src="/assets/svg/envelope.svg" alt="Icon" />
-                <span>Missatges</span>
-                <span class="counter">12</span>
+                <span>Barbacoes</span>
             </div>
         </Link>
         
