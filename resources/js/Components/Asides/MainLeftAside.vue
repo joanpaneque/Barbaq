@@ -61,7 +61,7 @@ const responsiveStore = useResponsiveStore();
         height: fit-content;
         padding: 5px 5px;
         gap: 5px;
-        position:fixed;
+        position: fixed;
     }
 
     .counter {

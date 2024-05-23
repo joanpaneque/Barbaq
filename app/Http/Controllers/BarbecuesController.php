@@ -248,14 +248,21 @@ class BarbecuesController extends Controller
     /**
      * Destroy frienship by user id and barbecue id.
      */
-    public function destroyFriendship(Request $request, string $id)
-    {
-        $barbecue = Barbecue::findOrFail($id);
+    public function destroyFriendship(Request $request) {
+    
+        $barbecue = Barbecue::findOrFail($request->barbecue_id);
         $user = User::findOrFail($request->user_id);
-        $friendship = BarbecueFriendship::where('barbecue_id', $id)->where('guest_id', $user->id)->firstOrFail();
+
+
+        $friendship = BarbecueFriendship::where('barbecue_id', $barbecue->id)->where('guest_id', $user->id)->firstOrFail();
+
+
         $friendship->delete();
 
-        return redirect()->route('barbecues.show', ['barbecue' => $id]);
+        return response()->json(["ok" => true]);
+
+
+        // return redirect()->route('barbecues.show', ['barbecue' => $id]);
     }
 
     public function acceptBarbecueJoinRequest(Request $request, string $barbecueId, string $userId)

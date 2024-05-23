@@ -17,9 +17,15 @@ use App\Http\Controllers\DiscordBotController;
 use App\Http\Controllers\ChatMessagesController;
 use App\Http\Controllers\ParticipationController;
 
-Route::get('/', [IndexController::class, 'show'])->name('index');
+
+
+
+Route::delete('/friendship-destroy', [BarbecuesController::class, 'destroyFriendship'])->name('destroyfriendship');
 
 Route::middleware('auth')->group(function () {
+
+Route::get('/', [IndexController::class, 'show'])->name('index');
+
     Route::resource('profile', ProfileController::class)->only(['edit', 'update', 'destroy']);
 });
 
@@ -34,6 +40,8 @@ Route::resource('profile', ProfileController::class);
 Route::resource('participations', ParticipationController::class);
 
 Route::get('/api/my-barbecues', [BarbecuesController::class, 'apiMyBarbecues']);
+// Route::resource('/barbecues', BarbecuesController::class);
+
 
 
 Route::get('friends', [FriendsController::class, 'index'])->name('friends.index');
@@ -46,6 +54,10 @@ Route::get('/auth/google/callback', [GoogleController::class, 'store']);
 Route::middleware('auth')->group(function () {
     Route::resource('profile', ProfileController::class);
 });
+
+
+
+// Route::resource('/barbecues/{barbecueId}/edit', BarbecuesController::class);
 
 // Route::get('/api/barbecue/{id}/messages', [MessagesController::class, 'apiIndex']);
 
@@ -68,7 +80,7 @@ Route::post('/api/discordbot', [DiscordBotController::class, 'broadcast']);
 Route::post('/updateuserdescription/{id}', [UserController::class, 'updateDescription'])->name('updateuserdescription');
 
 Route::post('/sendinvitation/{id}', [BarbecuesController::class, 'sendInvitation'])->name('sendinvitation');
-Route::delete('/destroyfriendship/{id}', [BarbecuesController::class, 'destroyFriendship'])->name('destroyfriendship');
+
 Route::post('/sendbarbecuejoinrequest/{id}', [BarbecuesController::class, 'sendBarbecueJoinRequest'])->name('sendbarbecuejoinrequest');
 
 Route::post('/acceptbarbecuejoinrequest/{barbecueId}/{userId}', [BarbecuesController::class, 'acceptBarbecueJoinRequest'])->name('acceptbarbecuejoinrequest');
@@ -82,6 +94,7 @@ Route::post('/assignproduct/{id}', [BarbecuesController::class, 'assignProduct']
 
 Route::resource('notifications', NotificationsController::class);
 Route::resource('comments', CommentsController::class);
+
 
 require __DIR__ . '/auth.php';
 
