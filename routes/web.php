@@ -19,8 +19,6 @@ use App\Http\Controllers\ParticipationController;
 
 
 
-
-
 Route::middleware('auth')->group(function () {
 
     Route::get('/', [IndexController::class, 'show'])->name('index');
