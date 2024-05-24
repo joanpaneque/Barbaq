@@ -162,10 +162,14 @@ class BarbecuesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit( Request $request, string $id)
+    public function edit(Request $request, string $id)
     {
         $barbecue = Barbecue::findOrFail($id);
         $user = auth()->user();
+        if ($barbecue->user_id !== $user->id) {
+            return redirect()->route('index')->withErrors(['error' => 'No tienes permiso para editar esta barbacoa.']);
+        }
+        
         $friends = $user->friends()->get();
         
         $users = User::whereNotIn('id', $friends->pluck('id'))
@@ -184,20 +188,20 @@ class BarbecuesController extends Controller
             } 
             $users[$i]->friendStatus = $friendStatus;
         }
-
-        // get only the users that the friend status is none
+    
         $filteredUsers = [];
         foreach ($users as $user) {
             if ($user->friendStatus === 'none') {
                 $filteredUsers[] = $user;
             }
         }
+        
         return Inertia::render('Barbecues/Edit', [
             'barbecue' => $barbecue,
             'filteredUsers' => $filteredUsers,
         ]);
     }
-
+    
     /**
      * Update the specified resource in storage.
      */
@@ -258,13 +262,49 @@ class BarbecuesController extends Controller
         return response()->json(["ok" => true]);
     }
 
+    public function rejectBarbecueJoinRequest(Request $request, string $barbecueId, string $userId)
+    {
+        $barbecue = Barbecue::findOrFail($barbecueId);
+        $user = User::findOrFail($userId);
+        
+        $friendship = BarbecueFriendship::where('barbecue_id', $barbecue->id)->where('user_id', $user->id)->firstOrFail();
+        
+        $friendship->delete();
+
+        return response()->json([$barbecueId, $userId]);
+    }
+
+    public function acceptBarbecueInvitation(Request $request, string $barbecueId, string $userId)
+    {
+        $barbecue = Barbecue::findOrFail($barbecueId);
+        $user = User::findOrFail($userId);
+
+
+        $friendship = BarbecueFriendship::where('barbecue_id', $barbecue->id)->where('guest_id', $user->id)->firstOrFail();
+
+        $friendship->accepted = true;
+
+        $friendship->save();
+
+
+        return response()->json($friendship);
+    }
+
     public function acceptBarbecueJoinRequest(Request $request, string $barbecueId, string $userId)
     {
         $barbecue = Barbecue::findOrFail($barbecueId);
         $user = User::findOrFail($userId);
-        $barbecue->acceptJoinRequest($user);
-        return response()->json([$barbecueId, $userId]);
+
+        $friendship = BarbecueFriendship::where('barbecue_id', $barbecue->id)->where('user_id', $user->id)->firstOrFail();
+
+        $friendship->accepted = true;
+
+        $friendship->save();
+
+        return response()->json($friendship);
     }
+
+    
 
     /**
      * Add new product to product list, basket_product and basket.

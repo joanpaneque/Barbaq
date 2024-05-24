@@ -19,7 +19,6 @@ const props = defineProps({
 });
 
 
-
 const highlightedArea = ref(null);
 const showAddUsers = ref(false);
 
@@ -63,23 +62,32 @@ const inviteUser = (friendId) => {
     highlightArea('usersinvite');
 }
 
+
+function removeMemberFromBBQ(barbecueId, userId) {
+    axios.delete(route('rejectbarbecuejoinrequest', [barbecueId, userId])).then(res => {
+        authStore.updateUserData();
+        barbecueStore.removeMember(userId);
+    });
+}
+
 const deleteMember = (memberId) => {
     form.user_id = memberId;
     // form.delete(route('destroyfriendship', { id: barbecue.id }));
-    axios.delete(route('destroyfriendship'), {
-        data: {
-            user_id: memberId,
-            barbecue_id: barbecue.id,
-        }
-    })
-        .then(response => {
-            console.log('Member deleted', response.data);
-            barbecueStore.removeMember(memberId);
-        })
-        .catch(error => {
-            console.error('Error deleting member:', error);
-        });
-    console.log('Delete member', memberId);
+    removeMemberFromBBQ(barbecue.id, memberId);
+    // axios.delete(route('destroyfriendship'), {
+    //     data: {
+    //         user_id: memberId,
+    //         barbecue_id: barbecue.id,
+    //     }
+    // })
+    //     .then(response => {
+    //         console.log('Member deleted', response.data);
+    //         barbecueStore.removeMember(memberId);
+    //     })
+    //     .catch(error => {
+    //         console.error('Error deleting member:', error);
+    //     });
+    // console.log('Delete member', memberId);
 }
 
 function addEvent() {
