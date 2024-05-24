@@ -21,7 +21,7 @@ authStore.updateUserData();
 <template>
     <ProfileLayout title="Inici">
         <template #main-content>
-            <div class="max-w-7xl mx-auto space-y-6 overflow my-5">
+            <div class="max-w-7xl mx-auto space-y-6 overflow">
 
                 <div class="flex justify-start items-center bg-white shadow sm:rounded-[20px] p-2 w-full" >
                     <Link 
