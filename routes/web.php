@@ -55,7 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('profile', ProfileController::class);
 });
 
-
+Route::post('/review', [BarbecuesController::class, 'review'])->name('review');
 
 // Route::resource('/barbecues/{barbecueId}/edit', BarbecuesController::class);
 
