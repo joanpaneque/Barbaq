@@ -11,7 +11,7 @@ use App\Models\Basket;
 use App\Models\BasketProduct;
 use App\Models\Product;
 use App\Models\BarbecueFriendship;
-
+use App\Models\Review;
 
 
 class BarbecuesController extends Controller
@@ -249,20 +249,13 @@ class BarbecuesController extends Controller
      * Destroy frienship by user id and barbecue id.
      */
     public function destroyFriendship(Request $request) {
-    
         $barbecue = Barbecue::findOrFail($request->barbecue_id);
         $user = User::findOrFail($request->user_id);
 
-
         $friendship = BarbecueFriendship::where('barbecue_id', $barbecue->id)->where('guest_id', $user->id)->firstOrFail();
-
-
         $friendship->delete();
 
         return response()->json(["ok" => true]);
-
-
-        // return redirect()->route('barbecues.show', ['barbecue' => $id]);
     }
 
     public function acceptBarbecueJoinRequest(Request $request, string $barbecueId, string $userId)
@@ -349,4 +342,22 @@ class BarbecuesController extends Controller
          $basketProduct->user_id = $memberId;
          $basketProduct->save();
      }
+
+     /**
+     * Make a review for barbecue, with rating, comment, user_id (who recives de review), guest_id (who do the review) and barbecue_id.
+     */
+    public function review(Request $request)
+    {
+        $data = $request->all();
+        $user = auth()->user();
+        $barbecue = Barbecue::findOrFail($data['barbecue_id']);
+        $review = Review::create([
+            'rating' => $data['rating'],
+            'content' => $data['content'],
+            'user_id' => $barbecue->user_id,
+            'guest_id' => $user->id,
+            'barbecue_id' => $barbecue->id
+        ]);
+        
+    }
 }

@@ -1,5 +1,5 @@
 <script setup>
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import { useAuthStore } from "@/stores/auth";
 import { ref, onMounted } from 'vue';
 import MainLayout from "@/Layouts/MainLayout.vue";
@@ -15,7 +15,6 @@ authStore.updateUserData();
 const allBarbecues = ref([]);
 const futureBarbecues = ref([]);
 const pastBarbecues = ref([]);
-
 
 onMounted(() => {
     axios.get('/api/my-barbecues')
@@ -54,9 +53,48 @@ const enableLinks = (event) => {
     });
 }
 
+const leaveBarbecue = (barbecueId, userId) => {
 
-const leaveBarbecue = () => {
-    console.log('Leaving barbecue');
+    console.log(barbecueId, userId);
+    axios.delete(route('destroyfriendship'), {
+    }).then(response => {
+        console.log(response);
+    }).catch(error => {
+        console.log(error);
+    });
+}
+
+const showModal = ref(false);
+
+const closeModal = () => {
+    showModal.value = false;
+    form.product_name = '';
+    form.product_price = '';
+};
+
+const form = useForm({
+    content: '',
+    rating: 1,
+    barbecue_id: '',
+    guest_id: '',
+    user_id: ''
+});
+
+const submitReview = (barbecueId, guestId, userId) => {
+    form.barbecue_id = barbecueId;
+    form.user_id = userId;
+    form.guest_id = guestId;
+    console.log(form);
+    form.post(route('review'));
+    closeModal();
+    form.reset();
+
+
+}
+
+const updateRating = event => {
+    form.rating = parseInt(event.target.value);
+    console.log(form.rating);
 }
 </script>
 
@@ -93,37 +131,7 @@ const leaveBarbecue = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div class="ml-auto mr-2"><button title="Abandonar" onclick="leaveBarbecue()"
-                                    class="cursor-pointer flex items-center fill-lime-400 bg-orange-600 hover:bg-orange-900 active:border active:border-lime-400 rounded-md duration-100 p-1">
-                                    <svg width="27px" height="27px" viewBox="0 0 24 24" version="1.1"
-                                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                        fill="#000000">
-                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
-                                        </g>
-                                        <g id="SVGRepo_iconCarrier">
-                                            <title>Session-Leave</title>
-                                            <g id="Page-1" stroke="none" stroke-width="1" fill="none"
-                                                fill-rule="evenodd">
-                                                <g id="Session-Leave">
-                                                    <rect id="Rectangle" fill-rule="nonzero" x="0" y="0" width="24"
-                                                        height="24"> </rect>
-                                                    <line x1="9" y1="12" x2="19" y2="12" id="Path" stroke="#ffffff"
-                                                        stroke-width="2" stroke-linecap="round"> </line>
-                                                    <path
-                                                        d="M16,8 L18.5858,10.5858 C19.3668,11.3668 19.3668,12.6332 18.5858,13.4142 L16,16"
-                                                        id="Path" stroke="#ffffff" stroke-width="2"
-                                                        stroke-linecap="round"> </path>
-                                                    <path
-                                                        d="M16,4 L6,4 C4.89543,4 4,4.89543 4,6 L4,18 C4,19.1046 4.89543,20 6,20 L16,20"
-                                                        id="Path" stroke="#ffffff" stroke-width="2"
-                                                        stroke-linecap="round"> </path>
-                                                </g>
-                                            </g>
-                                        </g>
-                                    </svg>
-                                    <span class="text-sm text-white font-bold pr-1">Abandonar</span>
-                                </button></div>
+
 
                             <div class="barbecue-right-section">
                                 <Timestamp :datetime="barbecue.created_at" class="barbecue-creation text-sm" />
@@ -131,17 +139,54 @@ const leaveBarbecue = () => {
 
                         </div>
 
-                        <div class="barbecue-content-wrapper">
-                            <div class="flex">
+                        <div class="barbecue-content-wrapper flex justify-between">
+                            <div class="flex flex-col w-auto">
                                 <Link :href="'/barbecues/' + barbecue.id"
                                     class="barbecue-title hover:text-orange-500 transition-colors">
                                 {{ barbecue.title }}
 
                                 </Link>
-
+                                <span class="barbecue-date">{{ barbecue.date }}</span>
                             </div>
 
-                            <span class="barbecue-date">{{ barbecue.date }}</span>
+                            <div class="reviews flex align-end justify-end ">
+                                <div class="ml-auto mr-2 flex justify-end items-end">
+                                    <button title="Abandonar"
+                                        @click="leaveBarbecue(barbecue.id, authStore.user.id)"
+                                        class="btn hover:bg-[#c84c00] items-center hover:text-white bg-[#FF6100] text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF6100] focus:ring-offset-white active:bg-[#FF6100] active:text-white px-2 py-2 rounded-md transition ease-in-out duration-150">
+                                        <svg width="27px" height="27px" viewBox="0 0 24 24" version="1.1"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                            </g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <title>Session-Leave</title>
+                                                <g id="Page-1" stroke="none" stroke-width="1" fill="none"
+                                                    fill-rule="evenodd">
+                                                    <g id="Session-Leave">
+                                                        <rect id="Rectangle" fill-rule="nonzero" x="0" y="0" width="24"
+                                                            height="24"> </rect>
+                                                        <line x1="9" y1="12" x2="19" y2="12" id="Path" stroke="#ffffff"
+                                                            stroke-width="2" stroke-linecap="round"> </line>
+                                                        <path
+                                                            d="M16,8 L18.5858,10.5858 C19.3668,11.3668 19.3668,12.6332 18.5858,13.4142 L16,16"
+                                                            id="Path" stroke="#ffffff" stroke-width="2"
+                                                            stroke-linecap="round"> </path>
+                                                        <path
+                                                            d="M16,4 L6,4 C4.89543,4 4,4.89543 4,6 L4,18 C4,19.1046 4.89543,20 6,20 L16,20"
+                                                            id="Path" stroke="#ffffff" stroke-width="2"
+                                                            stroke-linecap="round"> </path>
+                                                    </g>
+                                                </g>
+                                            </g>
+                                        </svg>
+                                        <span class="text-sm text-white font-bold pr-1">Abandonar</span>
+                                    </button>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -152,7 +197,7 @@ const leaveBarbecue = () => {
                     Finalitzades
                 </h1>
 
-                <div class="grid grid-cols-2 gap-5">
+                <div class="grid gap-5">
                     <div v-for="barbecue in pastBarbecues" :key="barbecue.id">
                         <div class="barbecue-container past-barbecues" @mouseover="disableLinks"
                             @mouseleave="enableLinks">
@@ -175,15 +220,73 @@ const leaveBarbecue = () => {
                                 <Timestamp :datetime="barbecue.created_at" class="barbecue-creation" />
                             </div>
 
-                            <div class="barbecue-content-wrapper">
-                                <div class="flex">
+                            <div class="barbecue-content-wrapper flex justify-between">
+                                <div class="flex flex-col w-auto">
                                     <Link :href="'/barbecues/' + barbecue.id"
                                         class="barbecue-title hover:text-orange-500 transition-colors">
                                     {{ barbecue.title }}
                                     </Link>
+                                    <span class="barbecue-date">{{ barbecue.date }}</span>
                                 </div>
 
-                                <span class="barbecue-date">{{ barbecue.date }}</span>
+                                <div class="reviews flex align-end justify-end ">
+                                    <div class="flex justify-end items-end">
+                                        <button
+                                            class="btn hover:bg-[#c84c00] items-center hover:text-white bg-[#FF6100] text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF6100] focus:ring-offset-white active:bg-[#FF6100] active:text-white px-4 py-2 rounded-md transition ease-in-out duration-150"
+                                            @click="showModal = true">Valorar</button>
+                                    </div>
+                                    <dialog id="my_modal_3" class="modal" :open="showModal" @click.stop>
+                                        <div class="modal-box cursor-default">
+                                            <form method="dialog">
+                                                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                                                    @click="closeModal">
+                                                    ✕
+                                                </button>
+                                            </form>
+
+                                            <h1 class="text-center">
+                                                Deixa la teva valoració a <span class=" font-bold">{{ barbecue.user.name
+                                                    }}</span>
+                                            </h1>
+                                            <h2 class="text-center">
+                                                per a <span class=" font-bold">{{ barbecue.title }}</span></h2>
+                                            <form
+                                                @submit.prevent="submitReview(barbecue.id, authStore.user.id, barbecue.user.id)">
+                                                <div class="flex flex-col items-start gap-4 p-4">
+                                                    <div class="rating">
+                                                        <input type="radio" name="rating"
+                                                            class="mask mask-star-2 bg-orange-400" value="1"
+                                                            @change="updateRating" checked />
+                                                        <input type="radio" name="rating"
+                                                            class="mask mask-star-2 bg-orange-400" value="2"
+                                                            @change="updateRating" />
+                                                        <input type="radio" name="rating"
+                                                            class="mask mask-star-2 bg-orange-400" value="3"
+                                                            @change="updateRating" />
+                                                        <input type="radio" name="rating"
+                                                            class="mask mask-star-2 bg-orange-400" value="4"
+                                                            @change="updateRating" />
+                                                        <input type="radio" name="rating"
+                                                            class="mask mask-star-2 bg-orange-400" value="5"
+                                                            @change="updateRating" />
+                                                    </div>
+
+                                                    <textarea class="textarea textarea-warning w-full max-h-32"
+                                                        maxlength="500" v-model="form.content"
+                                                        placeholder="Deixa un comentari..."></textarea>
+
+                                                </div>
+                                                <div class="flex justify-center w-full">
+
+
+                                                    <button
+                                                        class="btn w-1/4 hover:bg-[#c84c00] items-center hover:text-white bg-[#FF6100] text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF6100] focus:ring-offset-white active:bg-[#FF6100] active:text-white px-4 py-2 rounded-md transition ease-in-out duration-150">
+                                                        Enviar</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </dialog>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -239,14 +342,18 @@ const leaveBarbecue = () => {
     gap: 10px;
 }
 
+.modal {
+    background-color: rgba(0, 0, 0, 0.407);
+
+
+}
+
 .barbecue-container.past-barbecues {
-    opacity: 0.5;
     transition: all 0.3s ease;
 }
 
 .barbecue-container.past-barbecues:hover {
-    background: red;
-    cursor: not-allowed;
+    background: #dddddd;
 }
 
 .barbecue-header {

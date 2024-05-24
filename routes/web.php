@@ -78,6 +78,8 @@ Route::middleware('auth')->group(function () {
 
 // Route::resource('/barbecues', BarbecuesController::class);
 // Route::get('/messages', [MessagesController::class, 'index'])->name('messages.index');
+Route::post('/review', [BarbecuesController::class, 'review'])->name('review');
+
 // Route::resource('/barbecues/{barbecueId}/edit', BarbecuesController::class);
 // Route::get('/api/barbecue/{id}/messages', [MessagesController::class, 'apiIndex']);
 
