@@ -9,7 +9,6 @@ use App\Http\Controllers\BarbecuesController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GoogleController;
-// use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\ImagesController;
@@ -21,7 +20,10 @@ use App\Http\Controllers\ParticipationController;
 
 
 
+
+
 Route::middleware('auth')->group(function () {
+    Route::get('/profile/{id}/reviews', [ProfileController::class, 'reviews'])->name('profile.reviews');
 
     Route::get('/', [IndexController::class, 'show'])->name('index');
     Route::resource('profile', ProfileController::class);
@@ -30,6 +32,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/test', [TestController::class, 'index'])->name('test');
     Route::get('/test/profile', [TestController::class, 'indexProfile'])->name('test.profile');
 
+    Route::post('/acceptbarbecuejoinrequest/{barbecueId}/{userId}', [BarbecuesController::class, 'acceptBarbecueJoinRequest'])->name('acceptbarbecuejoinrequest');
+    Route::post('/acceptbarbecueinvitation/{barbecueId}/{userId}', [BarbecuesController::class, 'acceptBarbecueInvitation'])->name('acceptbarbecuejoinrequest');
+    Route::delete('/api/rejectbarbecuejoinrequest/{barbecueId}/{userId}', [BarbecuesController::class, 'rejectBarbecueJoinRequest'])->name('rejectbarbecuejoinrequest');
+
+    Route::post('/sendbarbecuejoinrequest/{id}', [BarbecuesController::class, 'sendBarbecueJoinRequest'])->name('sendbarbecuejoinrequest');
 
     Route::post('/api/chat/{barbecueId}', [ChatMessagesController::class, 'store']);
 
@@ -60,10 +67,6 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/sendinvitation/{id}', [BarbecuesController::class, 'sendInvitation'])->name('sendinvitation');
 
-    Route::post('/sendbarbecuejoinrequest/{id}', [BarbecuesController::class, 'sendBarbecueJoinRequest'])->name('sendbarbecuejoinrequest');
-
-    Route::post('/acceptbarbecuejoinrequest/{barbecueId}/{userId}', [BarbecuesController::class, 'acceptBarbecueJoinRequest'])->name('acceptbarbecuejoinrequest');
-
     Route::post('/toggleprivate', [UserController::class, 'togglePrivate'])->name('toggleprivate');
 
     Route::post('/addproduct/{id}', [BarbecuesController::class, 'addProduct'])->name('addproduct');
@@ -73,15 +76,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('notifications', NotificationsController::class);
     Route::resource('comments', CommentsController::class);
-
+    Route::post('/review', [BarbecuesController::class, 'review'])->name('review');
 });
-
-// Route::resource('/barbecues', BarbecuesController::class);
-// Route::get('/messages', [MessagesController::class, 'index'])->name('messages.index');
-Route::post('/review', [BarbecuesController::class, 'review'])->name('review');
-
-// Route::resource('/barbecues/{barbecueId}/edit', BarbecuesController::class);
-// Route::get('/api/barbecue/{id}/messages', [MessagesController::class, 'apiIndex']);
-
 
 require __DIR__ . '/auth.php';
