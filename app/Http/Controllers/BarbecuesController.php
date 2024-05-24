@@ -162,10 +162,14 @@ class BarbecuesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit( Request $request, string $id)
+    public function edit(Request $request, string $id)
     {
         $barbecue = Barbecue::findOrFail($id);
         $user = auth()->user();
+        if ($barbecue->user_id !== $user->id) {
+            return redirect()->route('index')->withErrors(['error' => 'No tienes permiso para editar esta barbacoa.']);
+        }
+        
         $friends = $user->friends()->get();
         
         $users = User::whereNotIn('id', $friends->pluck('id'))
@@ -184,20 +188,20 @@ class BarbecuesController extends Controller
             } 
             $users[$i]->friendStatus = $friendStatus;
         }
-
-        // get only the users that the friend status is none
+    
         $filteredUsers = [];
         foreach ($users as $user) {
             if ($user->friendStatus === 'none') {
                 $filteredUsers[] = $user;
             }
         }
+        
         return Inertia::render('Barbecues/Edit', [
             'barbecue' => $barbecue,
             'filteredUsers' => $filteredUsers,
         ]);
     }
-
+    
     /**
      * Update the specified resource in storage.
      */
