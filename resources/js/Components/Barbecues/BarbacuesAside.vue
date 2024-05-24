@@ -6,7 +6,6 @@ import { defineProps } from 'vue';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import BarbaqUserProfile from '../UserProfile/BarbaqUserProfile.vue';
 import axios from 'axios';
-import MapOnSteroids from '../Steroids/MapOnSteroids.vue';
 import PhotoAlbum from '../Barbecues/PhotoAlbum/PhotoAlbum.vue';
 
 import AddProductModal from '../Barbecues/AddProductModal.vue';
@@ -20,18 +19,6 @@ const props = defineProps({
 });
 
 
-onMounted(() => {
-    const mapSelector = document.querySelector(".map-on-steroids-opener");
-    mapSelector.style.visibility = "hidden";
-    mapSelector.style.position = "fixed";
-});
-
-onUnmounted(() => {
-    const mapSelector = document.querySelector(".map-on-steroids-opener");
-    mapSelector.style.visibility = "visible";
-    mapSelector.style.position = "relative";
-
-})
 
 const highlightedArea = ref(null);
 const showAddUsers = ref(false);
@@ -356,7 +343,6 @@ const minusProduct = (product) => {
             'notSelected': highlightedArea !== 'maps' && highlightedArea !== null
         }">
             <img src="/assets/img/map.png" alt="Mapa" class="img-fluid hidden" @click="handleMapClick">
-            <MapOnSteroids v-model="coordinates" :offsetX="-245" :offsetY="300" />
 
             <iframe class="w-full h-50 mapagoogle"
                 :src="'https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d877.7659237744726!2d' + barbecue.longitude + '!3d' + barbecue.latitude + '!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses!2ses!4v1715779032596!5m2!1ses!2ses'"
