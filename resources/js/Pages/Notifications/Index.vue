@@ -32,7 +32,7 @@ function acceptBarbecueJoinRequest(barbecueId, userId) {
 }
 
 function rejectBarbecueJoinRequest(barbecueId, userId) {
-    axios.delete('/barbecues/' + id + '/join').then(() => {
+    axios.delete(route('rejectbarbecuerequest'), { data: { barbecueId, userId } }).then(() => {
         authStore.updateUserData();
     });
 }
