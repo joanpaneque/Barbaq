@@ -171,6 +171,7 @@ class User extends Authenticatable
         $this->recievedFriendRequests()->detach($user->id);
     }
 
+
     public function notifications()
     {
         // this method will return list of notifications
@@ -181,6 +182,10 @@ class User extends Authenticatable
 
         $friendRequests = $this->pendingFriendsRequests()->get();
         $barbecuesJoinRequests = $this->barbecuesJoinRequests();
+        $barbecueInvitations = $this->barbecueInvitations()->where('accepted', false)->with('barbecue', 'user')->get()->toArray();
+
+
+        // dd($barbecueInvitations->get()->toArray());
         
 
         foreach ($friendRequests as $friendRequest) {
@@ -198,6 +203,19 @@ class User extends Authenticatable
                 'barbecue' => $barbecueJoinRequest['barbecue'],
                 'user' => $barbecueJoinRequest['user'],
                 'created_at' => $barbecueJoinRequest['created_at'],
+                'invitation' => false
+            ];
+        }
+
+        foreach ($barbecueInvitations as $barbecueInvitation) {
+            $barbecueInvitation['type'] = 'barbecue_invitation';
+            $notifications[] = [
+                'type' => 'barbecue_invitation',
+                'barbecue' => $barbecueInvitation['barbecue'],
+                'user' => $barbecueInvitation['user'],
+                'created_at' => $barbecueInvitation['created_at'],
+                'invitation' => $barbecueInvitation['invitation'],
+                'guest_id' => $barbecueInvitation['guest_id'],
             ];
         }
 
@@ -233,7 +251,7 @@ class User extends Authenticatable
 
     public function barbecueInvitations()
     {
-        return $this->barbecuesFriendships()->where('accepted', false);
+        return $this->hasMany(BarbecueFriendship::class, 'guest_id')->where('invitation', true);
     }
 
     public function barbecuesJoinRequests()

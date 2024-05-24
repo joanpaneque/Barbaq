@@ -20,8 +20,14 @@ use App\Http\Controllers\ParticipationController;
 
 
 
-Route::delete('/friendship-destroy', [BarbecuesController::class, 'destroyFriendship'])->name('destroyfriendship');
 
+Route::delete('/api/rejectbarbecuejoinrequest/{barbecueId}/{userId}', [BarbecuesController::class, 'rejectBarbecueJoinRequest'])->name('rejectbarbecuejoinrequest');
+
+
+
+
+Route::get('/profile/{id}/reviews', [ProfileController::class, 'reviews'])->name('profile.reviews');
+Route::delete('/friendship-destroy', [BarbecuesController::class, 'destroyFriendship'])->name('destroyfriendship');
 Route::middleware('auth')->group(function () {
 
 Route::get('/', [IndexController::class, 'show'])->name('index');
@@ -84,6 +90,9 @@ Route::post('/sendinvitation/{id}', [BarbecuesController::class, 'sendInvitation
 Route::post('/sendbarbecuejoinrequest/{id}', [BarbecuesController::class, 'sendBarbecueJoinRequest'])->name('sendbarbecuejoinrequest');
 
 Route::post('/acceptbarbecuejoinrequest/{barbecueId}/{userId}', [BarbecuesController::class, 'acceptBarbecueJoinRequest'])->name('acceptbarbecuejoinrequest');
+Route::post('/acceptbarbecueinvitation/{barbecueId}/{userId}', [BarbecuesController::class, 'acceptBarbecueInvitation'])->name('acceptbarbecuejoinrequest');
+
+
 
 Route::post('/toggleprivate', [UserController::class, 'togglePrivate'])->name('toggleprivate');
 
