@@ -64,7 +64,7 @@ const inviteUser = (friendId) => {
 
 
 function removeMemberFromBBQ(barbecueId, userId) {
-    axios.delete(route('rejectbarbecuejoinrequest', [barbecueId, userId])).then(res => {
+    axios.delete(route('deletebarbecueguest', [barbecueId, userId])).then(res => {
         authStore.updateUserData();
         barbecueStore.removeMember(userId);
     });

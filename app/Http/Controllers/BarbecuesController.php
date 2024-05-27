@@ -278,6 +278,19 @@ class BarbecuesController extends Controller
         return response()->json([$barbecueId, $userId]);
     }
 
+    public function deletebarbecueguest(Request $request, string $barbecueId, string $userId)
+    {
+        $barbecue = Barbecue::findOrFail($barbecueId);
+        $user = User::findOrFail($userId);
+        
+        $friendship = BarbecueFriendship::where('barbecue_id', $barbecue->id)->where('guest_id', $user->id)->firstOrFail();
+        
+        $friendship->delete();
+
+        return response()->json([$barbecueId, $userId]);
+    }
+    
+
     public function acceptBarbecueInvitation(Request $request, string $barbecueId, string $userId)
     {
         $barbecue = Barbecue::findOrFail($barbecueId);

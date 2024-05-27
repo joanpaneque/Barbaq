@@ -55,13 +55,13 @@ const enableLinks = (event) => {
 
 const leaveBarbecue = (barbecueId, userId) => {
 
+
     console.log(barbecueId, userId);
-    axios.delete(route('destroyfriendship'), {
-    }).then(response => {
-        console.log(response);
-    }).catch(error => {
-        console.log(error);
-    });
+
+    axios.delete(route('rejectbarbecuejoinrequest', [barbecueId, userId])).then(res => {
+        authStore.updateUserData();
+        location.reload();
+    })
 }
 
 const showModal = ref(false);

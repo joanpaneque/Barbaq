@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/acceptbarbecuejoinrequest/{barbecueId}/{userId}', [BarbecuesController::class, 'acceptBarbecueJoinRequest'])->name('acceptbarbecuejoinrequest');
     Route::post('/acceptbarbecueinvitation/{barbecueId}/{userId}', [BarbecuesController::class, 'acceptBarbecueInvitation'])->name('acceptbarbecuejoinrequest');
     Route::delete('/api/rejectbarbecuejoinrequest/{barbecueId}/{userId}', [BarbecuesController::class, 'rejectBarbecueJoinRequest'])->name('rejectbarbecuejoinrequest');
+    Route::delete('/api/deletebarbecueguest/{barbecueId}/{userId}', [BarbecuesController::class, 'deletebarbecueguest'])->name('deletebarbecueguest');
 
     Route::post('/sendbarbecuejoinrequest/{id}', [BarbecuesController::class, 'sendBarbecueJoinRequest'])->name('sendbarbecuejoinrequest');
 
