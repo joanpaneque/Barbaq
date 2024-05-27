@@ -48,11 +48,11 @@ return [
 
         'pusher' => [
             'driver' => 'pusher',
-            'key' => env('PUSHER_APP_KEY', '3ngneno2usudnbxo0h1y'),
-            'secret' => env('PUSHER_APP_SECRET', 'ci9ubzjrgjjauex29kov'),
-            'app_id' => env('PUSHER_APP_ID', '989129'),
+            'key' => env('PUSHER_APP_KEY', 'f8a171a0a0f48aecf178'),
+            'secret' => env('PUSHER_APP_SECRET', '80d53f552af2d63c6b8c'),
+            'app_id' => env('PUSHER_APP_ID', '1809388'),
             'options' => [
-                'cluster' => env('PUSHER_APP_CLUSTER'),
+                'cluster' => env('PUSHER_APP_CLUSTER', 'eu'),
                 'host' => env('PUSHER_HOST') ?: 'api-'.env('PUSHER_APP_CLUSTER', 'mt1').'.pusher.com',
                 'port' => env('PUSHER_PORT', 443),
                 'scheme' => env('PUSHER_SCHEME', 'https'),
