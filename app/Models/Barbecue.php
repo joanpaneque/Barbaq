@@ -49,9 +49,17 @@ class Barbecue extends Model
         return $this->mergedRelationWithModel(User::class, 'barbecues_friendships_view');
     }
 
-    public function sendInvitation(User $user)
+    public function sendInvitation(User $guest, User $user)
     {
-        $this->invitations()->attach($user->id, ['accepted' => false, 'barbecue_id' => $this->id, 'invitation' => true]);
+        // $this->invitations()->attach($guest->id, ['accepted' => false, 'barbecue_id' => $this->id, 'invitation' => true]);
+
+        BarbecueFriendship::create([
+            'user_id' => $user->id,
+            'guest_id' => $guest->id,
+            'accepted' => false,
+            'barbecue_id' => $this->id,
+            'invitation' => true,
+        ]);
     }
 
     public function recieveJoinRequest(User $user)

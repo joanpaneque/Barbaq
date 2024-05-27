@@ -16,12 +16,6 @@ use App\Http\Controllers\DiscordBotController;
 use App\Http\Controllers\ChatMessagesController;
 use App\Http\Controllers\ParticipationController;
 
-
-
-
-
-
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile/{id}/reviews', [ProfileController::class, 'reviews'])->name('profile.reviews');
 
