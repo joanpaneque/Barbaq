@@ -76,7 +76,7 @@ function acceptBarbecueInvitation(barbecueId, userId) {
                             </div>
                         </div>
                     </div>
-                    <div class="notification-content" v-if="notification.type == 'barbecue_join_request' && !notification.invitation">
+                    <div class="notification-content" v-if="notification.type == 'barbecue_join_request'">
                         <div class="notification-left">
                             <div class="profile-image">
                                 <img :src="notification.user?.image" alt="Imatge de perfil" />
@@ -104,7 +104,7 @@ function acceptBarbecueInvitation(barbecueId, userId) {
                             </div>
                         </div>
                     </div>
-                    <div class="notification-content" v-if="notification.type == 'barbecue_invitation' && notification.invitation">
+                    <div class="notification-content" v-if="notification.type == 'barbecue_invitation'">
                         <div class="notification-left">
                             <div class="profile-image">
                                 <img :src="notification.user?.image" alt="Imatge de perfil" />

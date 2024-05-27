@@ -229,9 +229,13 @@ class BarbecuesController extends Controller
      */
     public function sendInvitation(Request $request, string $id)
     {
-        $barbecue = Barbecue::findOrFail($id);
-        $user = User::findOrFail($request->user_id);
-        $barbecue->sendInvitation($user);
+        $barbecue = Barbecue::findOrFail($id); // ok
+        $guest = User::findOrFail($request->user_id);
+        
+        // get logged user
+        $user = User::findOrFail(auth()->user()->id);
+
+        $barbecue->sendInvitation($guest, $user);
 
         return redirect()->route('barbecues.show', ['barbecue' => $id]);
     }
